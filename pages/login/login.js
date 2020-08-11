@@ -65,7 +65,8 @@ Page({
         data: {
           openid: openid,
           name: name,
-          password: password
+          password: password,
+          appId:app.appId
         },
         header: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -90,9 +91,9 @@ Page({
             })
           } else {
             wx.showToast({
-              title: '用户名或密码错误',
+              title: res.data.message,
               icon: 'none',
-              duration: 1000,
+              duration: 2000,
               mask: true
             })
           }

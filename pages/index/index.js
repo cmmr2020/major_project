@@ -35,6 +35,7 @@ onShareAppMessage: function (res) {
     var that = this;
     var requestUrl = app.globalData.requestUrl; //服务器路径
     var appId = wx.getAccountInfoSync().miniProgram.appId;
+    app.appId=appId;
     wx.login({
       success(res) {
         if (res.code) {
@@ -47,7 +48,6 @@ onShareAppMessage: function (res) {
               "Content-Type": "application/json"
             },
             data: {
-              govCode: 'TJBS',
               code: res.code,
               appId:appId
             },
