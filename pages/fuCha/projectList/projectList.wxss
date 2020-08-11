@@ -29,6 +29,18 @@
   background-position: center;
   position: relative;
   z-index: 1;
+
+  /* 新增 */
+  transition: width 2s, height 2s, transform 2s;
+  -webkit-transition: width 2s;
+}
+
+/* 新增 */
+.nav-li::before{
+  width: 200px;
+  height: 200px;
+  -webkit-transform: rotate(360deg); /* Chrome, Safari, Opera */
+  transform: rotate(360deg);
 }
 
 .nav-li::after {
@@ -54,6 +66,13 @@
 .nav-title {
   font-size: 32rpx;
   font-weight: 300;
+  /* 新增 */
+  height: 90rpx;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
 }
 
 .nav-title::first-letter {

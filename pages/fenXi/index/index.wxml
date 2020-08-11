@@ -1,5 +1,11 @@
 <scroll-view scroll-y class="page show">
 
+   <view class='nav-list' style="white-space:pre-line"> 
+      <navigator open-type="navigate" hover-class='none' > 
+        <view class="nav-title">{{projectName}}</view> 
+      </navigator> 
+  </view> 
+
   <view class="cu-list menu  card-menu margin-top" >
     <view class="cu-item arrow" bind:tap="goZr1">
       <view class="content">

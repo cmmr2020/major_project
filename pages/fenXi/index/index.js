@@ -3,15 +3,18 @@ const app = getApp();
 import router from '../../../utils/router.js';
 Page({
   data: {
-   projectId:''
+   projectId:'',
+   projectName:'' 
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (option) {
     var projectId = option.projectId;
+    var projectName = option.projectName;
     this.setData({
-      projectId: projectId
+      projectId: projectId,
+      projectName:projectName
     })
   },
 
