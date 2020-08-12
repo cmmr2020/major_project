@@ -38,7 +38,7 @@
 
 <!-- /4/5页面展示的图标数量不一样是分开处理css -->
 <!-- 账号为责任单位和文明办时-->
-<view wx:if="{{surveyList.length==4 || surveyList.length==5}}" id="box" class="nav-list" style="font-size:{{menufontSize}}rpx">
+<!-- <view wx:if="{{surveyList.length==4 || surveyList.length==5}}" id="box" class="nav-list" style="font-size:{{menufontSize}}rpx">
   <view wx:for="{{surveyList}}" wx:key="index" bindtap="junmp" data-type="{{surveyList[index].name}}" class="nav-li">
     <image id="login" src="{{item.url}}"></image>
     <view id="text">
@@ -46,10 +46,10 @@
     </view>
   </view>
 
-</view>
+</view> -->
 <!-- 账号为调查员时-->
-<view wx:elif="{{surveyList.length==2}}" class="nav-list box_user" style="font-size:{{menufontSize}}rpx">
-
+<!-- <view wx:elif="{{surveyList.length==2}}" class="nav-list box_user" style="font-size:{{menufontSize}}rpx"> -->
+<view class="nav-list box_user" style="font-size:{{menufontSize}}rpx">
   <view wx:for="{{surveyList}}" wx:key="index" bindtap="junmp" data-type="{{surveyList[index].name}}" class="nav-li">
     <image id="login" src="{{item.url}}"></image>
     <view id="text">
