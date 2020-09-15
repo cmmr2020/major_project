@@ -4,7 +4,7 @@ var app = getApp();
 import router from '../../../utils/router.js';
 Page({
   data: {
-    requestUrl: '', //服务器路径                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    requestUrl: '', //服务器路径                          
     open: false,
     selected: [true], // 这里表示列表项是否展开,默认初始时此数组的元素全为fasle,表示都没展开
     active: null, // 当前展开的项的index值
@@ -32,8 +32,10 @@ Page({
     userIndex: 0, //用户操作的行
     modalName:"viewModal",//默认抽屉打开
     isGrade:'',//是否打分
+    resourceCount:'',//资源数量
     fontSize:'',
     fontSize28:'',
+    fontSize29:'',
     fontSize34:'',
     fontSize30:'',
     fontSize38:'',
@@ -56,6 +58,7 @@ Page({
         bgColor:data.bgColor,
         fontSize:data.fontSize,
         fontSize28:parseInt(data.fontSize)-4,
+        fontSize29:parseInt(data.fontSize),
         fontSize30:parseInt(data.fontSize)-2,
         fontSize34:parseInt(data.fontSize)+2,
         fontSize38:parseInt(data.fontSize)+6,
@@ -177,10 +180,9 @@ Page({
         'Content-Type': 'application/json'
       },
       success: (res) => {
-
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj;
-          // console.log("指标下的详情111111：", quotaList)
+           //console.log("指标下的详情111111：", quotaList)
 
           let arr = [];
           let ayy = [];
@@ -202,7 +204,8 @@ Page({
                 quotaId: quotaList[i].quotaId,
                 status: quotaList[i].status,
                 finished: quotaList[i].finished,
-                isAmount: quotaList[i].isAmount
+                isAmount: quotaList[i].isAmount,
+                resourceCount:quotaList[i].resourceCount
               })
             }
           }
@@ -383,7 +386,7 @@ Page({
         'Content-Type': 'application/json'
       },
       success: (res) => {
-       // console.log('指标列表数据', res.data.retObj)
+        //console.log('指标列表数据', res.data.retObj)
         if (res.data.status == 'success') {
           var pointTypeId = that.data.pointTypeId
           if (userIndex === 0) {
@@ -461,7 +464,7 @@ Page({
       success: (res) => {
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj;
-          // console.log("问题分类指标下的详情：", quotaList)
+           //console.log("问题分类指标下的详情：", quotaList)
           let arr = [];
           let ayy = [];
           for (let i = 0; i < quotaList.length; i++) {
@@ -482,7 +485,8 @@ Page({
                 quotaId: quotaList[i].quotaId,
                 status: quotaList[i].status,
                 finished: quotaList[i].finished,
-                isAmount: quotaList[i].isAmount
+                isAmount: quotaList[i].isAmount,
+                resourceCount:quotaList[i].resourceCount
               })
             }
           }

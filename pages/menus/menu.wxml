@@ -2,7 +2,7 @@
 
 <view class="cu-card article div-use">
   <view class="cu-item shadow">
-    <view class="open-user">
+    <view class="open-user" bindtap="goToPage">
       <open-data type="userAvatarUrl" class=" userinfo bg-white userinfo-avatar icon" style="border-radius: 5000rpx"></open-data>
       <!--  <open-data type="userNickName" class="userinfo-nickname"></open-data> -->
       <!--   <view class="flex">
@@ -13,7 +13,7 @@
         <view class="cu-tag bg-blue light sm round">飞天不</view>
       </view> -->
 
-      <view wx:if="{{surveyList}}" class="box-user nav-list-open-user">
+      <view wx:if="{{surveyList}}" class="box-user nav-list-open-user" >
         <view class="user-text">
           <!-- <text style="font-size: 38rpx;">{{terminalUserName}}</text> -->
            <text style="font-size:{{fontSize}}rpx">{{terminalUserName}}</text>
@@ -24,13 +24,13 @@
           <!-- <view class="cu-tag bg-blue light  round" >文明办</view> -->
         </view>
       </view>
-      <view wx:else class="box-user nav-list-open-user">
+      <view wx:else class="box-user nav-list-open-user" >
         <view class="user-text">
           <text style="font-size: 38rpx;">右侧按钮绑定账号</text>
           <!-- <view class="cu-tag bg-blue light  round" >文明办</view> -->
         </view>
       </view>
-        <text class="cuIcon-right icon_user" bind:tap="goToPage"></text>
+        <text class="cuIcon-right icon_user"></text>
     </view>
 
   </view>
