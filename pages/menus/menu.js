@@ -160,12 +160,12 @@ Page({
       //   break;
       case "开始调查":
         router.navigateTo({
-          url: "../startDiaocha/project_list/project_list"
+          url: "../../startDiaochaPackage/pages/startDiaocha/project_list/project_list"
         })
         break;
       case "开始整改":
         router.navigateTo({
-          url: "../surveyDept/dept_project/dept_project"
+          url: "../../correctionPackage/pages/surveyDept/dept_project/dept_project"
         })
         break;
       case "实时监控":
@@ -178,32 +178,32 @@ Page({
         break;
       case "统计排名":
         router.navigateTo({
-          url: "../paiMing/index/index"
+          url: "../../displayPackage/pages/paiMing/index/index"
         })
         break;
       case "材料审核":
         router.navigateTo({
-          url: "../DatumCheck/datum_check_project/datum_check_project"
+          url: "../../datumCheckPackage/pages/DatumCheck/datum_check_project/datum_check_project"
         })
         break;
       case "材料上报":
         router.navigateTo({
-          url: "../DatumUpload/upload_project/upload_project"
+          url: "../../datumUploadPackage/pages/DatumUpload/upload_project/upload_project"
         })
         break;
       case "实地审核":
         router.navigateTo({
-          url: "../ShiDiCheck/check_project/check_project"
+          url: "../../shiDiCheckPackage/pages/ShiDiCheck/check_project/check_project"
         })
         break;
       case "开始复查":
        router.navigateTo({
-          url: "../fuCha/projectList/projectList"
+          url: "../../startFuchaPackage/pages/fuCha/projectList/projectList"
         })
         break;
       case "数据分析":
        router.navigateTo({
-         url: "../fenXi/projectList/projectList"
+         url: "../../displayPackage/pages/fenXi/projectList/projectList"
          // url: "../fenXi/index/index"
         })
         break;
