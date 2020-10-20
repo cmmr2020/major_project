@@ -1,0 +1,107 @@
+<!-- 初始加载显示部分 -->
+<scroll-view scroll-y class="DrawerPage {{modalName=='viewModal'?'show':''}}">
+  <block>
+    <view class="cu-bar user1 bg-white1  solid-bottom ">
+      <view class="h1" style="font-size:{{fontSize38}}rpx">
+        <text class="cuIcon-favor text-{{bgColor}} "></text>{{pointName}}
+      </view>
+    </view>
+    <view class="cu-bar user2 bg-white1  solid-bottom ">
+      <view class="h2" style="font-size:{{fontSize34}}rpx">
+        <text class="cuIcon-titles text-{{bgColor}} "></text>{{quotaName}}
+      </view>
+    </view>
+
+    <text wx:if="{{tips==null || tips==''}}"></text>
+    <text wx:else class="cu-bar user2 bg-white1 h3" style="font-size:{{fontSize28}}rpx">{{tips}}</text>
+
+  </block>
+  <view class="margin-tb-sm-user text-center">
+    <button class="cu-btn round lg1 bg-{{bgColor}} cuIcon-back_android " bindtap="showModal" data-target="viewModal" style="font-size:{{fontSize28}}rpx">切换指标</button>
+  </view>
+
+  <view class="table">
+    <view class="tr bg-w">
+      <view class="th" style="font-size:{{fontSize28}}rpx">检查内容</view>
+    </view>
+    <block wx:for="{{listData}}" wx:key="item">
+  <view class="cu-card article no-card" style="border-block-end: 1px solid #ddd">
+    <view class="cu-item shadow">
+      <view class="content">
+        <view class="desc">
+          <view wx:if="{{item.url!=null}}" selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
+          <text bindtap="showAlert" data-url="{{item.url}}" data-target="Modal" class="text-red cuIcon-questionfill" style="font-size:{{fontSize29}}rpx"></text>
+          </view>
+          <view wx:else selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
+          </view>
+          <view wx:if="{{item.isOk==0}}" class="bg-white" style="margin-bottom: 40rpx">
+          <view class="bg-grey td-test" style="width:220px font-size:{{fontSize29}}rpx;"><text>不合格原因:{{item.unqualified==nul?'无':item.unqualified}}</text></view>
+          </view>
+      <view>
+        <view>
+        <view style="text-align: center"> 
+          <button class="cu-btn round lg {{item.finished==0?'bg-red':'bg-blue'}}"  bindtap="goToUpload" data-code='{{item.code}}' data-id='{{item.id}}'  data-type='{{item.finished}}' data-content='{{item.content}}'
+            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}">{{item.finished==0?'未测评':'已测评'}}</button>
+          <button class="cu-btn round lg {{item.finished==0?'bg-red':'bg-blue'}}" style="margin-left:100rpx"
+          bindtap="goToUpload" data-code='{{item.code}}' data-id='{{item.id}}'  data-type='{{item.finished}}' data-content='{{item.content}}'
+            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}">资源：{{item.resourceCount}}</button>
+        </view>    
+        </view>  
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+    </block>
+    <!--提示框alert-->
+    <tui-alert show="{{visible}}" bind:click="hideAlert" bind:cancel="hideAlert" maskClosable="true" btnColor="#e54d42" color="#333" btnText="点击关闭">
+      <view class="tips2">
+        该问题无提示
+      </view>
+    </tui-alert>
+  </view>
+
+
+</scroll-view>
+
+<!-- 触摸屏幕回退列 -->
+<view class="DrawerClose {{modalName=='viewModal'?'show':''}} " data-type="1" bindtap="hideModal">
+  <text class="cuIcon-roundrightfill "></text>
+</view>
+<!-- 隐藏部分 -->
+<scroll-view scroll-y class="DrawerWindow {{modalName=='viewModal'?'show':''}}">
+  <!-- 描述 -->
+  <view class="cu-bar solid-bottom">
+
+    <view class="action">
+      <button class="cu-btn bg-{{bgColor}} shadow" bindtap="goToSwitch" style="font-size:{{fontSize28}}rpx">切换</button>
+    </view>
+  </view>
+
+
+  <block>
+    <view class="kind-list_item">
+      <view class="tui-flex kind-list_item-hd {{selected[index] ? 'kind-list_item-hd_show' : ''}}">
+        <view class="cuIcon-unfold text-{{bgColor}}" style="font-size:{{fontSize28}}rpx"></view>
+        <!-- 这里是点位 -->
+        <view class="tui-flex_item" style="font-size:{{fontSize34}}rpx">　{{pointName}}</view>
+      </view>
+      <view class="kind-list_item-bd kind-list_item-bd_show">
+        <view class="tui-cells tui-cells_show">
+          <block wx:for-items="{{list}}" wx:key="index">
+            <view data-index="{{index}}" class="tui-cell tui-cell_access" bindtap="hideModal" data-type="0" data-target="viewModal" data-quotaId="{{item.id}}" data-content="{{item.content}}" data-variable="{{variable}}">
+              <view class="tui-cell_bd" style="font-size:{{fontSize30}}rpx">{{item.content}}</view>
+              
+              <view wx:if="{{userIndex==index}}" class="cuIcon-creativefill  text-yellow" style="font-size:{{fontSize28}}rpx">　</view>
+              <view wx:if="{{item.submitStatus==1}}" class="cuIcon-infofill  text-red" style="font-size:{{fontSize28}}rpx"></view>
+              <view wx:if="{{item.submitStatus==2}}" class="cuIcon-roundcheckfill  text-blue" style="font-size:{{fontSize28}}rpx">
+              </view>
+              <view class="tui-cell_ft tui-cell_ft_in-access"></view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </block>
+</scroll-view>

@@ -1,6 +1,10 @@
 //app.js
 App({
   data: {
+    //type 0复制  1粘贴   resType 资源类型 0图片 1视频 2音频
+    tmpImgUrl:{'type':'','src':'',"resType":'','imgSrc':''},
+    // tmpVideoUrl:{'type':'','src':''},
+    // tmpVoiceUrl:{'type':'','src':''}
   },
   onLaunch: function() {
     // 展示本地存储能力
@@ -15,9 +19,10 @@ App({
   },
   globalData: {
     userInfo: null,
-    requestUrl: 'https://wxp.diaochaonline.com'//35
-    //  requestUrl: 'https://wmccpr.diaochaonline.com'//线上
+   requestUrl: 'https://wxp.diaochaonline.com'//35
+   // requestUrl: 'https://wmccpr.diaochaonline.com'//线上
+   // requestUrl:'https://cmmrpr.diaochaonline.com'//13o
     // requestUrl:'http://221.216.95.200:8286'//35
-    // requestUrl:'http://192.168.3.3:8080'//本地
+   // requestUrl:'http://192.168.20.79:8188'//本地
   }
 })

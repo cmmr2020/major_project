@@ -45,5 +45,16 @@ Page({
       default:
         // console.log("default");
     }
+  },
+  bindMsg:function(){
+    wx.requestSubscribeMessage({
+      tmplIds: ['oeglACDSTSbG_pgw2To_Cd2oKPPwuurtoUhdjb9HlJQ'],
+      success (res) {
+        console.log(res)
+       },
+       fail(res){
+         console.log(res)
+       }
+    })
   }
 })
