@@ -31,8 +31,10 @@
         <view class="desc">
           <view wx:if="{{item.url!=null}}" selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
           <text bindtap="showAlert" data-url="{{item.url}}" data-target="Modal" class="text-red cuIcon-questionfill" style="font-size:{{fontSize29}}rpx"></text>
+          <text bindtap="showHistroy" data-isOk="{{item.isOkHistoryResult}}" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray " style="font-size:{{fontSize29}}rpx;display:{{item.isFacilities==1?'':'none'}}; color:{{item.isOkHistoryResult==1?'red':'black'}}"></text>
           </view>
           <view wx:else selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
+          <text data-isOk="{{item.isOkHistoryResult}}" bindtap="showHistroy" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray" style="font-size:{{fontSize29}}rpx; display:{{item.isFacilities==1?'':'none'}}; color:{{item.isOkHistoryResult==1?'red':'black'}}"></text>
           </view>
           <view wx:if="{{item.isOk==0}}" class="bg-white" style="margin-bottom: 40rpx">
           <view class="bg-grey td-test" style="width:220px font-size:{{fontSize29}}rpx;"><text>不合格原因:{{item.unqualified==nul?'无':item.unqualified}}</text></view>
@@ -105,3 +107,37 @@
     </view>
   </block>
 </scroll-view>
+
+<view class="DrawerClose {{modalNameR=='viewModal'?'show':''}}" bindtap="hideModal2">
+			<text class="cuIcon-pullright"></text>
+</view>
+		<scroll-view scroll-y class="DrawerWindow {{modalNameR=='viewModal'?'show':''}}">
+			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg" style="margin-left:0rpx">
+        <!-- <view>
+        <text class="cuIcon-timefill lg text-gray title">历史答案资源</text>
+        </view> -->
+        <view class="cu-bar bg-white solid-bottom">
+        <view class='action'>
+          <text class='cuIcon-titles text-orange '></text> 历史答案资源
+        </view>
+        </view>
+				<view class="cu-item arrow" wx:for="{{historyResList}}" wx:key="index" wx:for-item="item">
+					<view class="">
+						<view class="cu-card article no-card">
+            <view class="cu-item shadow">
+              <view>
+                <text class="title" style="line-height: 2em">项目名称：{{item.projectName}}</text>
+              </view>
+            <view wx:for="{{item.fieldResourceList}}" wx:key="index2" wx:for-item="obj">
+              <view>
+                <image bindtap='lookImg' data-showUrl="{{obj.url}}" style="width: 280px" src="{{obj.url}}" mode="aspectFill"></image>
+              </view>
+            <view><text class="td-test">拍摄地址：{{obj.address==null?'暂无':obj.address}}</text></view>
+            <view><text class="td-test">拍摄时间：{{obj.createBy==null?'暂无':obj.createBy}}</text></view>
+           </view>  
+            </view>
+          </view>
+					</view>
+				</view>
+			</view>
+		</scroll-view>

@@ -31,6 +31,7 @@ Page({
     qiehuan: 1,
     userIndex: 0, //用户操作的行
     modalName:"viewModal",//默认抽屉打开
+    modalNameR:'',
     isGrade:'',//是否打分
     resourceCount:'',//资源数量
     fontSize:'',
@@ -46,7 +47,10 @@ Page({
     latitude :'',
     //监听位置 list
     addrs :[],
+    //位置监听 定任务器ID
     taskId:'',
+    //历史资源列表
+    historyResList:[]
   },
     onShow: function() {
     var that = this;
@@ -430,7 +434,12 @@ Page({
       })
     }
   },
+  hideModal2:function(){
+    this.setData({
+      modalNameR:''
+    })
 
+  },
   // 切换  按问题分类查
   goToSwitch: function(e) {
     var that = this;
@@ -579,7 +588,9 @@ Page({
                 isAmount: quotaList[i].isAmount,
                 resourceCount:quotaList[i].resourceCount,
                 isOk:quotaList[i].isOk,
-                unqualified:quotaList[i].unqualified
+                unqualified:quotaList[i].unqualified,
+                isFacilities:quotaList[i].isFacilities,
+                isOkHistoryResult:quotaList[i].isOkHistoryResult
 
               })
             }
@@ -660,4 +671,59 @@ Page({
     })
     this.changeParentData();
   },
+  showHistroy:function(e){
+    var that = this;
+    var isOk = e.currentTarget.dataset.isok;
+    if(isOk!='1'){
+      return
+    }
+    wx.showLoading({
+      title:'数据加载中'
+    })
+     var requestUrl = that.data.requestUrl; //服务器路径
+     wx.request({
+      // 必需
+      url: requestUrl + '/wechat/api/fieldQuestion/getHistoryAnswerResource',
+      data: {
+        projectId: that.data.projectId,
+        quotaCode: e.currentTarget.dataset.code,
+      },
+      header: {
+        'Content-Type': 'application/json'
+      },
+      success: (res) => {
+        console.log(res)
+        if (res.data.status == 'success') {
+          if(res.data.retObj){
+            that.setData({
+              historyResList:res.data.retObj
+            })
+          }
+          if(that.data.historyResList.length>0){
+            that.setData({
+              modalNameR:'viewModal'
+            })
+          }
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: res.data.message,
+            showCancel:false
+          })
+        }
+      },
+      fail: (res) => {
+
+      },
+      complete: (res) => {
+        wx.hideLoading()
+      }
+    })
+  },
+  lookImg:function(res){
+    wx.previewImage({
+      urls: [res.currentTarget.dataset.showurl],
+      current: res.currentTarget.dataset.showurl // 当前显示图片的http链接
+    })
+  }
 })

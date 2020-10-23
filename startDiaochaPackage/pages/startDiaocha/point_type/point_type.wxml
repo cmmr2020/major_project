@@ -24,7 +24,7 @@
                   <view class="tui-cell_bd" style="font-size:{{fontSize30}}rpx">　{{page.name}}</view>
 
                   <view wx:if="{{page.submitStatus==1}}" class="cuIcon-infofill  text-red" style="font-size:{{fontSize30}}rpx"></view>
-                  <view wx:if="{{item.locationCheckStatus==4}}">
+                  <view wx:if="{{page.checkStatus==4}}">
                     <view class="cu-tag bg-red light  round"  style="font-size:{{fontSize30}}rpx  ;margin-right: 15px;"  data-index="{{page.id}}">不合格</view>
                   </view>
                   <view wx:if="{{page.submitStatus==2}}">
