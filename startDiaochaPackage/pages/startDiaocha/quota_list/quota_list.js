@@ -159,10 +159,10 @@ Page({
             //console.log('2成功')
             //console.log(value)
             var obj =JSON.parse(value);
-            var addr = {'L':param.longitude,'l':param.latitude};
+            var addr = {'lng':param.longitude,'lat':param.latitude};
             wx.setStorageSync(locationId, JSON.stringify(obj.concat(addr)))
         }else{
-          var addr = {'L':param.longitude,'l':param.latitude};
+          var addr = {'lng':param.longitude,'lat':param.latitude};
           newArr.push(addr);
           wx.setStorageSync(locationId, JSON.stringify(newArr))
         }
