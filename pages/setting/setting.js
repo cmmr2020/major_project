@@ -181,5 +181,9 @@ Page({
        
      }
    })
+  },
+  clean:function(){
+    wx.clearStorage();
+    console.log('已清除缓存')
   }
 })

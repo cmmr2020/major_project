@@ -1,5 +1,7 @@
+
+
 <!-- 初始加载显示部分 -->
-<scroll-view scroll-y class="DrawerPage {{modalName=='viewModal'?'show':''}}">
+<scroll-view scroll-y="true"  type="display:none"  class="DrawerPage {{modalName=='viewModal'?'show':''}}">
   <block>
     <view class="cu-bar user1 bg-white1  solid-bottom ">
       <view class="h1" style="font-size:{{fontSize38}}rpx">
@@ -16,8 +18,12 @@
     <text wx:else class="cu-bar user2 bg-white1 h3" style="font-size:{{fontSize28}}rpx">{{tips}}</text>
 
   </block>
-  <view class="margin-tb-sm-user text-center">
-    <button class="cu-btn round lg1 bg-{{bgColor}} cuIcon-back_android " bindtap="showModal" data-target="viewModal" style="font-size:{{fontSize28}}rpx">切换指标</button>
+  <view class="margin-tb-sm-user text-center" style="z-index: 2;position: relative">
+    <button class="cu-btn round lg1 bg-{{bgColor}} cuIcon-back_android " bindtap="showModal" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;left: 3%;overflow: auto;">切换指标</button>
+  </view>
+
+  <view  class="margin-tb-sm-user text-center {{showQueryDistance===1?'':'hidenModel'}}" style="z-index: 2;position: relative">
+    <button class="cu-btn round lg1 bg-{{bgColor}}" bindtap="queryDistance" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;right:3% ;overflow: auto;">查询行走距离</button>
   </view>
 
   <view class="table">
@@ -31,13 +37,13 @@
         <view class="desc">
           <view wx:if="{{item.url!=null}}" selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
           <text bindtap="showAlert" data-url="{{item.url}}" data-target="Modal" class="text-red cuIcon-questionfill" style="font-size:{{fontSize29}}rpx"></text>
-          <text bindtap="showHistroy" data-isOk="{{item.isOkHistoryResult}}" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray " style="font-size:{{fontSize29}}rpx;display:{{item.isFacilities==1?'':'none'}}; color:{{item.isOkHistoryResult==1?'red':'black'}}"></text>
+          <text bindtap="showHistroy" data-isOk="{{item.isOkHistoryResult}}" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray " style="font-size:{{fontSize29}}rpx;display:{{item.isOkHistoryResult==1?'':'none'}}; color:#0000FF"></text>
           </view>
           <view wx:else selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
-          <text data-isOk="{{item.isOkHistoryResult}}" bindtap="showHistroy" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray" style="font-size:{{fontSize29}}rpx; display:{{item.isFacilities==1?'':'none'}}; color:{{item.isOkHistoryResult==1?'red':'black'}}"></text>
+          <text data-isOk="{{item.isOkHistoryResult}}" bindtap="showHistroy" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray" style="font-size:{{fontSize29}}rpx; display:{{item.isOkHistoryResult==1?'':'none'}}; color:#0000FF"></text>
           </view>
           <view wx:if="{{item.isOk==0}}" class="bg-white" style="margin-bottom: 40rpx">
-          <view class="bg-grey td-test" style="width:220px font-size:{{fontSize29}}rpx;"><text>不合格原因:{{item.unqualified==nul?'无':item.unqualified}}</text></view>
+          <view class="bg-red td-test" style="width:220px font-size:{{fontSize29}}rpx;"><text style="margin-left: 0.5rem;">原因:{{item.unqualified==nul?'无':item.unqualified}}</text></view>
           </view>
       <view>
         <view>
@@ -66,13 +72,110 @@
 
 
 </scroll-view>
+<scroll-view scroll-y="true"   class="DrawerPage {{modalName=='viewModal'?'show':''}}">
+  <block>
+    <view class="cu-bar user1 bg-white1  solid-bottom ">
+      <view class="h1" style="font-size:{{fontSize38}}rpx">
+        <text class="cuIcon-favor text-{{bgColor}} "></text>{{pointName}}
+      </view>
+    </view>
+    <view class="cu-bar user2 bg-white1  solid-bottom ">
+      <view class="h2" style="font-size:{{fontSize34}}rpx">
+        <text class="cuIcon-titles text-{{bgColor}} "></text>{{quotaName}}
+      </view>
+    </view>
 
+    <text wx:if="{{tips==null || tips==''}}"></text>
+    <text wx:else class="cu-bar user2 bg-white1 h3" style="font-size:{{fontSize28}}rpx">{{tips}}</text>
+
+  </block>
+  <view class="margin-tb-sm-user text-center" style="z-index: 2;position: relative">
+    <button class="cu-btn round lg1 bg-{{bgColor}} cuIcon-back_android " bindtap="showModal" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;left: 3%;overflow: auto;">切换指标</button>
+  </view>
+
+  <view  class="margin-tb-sm-user text-center {{showQueryDistance===1?'':'hidenModel'}}" style="z-index: 2;position: relative">
+    <button class="cu-btn round lg1 bg-{{bgColor}}" bindtap="queryDistance" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;right:3% ;overflow: auto;">查询行走距离</button>
+  </view>
+
+  <view class="table">
+    <view class="tr bg-w">
+      <view class="th" style="font-size:{{fontSize28}}rpx">检查内容</view>
+    </view>
+    <block wx:for="{{listData}}" wx:key="item">
+  <view class="cu-card article no-card" style="border-block-end: 1px solid #ddd">
+    <view class="cu-item shadow">
+      <view class="content">
+        <view class="desc">
+          <view wx:if="{{item.url!=null}}" selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
+          <text bindtap="showAlert" data-url="{{item.url}}" data-target="Modal" class="text-red cuIcon-questionfill" style="font-size:{{fontSize29}}rpx"></text>
+          <text bindtap="showHistroy" data-isOk="{{item.isOkHistoryResult}}" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray " style="font-size:{{fontSize29}}rpx;display:{{item.isOkHistoryResult==1?'':'none'}}; color:#0000FF"></text>
+          </view>
+          <view wx:else selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
+          <text data-isOk="{{item.isOkHistoryResult}}" bindtap="showHistroy" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray" style="font-size:{{fontSize29}}rpx; display:{{item.isOkHistoryResult==1?'':'none'}}; color:#0000FF"></text>
+          </view>
+          <view wx:if="{{item.isOk==0}}" class="bg-white" style="margin-bottom: 40rpx">
+          <view class="bg-red td-test" style="width:220px font-size:{{fontSize29}}rpx;"><text style="margin-left: 0.5rem;">原因:{{item.unqualified==nul?'无':item.unqualified}}</text></view>
+          </view>
+      <view>
+        <view>
+        <view style="text-align: center"> 
+          <button class="cu-btn round lg {{item.finished==0?'bg-red':'bg-blue'}}"  bindtap="goToUpload" data-code='{{item.code}}' data-id='{{item.id}}'  data-type='{{item.finished}}' data-content='{{item.content}}'
+            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}">{{item.finished==0?'未测评':'已测评'}}</button>
+          <button class="cu-btn round lg {{item.finished==0?'bg-red':'bg-blue'}}" style="margin-left:100rpx"
+          bindtap="goToUpload" data-code='{{item.code}}' data-id='{{item.id}}'  data-type='{{item.finished}}' data-content='{{item.content}}'
+            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}">资源：{{item.resourceCount}}</button>
+        </view>    
+        </view>  
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+    </block>
+    <!--提示框alert-->
+    <tui-alert show="{{visible}}" bind:click="hideAlert" bind:cancel="hideAlert" maskClosable="true" btnColor="#e54d42" color="#333" btnText="点击关闭">
+      <view class="tips2">
+        该问题无提示
+      </view>
+    </tui-alert>
+  </view>
+
+
+</scroll-view>
+<!-- <scroll-view  scroll-y class="DrawerPage {{modalName=='viewModal'?'show':''}}">
+  <view>
+  <tex>
+    ​小程序的主要开发语言是 JavaScript ，小程序的开发同普通的网页开发相比有很大的相似性。对于前端开发者而言，从网页开发迁移到小程序的开发成本并不高，但是二者还是有些许区别的。
+
+​网页开发渲染线程和脚本线程是互斥的，这也是为什么长时间的脚本运行可能会导致页面失去响应，而在小程序中，二者是分开的，分别运行在不同的线程中。网页开发者可以使用到各种浏览器暴露出来的 DOM API，进行 DOM 选中和操作。而如上文所述，小程序的逻辑层和渲染层是分开的，逻辑层运行在 JSCore 中，并没有一个完整浏览器对象，因而缺少相关的DOM API和BOM API。这一区别导致了前端开发非常熟悉的一些库，例如 jQuery、 Zepto 等，在小程序中是无法运行的。同时 JSCore 的环境同 NodeJS 环境也是不尽相同，所以一些 NPM 的包在小程序中也是无法运行的。
+
+​网页开发者需要面对的环境是各式各样的浏览器，PC 端需要面对 IE、Chrome、QQ浏览器等，在移动端需要面对Safari、Chrome以及 iOS、Android 系统中的各式 WebView 。而小程序开发过程中需要面对的是两大操作系统 iOS 和 Android 的微信客户端，以及用于辅助开发的小程序开发者工具，小程序中三大运行环境也是有所区别的，如表1-1所示。
+
+表1-1 小程序的运行环境​小程序的主要开发语言是 JavaScript ，小程序的开发同普通的网页开发相比有很大的相似性。对于前端开发者而言，从网页开发迁移到小程序的开发成本并不高，但是二者还是有些许区别的。
+
+​网页开发渲染线程和脚本线程是互斥的，这也是为什么长时间的脚本运行可能会导致页面失去响应，而在小程序中，二者是分开的，分别运行在不同的线程中。网页开发者可以使用到各种浏览器暴露出来的 DOM API，进行 DOM 选中和操作。而如上文所述，小程序的逻辑层和渲染层是分开的，逻辑层运行在 JSCore 中，并没有一个完整浏览器对象，因而缺少相关的DOM API和BOM API。这一区别导致了前端开发非常熟悉的一些库，例如 jQuery、 Zepto 等，在小程序中是无法运行的。同时 JSCore 的环境同 NodeJS 环境也是不尽相同，所以一些 NPM 的包在小程序中也是无法运行的。
+
+​网页开发者需要面对的环境是各式各样的浏览器，PC 端需要面对 IE、Chrome、QQ浏览器等，在移动端需要面对Safari、Chrome以及 iOS、Android 系统中的各式 WebView 。而小程序开发过程中需要面对的是两大操作系统 iOS 和 Android 的微信客户端，以及用于辅助开发的小程序开发者工具，小程序中三大运行环境也是有所区别的，如表1-1所示。
+
+表1-1 小程序的运行环境​小程序的主要开发语言是 JavaScript ，小程序的开发同普通的网页开发相比有很大的相似性。对于前端开发者而言，从网页开发迁移到小程序的开发成本并不高，但是二者还是有些许区别的。
+
+​网页开发渲染线程和脚本线程是互斥的，这也是为什么长时间的脚本运行可能会导致页面失去响应，而在小程序中，二者是分开的，分别运行在不同的线程中。网页开发者可以使用到各种浏览器暴露出来的 DOM API，进行 DOM 选中和操作。而如上文所述，小程序的逻辑层和渲染层是分开的，逻辑层运行在 JSCore 中，并没有一个完整浏览器对象，因而缺少相关的DOM API和BOM API。这一区别导致了前端开发非常熟悉的一些库，例如 jQuery、 Zepto 等，在小程序中是无法运行的。同时 JSCore 的环境同 NodeJS 环境也是不尽相同，所以一些 NPM 的包在小程序中也是无法运行的。
+
+​网页开发者需要面对的环境是各式各样的浏览器，PC 端需要面对 IE、Chrome、QQ浏览器等，在移动端需要面对Safari、Chrome以及 iOS、Android 系统中的各式 WebView 。而小程序开发过程中需要面对的是两大操作系统 iOS 和 Android 的微信客户端，以及用于辅助开发的小程序开发者工具，小程序中三大运行环境也是有所区别的，如表1-1所示。
+
+表1-1 小程序的运行环境
+
+  </tex>
+</view>
+</scroll-view> -->
 <!-- 触摸屏幕回退列 -->
 <view class="DrawerClose {{modalName=='viewModal'?'show':''}} " data-type="1" bindtap="hideModal">
   <text class="cuIcon-roundrightfill "></text>
 </view>
 <!-- 隐藏部分 -->
 <scroll-view scroll-y class="DrawerWindow {{modalName=='viewModal'?'show':''}}">
+  
   <!-- 描述 -->
   <view class="cu-bar solid-bottom">
 
@@ -106,6 +209,7 @@
       </view>
     </view>
   </block>
+  
 </scroll-view>
 
 <view class="DrawerClose {{modalNameR=='viewModal'?'show':''}}" bindtap="hideModal2">
@@ -123,17 +227,32 @@
         </view>
 				<view class="cu-item arrow" wx:for="{{historyResList}}" wx:key="index" wx:for-item="item">
 					<view class="">
-						<view class="cu-card article no-card">
+						<view class="cu-card article no-card" style="font-size:{{fontSize30}}rpx">
             <view class="cu-item shadow">
-              <view>
+              <view style="text-align: center;">
                 <text class="title" style="line-height: 2em">项目名称：{{item.projectName}}</text>
               </view>
+              <!-- 分割线 -->
+             <view class="divLine"></view>
             <view wx:for="{{item.fieldResourceList}}" wx:key="index2" wx:for-item="obj">
+              <view><text class="td-test" >指标名称：{{obj.quotaContent}}</text></view>
+              <!-- 分割线 -->
+             <view class="divLine"></view>
+              <view><text class="td-test" >测评结果：{{obj.resultContent}}</text></view>
+              <!-- 分割线 -->
+             <view class="divLine"></view>       
               <view>
                 <image bindtap='lookImg' data-showUrl="{{obj.url}}" style="width: 280px" src="{{obj.url}}" mode="aspectFill"></image>
               </view>
+              <view><text class="td-test">原因描述：{{obj.address==null?'暂无':obj.description}}</text></view>
+              <!-- 分割线 -->
+             <view class="divLine"></view>
             <view><text class="td-test">拍摄地址：{{obj.address==null?'暂无':obj.address}}</text></view>
+            <!-- 分割线 -->
+            <view class="divLine"></view>
             <view><text class="td-test">拍摄时间：{{obj.createBy==null?'暂无':obj.createBy}}</text></view>
+            <!-- 分割线 -->
+            <view class="divLine"></view>
            </view>  
             </view>
           </view>

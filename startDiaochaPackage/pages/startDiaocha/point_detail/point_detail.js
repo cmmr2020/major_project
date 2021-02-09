@@ -20,7 +20,10 @@ Page({
     fontSize30:'',
     fontSize28:'',
     fontSize35:'',
-    bgColor:''
+    bgColor:'',
+    isRecord:'',//是否记录行走经纬度 0 不记录 1 记录
+    timeInterval:'', //记录行走经纬度时时间间隔 单位毫秒
+    submitStatus:'',//点位测评状态  0 未上传  1上传中  2测评完毕  待提交
   },
 
   /**
@@ -38,6 +41,9 @@ Page({
     var fontSize = options.fontSize;
     var bgColor = options.bgColor;
     var name = options.name;
+    that.data.isRecord = options.isRecord==='null'?app.data.isRecord:options.isRecord;
+    that.data.timeInterval = options.timeInterval==='null'?app.data.timeInterval:options.timeInterval;
+    that.data.submitStatus = options.submitStatus;
     that.setData({
       requestUrl: requestUrl,
       isGrade: isGrade,
@@ -113,7 +119,10 @@ Page({
                   requestUrl:requestUrl,
                   bgColor:bgColor,
                   fontSize:fontSize,
-                  isGrade:isGrade
+                  isGrade:isGrade,
+                  isRecord:that.data.isRecord,
+                  timeInterval:that.data.timeInterval,
+                  submitStatus:that.data.submitStatus,
                 })
               }
     })

@@ -21,7 +21,7 @@ Page({
 
   onLoad: function(e) {
     var that = this;
-    console.log(e)
+    //console.log(e)
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
     // projectList页面传递过来的参数
     var isGrade = e.isGrade;
@@ -112,7 +112,7 @@ Page({
         'Content-Type': 'application/json'
       },
       success: (res) => {
-        //console.log("出来：",res)
+        console.log("出来：",res)
         wx.hideLoading();
         if (res.data.status ==="success") {
           var mapList = res.data.retObj;
@@ -130,6 +130,8 @@ Page({
             if (mapList[i].locationList != null) {
               map.push({
                 pointTypeId:mapList[i].id,
+                isRecord:mapList[i].isRecord==null?app.data.isRecord:mapList[i].isRecord,
+                timeInterval:mapList[i].timeInterval==null?app.data.timeInterval:mapList[i].timeInterval,
                 list: mapList[i].locationList
               })
             }
@@ -144,16 +146,25 @@ Page({
                 name: map[i].list[j].name,
                 address: map[i].list[j].address,
                 pointId: map[i].list[j].id,
-                submitStatus: map[i].list[j].submitStatus
+                submitStatus: map[i].list[j].submitStatus,
+                isRecord:map[i].isRecord,
+                timeInterval:map[i].timeInterval
               })
-            }
+              let pointId = map[i].list[j].id
+              if(!app.data.locationIsHaveAnswer.hasOwnProperty(pointId)){
+                if(map[i].list[j].submitStatus===1){
+                  //将上传中的标志放到全局变量中
+                  app.data.locationIsHaveAnswer[pointId] = 1;
+                }
+              }
+            }        
           }
           that.setData({
             list: res.data.retObj,
             markersList: mapLists
           })
-             wx.setStorageSync('markersList', mapLists);
-          // console.log("点位", this.data.list)
+          wx.setStorageSync('markersList', mapLists);
+          //console.log("点位", mapLists)
           }
         } else {
           wx.showModal({
@@ -265,22 +276,24 @@ Page({
             wx.request({
               // 必需
               url: requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
+              method:'POST',
+              dataType:'json',
               data: {
-                surveyorId: surveyorId,
-                locationId: locationId,
-                projectId: projectId,
-                addressJsonStr: value
+                "surveyorId": surveyorId,
+                "locationId": locationId,
+                "projectId": projectId,
+                "addressJsonStr": value,
+                "type":0
               },
               header: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
               },
               success: (res) => {
-                console.log('成功')
+
               },
               fail: (res) => {
               },
               complete: (res) => {
-                console.log('成功')
                 //清空缓存的该点位行走路线经纬度
                  wx.removeStorageSync(locationId)
               }

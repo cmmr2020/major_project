@@ -45,14 +45,20 @@ Page({
     longitude :'',
     //监听位置   维度
     latitude :'',
+    //监听定位时的时间戳
+    tStamp :'',
     //监听位置 list
     addrs :[],
     //位置监听 定任务器ID
     taskId:'',
     //历史资源列表
-    historyResList:[]
+    historyResList:[],
+    isRecord:'',//是否记录行走经纬度 0 不记录 1 记录
+    timeInterval:'', //记录行走经纬度时时间间隔 单位毫秒
+    submitStatus:'', //点位测评状态  0 未上传  1上传中  2测评完毕  待提交
+    showQueryDistance:0, //是否显示查询行走距离按钮  0隐藏  1显示
   },
-    onShow: function() {
+    onShow: function() {  
     var that = this;
     var variable = that.data.variable;
     var locationId = '';
@@ -75,101 +81,142 @@ Page({
         fontSize30:parseInt(data.fontSize)-2,
         fontSize34:parseInt(data.fontSize)+2,
         fontSize38:parseInt(data.fontSize)+6,
+        isRecord:data.isRecord,
+        timeInterval:data.timeInterval
       })
-     //  console.log("pointDetail传递参数", data)
+      if(app.data.locationIsHaveAnswer.hasOwnProperty(locationId)){
+        that.data.submitStatus = "1"
+      }else{
+        that.data.submitStatus = "0";
+      }
+      // console.log("pointDetail传递参数", data)
       if(variable===0){
         that.getproblemList(data.pointTypeId,data.projectId, data.pointId);
       }else{
         that.getQuotaList(data.pointTypeId,data.pointId,data.projectId);
       }
-      wx.getSetting({
-        success (res) {
-          if(!res.authSetting['scope.userLocationBackground']){
-            wx.showModal({
-              title: '提示',
-              content: '您未授权后台获取位置信息，此点位将无法记录您的行走路线！',
-              showCancel:false
-            })
-          }
-        }
-      })
-            //获取缓存信息
-            const res = wx.getStorageInfoSync()
-            //如果缓存中的key数量小于话  允许保存到缓存中 缓存中除此功能已有9个key分别为 "logs"  "fontSize" "bgColor" "bgColorUi" "markersList" "firstQuestion" 
-            //缓存key最多十个 记录测评路线最多保存 3个点位  缓存keys 长度控制到 9 
-            if(res.keys.length<=10 || res.keys.indexOf(locationId)!=-1|| res.currentSize<1024*10){
-              //开启小程序进入前后台时均接收位置消息
-                wx.startLocationUpdateBackground({
-                  success(res){
-                    const _locationChangeFn = function(res) {
-                      that.setData({
-                        longitude:res.longitude.toFixed(4),
-                        latitude:res.latitude.toFixed(4)
-                      })
-          
-                      }
-                      wx.onLocationChange(_locationChangeFn)
-                      var id =setInterval(handleLocationUpdate,10000,that.data)
-                      that.setData({
-                        taskId:id
-                      })
-                  },
-                  fail(res){
-                    // console.log('失败')
-                    console.log(res)
-                  }
-                })
-            }else{
-              wx.showModal({
-                title: '提示',
-                content: '缓存已满,当前点位无法记录行走轨迹,请知晓!',
-                success (res) {
-                  LogManager.warn('测评轨迹记录功能缓存已满,已存缓存Key信息:'+res.keys)
-                }
-              })
-            }
+      that.checkIsRecord();
     })
      if(variable===0){
         that.getproblemList(that.data.pointTypeId,that.data.projectId, that.data.pointId);
       }else{
         that.getQuotaList(that.data.pointTypeId,that.data.pointId,that.data.projectId);
       }
-     const handleLocationUpdate = function(param){
-        //console.log('进入更新坐标方法')
-        // console.log(param.longitude)
-        // console.log(param.latitude)
+  },
+  checkIsRecord:function(){
+    //console.log(app.data.locationUpdateFlag)
+    console.log(this.data)
+    if(app.data.locationUpdateFlag===true){
+      //console.log('定位已开,return')
+      return
+    }
+    let that = this
+    //console.log(that)
+    let locationId = that.data.pointId;
+    if(that.data.isRecord==="1"){
+      that.setData({
+        showQueryDistance:1
+      })
+      //console.log(that.data)
+      if(that.data.submitStatus==="1"){
+        wx.getSetting({
+          success (res) {
+            if(!res.authSetting['scope.userLocationBackground']){
+              wx.showModal({
+                title: '提示',
+                content: '您未授权后台获取位置信息，此点位将无法记录您的行走路线！',
+                showCancel:false
+              })
+            }
+          }
+        })
+        //获取缓存信息
         const res = wx.getStorageInfoSync()
-        //缓存已满  不再更新
-        if(res.currentSize>=1024*10){
-          //关闭定位消息   关闭定时任务
-          wx.stopLocationUpdate({
-            success:function(res){
-              clearInterval(that.data.taskId)
-            },
-            fail : function(res){
-              LogManager.warn('内存已满,关闭定位消息失败:'+res)
+        //如果缓存中的key数量小于话  允许保存到缓存中 缓存中除此功能已有9个key分别为 "logs"  "fontSize" "bgColor" "bgColorUi" "markersList" "firstQuestion" 
+        //缓存key最多十个 记录测评路线最多保存 3个点位  缓存keys 长度控制到 9 
+        //console.log(res.keys.length)
+        if(res.keys.length<=10 || res.keys.indexOf(locationId)!=-1){
+          if(res.currentSize<1024*10){
+          //开启小程序进入前后台时均接收位置消息
+            wx.startLocationUpdateBackground({
+              success(res){
+                app.data.locationUpdateFlag=true
+                const _locationChangeFn = function(res) {
+                  var myTime = (Date.now()/1000).toFixed();
+                 //console.log(myTime)
+                  that.setData({
+                    // longitude:res.longitude.toFixed(4),
+                    // latitude:res.latitude.toFixed(4)
+                    longitude:res.longitude,
+                    latitude:res.latitude,
+                    tStamp:myTime
+                  })
+      
+                  }
+                  wx.onLocationChange(_locationChangeFn)
+                  console.log('开启并且 频率为:'+that.data.timeInterval)
+                  var id =setInterval(handleLocationUpdate,parseInt(that.data.timeInterval),that.data)
+                  //console.log(id)
+                  that.setData({
+                    taskId:id
+                  })
+              },
+              fail(res){
+                // console.log('失败')
+                //console.log(res)
+              }
+            })
+          }     
+        }else{
+          wx.showModal({
+            title: '提示',
+            content: '缓存已满,当前点位无法记录行走轨迹,请知晓!',
+            success (res) {
+              LogManager.warn('测评轨迹记录功能缓存已满,已存缓存Key信息:'+res.keys)
             }
           })
-          return;
         }
-        var newArr = new Array();
-        var value = wx.getStorageSync(locationId)
-        if (value) {
-        // Do something with return value
-            //console.log('2成功')
-            //console.log(value)
-            var obj =JSON.parse(value);
-            var addr = {'lng':param.longitude,'lat':param.latitude};
-            wx.setStorageSync(locationId, JSON.stringify(obj.concat(addr)))
-        }else{
-          var addr = {'lng':param.longitude,'lat':param.latitude};
-          newArr.push(addr);
-          wx.setStorageSync(locationId, JSON.stringify(newArr))
+        const handleLocationUpdate = function(param){
+          //  console.log('进入更新坐标方法')
+          //  console.log(param)
+          // console.log(param.latitude)
+  
+          const res = wx.getStorageInfoSync()
+          //console.log(res.currentSize)
+          //缓存已满  不再更新
+          if(res.currentSize>=1024*10){
+            //关闭定位消息   关闭定时任务
+            wx.stopLocationUpdate({
+              success:function(res){
+                clearInterval(that.data.taskId)
+              },
+              fail : function(res){
+                LogManager.warn('内存已满,关闭定位消息失败:'+res)
+              }
+            })
+            return;
+          }
+          var newArr = new Array();
+          var value = wx.getStorageSync(locationId)
+          if (value) {
+          // Do something with return value
+              //console.log('2成功')
+              //console.log(value)
+              var obj =JSON.parse(value);
+              var addr = {'lng':""+param.longitude+"",'lat':""+param.latitude+"",'time':""+param.tStamp+""};
+              wx.setStorageSync(locationId, JSON.stringify(obj.concat(addr)))
+          }else{
+            var addr = {'lng':""+param.longitude+"",'lat':""+param.latitude+"",'time':""+param.tStamp+""};
+            newArr.push(addr);
+            wx.setStorageSync(locationId, JSON.stringify(newArr))
+          }
         }
+
       }
+    }
   },
   onLoad: function(e) {
-    console.log('onLoad')
+    //console.log('onLoad')
   },
   // 获取指标列表
   getQuotaList(pointTypeId, locationId, projectId) {
@@ -251,7 +298,7 @@ Page({
   },
 
   // 获取指标下的问题
-  getQuotaDetail(quotaId, pointTypeId) {
+  getQuotaDetail(quotaId, q) {
     var that = this;
     var projectId = that.data.projectId;
     var pointId = that.data.pointId;
@@ -619,7 +666,7 @@ Page({
     })
   },
 
-  changeData: function() {
+  changeData: function(s) {
     var e = {
       pointTypeId: this.data.pointTypeId,
       pointName: this.data.pointName,
@@ -662,8 +709,18 @@ Page({
     wx.stopLocationUpdate({
       success:function(res){
         clearInterval(that.data.taskId)
-        console.log(that.data.taskId)
-         console.log('关闭接收定位信息')
+        //console.log(that.data.taskId)
+        app.data.locationUpdateFlag = false;
+        var pages = getCurrentPages(); //当前页面栈
+        if (pages.length > 1) {
+         // console.log(pages)
+          var beforePage = pages[pages.length - 1]; //获取上一个页面实例对象
+          beforePage.data.submitStatus= that.data.submitStatus
+          beforePage.data.isRecord= that.data.isRecord
+          beforePage.data.timeInterval= that.data.timeInterval
+          console.log('关闭接收定位信息'+beforePage.data.submitStatus)
+        }
+        console.log('关闭接收定位信息'+app.data.locationUpdateFlag)
       },
       fail : function(res){
 
@@ -687,12 +744,13 @@ Page({
       data: {
         projectId: that.data.projectId,
         quotaCode: e.currentTarget.dataset.code,
+        locationId:that.data.pointId
       },
       header: {
         'Content-Type': 'application/json'
       },
       success: (res) => {
-        console.log(res)
+        //console.log(res)
         if (res.data.status == 'success') {
           if(res.data.retObj){
             that.setData({
@@ -725,5 +783,61 @@ Page({
       urls: [res.currentTarget.dataset.showurl],
       current: res.currentTarget.dataset.showurl // 当前显示图片的http链接
     })
+  },
+  queryDistance:function(){
+    wx.showLoading({
+      title: '查询中',
+      mask:true
+    })
+    let locationId = this.data.pointId;
+    let surveyorId = app.terminalUserId;
+    let projectId = this.data.projectId;
+    var value = wx.getStorageSync(locationId)
+    if (value) {
+      wx.request({
+        // 必需
+        url: this.data.requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
+        method:'POST',
+        dataType:'json',
+        data: {
+          "surveyorId": surveyorId,
+          "locationId": locationId,
+          "projectId": projectId,
+          "addressJsonStr": value,
+          "type":0
+        },
+        header: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        success: (res) => {
+          //console.log(res)
+          wx.showModal({
+            content: '您在此点位测评中，已行走'+res.data.retObj+'米。',
+            showCancel:false,
+            confirmText:'知道了',
+            confirmColor:'#1E90FF',
+          })
+          wx.setStorageSync(locationId,null)
+        },
+        fail: (res) => {
+        },
+        complete:()=>{
+          wx.hideLoading()
+        }
+      })
+  }else{
+    wx.hideLoading()
+    wx.showModal({
+      content: '查询频率太快,请稍后再试~',
+      showCancel:false,
+      confirmText:'知道了',
+      confirmColor:'#1E90FF',
+    })
   }
+},
+test:function(){
+  console.log('向下滑动')
+}
 })
+
+

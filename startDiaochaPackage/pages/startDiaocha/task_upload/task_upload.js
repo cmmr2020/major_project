@@ -90,6 +90,7 @@ Page({
     audioInputValue: '', //音频资源描述 id所对应输入值
     isAmount:'',//是否需要记录问题处数，0不需要，1需要
     amountValue:'',//屏幕输入的处数
+    ischoose:0,//是否已选择过测评结果   0否  1是 
     fontSize:'',
     fontSize28:'',
     fontSize30:'',
@@ -100,6 +101,9 @@ Page({
     //复制功能资源临时路径 type 0 图片 1视频 2音频 index 资源所在下标  src 资源临时路径 imgSrc 视频预览图所在路径
     tempResSrc:{'index':'','src':'','type':'','imgSrc':''},
     pageType:'',
+    subinfo1:'',
+    subinfo2:'',
+    subinfo3:'',
   },
 
   onLoad: function(options) {
@@ -703,6 +707,7 @@ Page({
 
   radioChange: function(e) {
     var that = this;
+    that.data.ischoose=1;//标记 已经选择过检查结果
     // var AmountValue = that.data.amountValue;
     var Nowdata = util.getNowTime();
     var dabiaoOption = that.data.dabiaoOption;
@@ -747,6 +752,70 @@ Page({
     }
 
   },
+
+  /**
+   * 问题处数+1
+   */
+  queNumAdd:function(){
+  var  that = this;
+  var AmountValue = that.data.amountValue;
+  var setValue = 1;
+  if(AmountValue===""&&AmountValue!==0&&that.data.ischoose===0){
+    wx.showModal({
+      title: '提示',
+      content: '请先选择检查结果!',
+      showCancel:false,
+      })
+    return;
+  }
+  if(AmountValue==0&&AmountValue!==""){
+    wx.showModal({
+      title: '提示',
+      content: '检查结果为达标时,问题处数不可增加!',
+      showCancel:false,
+      })
+    return;
+  }
+  if(AmountValue!==""){
+    setValue=AmountValue+1;
+  }
+  that.setData({
+    amountValue: setValue,
+   })
+  },
+/**
+ * 问题处数-1
+ */
+  queNumCut:function(){
+    var that = this;
+    var AmountValue = that.data.amountValue;
+    var setValue = 1; 
+    if(AmountValue===""&&AmountValue!==0&&that.data.ischoose===0){
+      wx.showModal({
+        title: '提示',
+        content: '请先选择检查结果!',
+        showCancel:false,
+        })
+      return;
+    }
+    if(AmountValue==0&&AmountValue!==""){
+      wx.showModal({
+        title: '提示',
+        content: '检查结果为达标时,问题处数不可减少!',
+        showCancel:false,
+        })
+      return;
+    }
+    if(AmountValue){
+         if(AmountValue>2){
+          setValue = AmountValue-1;
+         }
+    }
+    that.setData({
+      amountValue: setValue,
+     })
+  },
+
   /**
    ***********************************评分**************************************
    */
@@ -822,7 +891,8 @@ Page({
     var id = e.target.dataset.index;
     that.setData({
       imageInputId: id,
-      modalHiddenInput1: false
+      modalHiddenInput1: false,
+      subinfo1:that.data.imgDescList[id]
     })
 
   },
@@ -831,7 +901,8 @@ Page({
     var id = e.target.dataset.index;
     that.setData({
       videoInputId: id,
-      modalHiddenInput2: false
+      modalHiddenInput2: false,
+      subinfo2:that.data.voidDescList[id]
     })
 
   },
@@ -840,61 +911,87 @@ Page({
     var id = e.target.dataset.index;
     that.setData({
       audioInputId: id,
-      modalHiddenInput3: false
+      modalHiddenInput3: false,
+      subinfo3:that.data.audioDescList[id]
     })
 
   },
   text1Input(e) {
-    this.data.imageInputValue = e.detail.value;
+    let that = this;
+    that.setData({
+      subinfo1: e.detail.value
+    })
   },
   text2Input(e) {
-    this.data.videoInputValue = e.detail.value;
+    //this.data.videoInputValue = e.detail.value;
+    let that = this;
+    that.setData({
+      subinfo2: e.detail.value
+    })
   },
   text3Input(e) {
-    this.data.audioInputValue = e.detail.value;
+    //this.data.audioInputValue = e.detail.value;
+    let that = this;
+    that.setData({
+      subinfo3: e.detail.value
+    })
   },
   //确定
-  sub1: function() {
+  sub1: function(e) {
     var that = this;
     that.setData({
       modalHiddenInput1: true
     })
     var id = that.data.imageInputId;
-    var value = that.data.imageInputValue+' ';
-    var imgDescList = that.data.imgDescList;
+    var value = e.currentTarget.dataset.info+'';
+    //var imgDescList = that.data.imgDescList;
+    //var id2 = e.target.dataset.index;
     var test = 'imgDescList[' + id + ']';
     that.setData({
-      [test]: value
+      [test]: value,
+      subinfo1:''
     })
   },
   //确定
-  sub2: function() {
+  sub2: function(e) {
     var that = this;
     that.setData({
       modalHiddenInput2: true
     })
     var id = that.data.videoInputId;
-    var value = that.data.videoInputValue+' ';
-    var voidDescList = that.data.voidDescList;
+    // var value = that.data.videoInputValue+' ';
+    // var voidDescList = that.data.voidDescList;
 
+    // var test = 'voidDescList[' + id + ']';
+    // that.setData({
+    //   [test]: value
+    // })
+    var value = e.currentTarget.dataset.info+'';
     var test = 'voidDescList[' + id + ']';
     that.setData({
-      [test]: value
+      [test]: value,
+      subinfo2:''
     })
   },
   //确定
-  sub3: function() {
+  sub3: function(e) {
     var that = this;
     that.setData({
       modalHiddenInput3: true
     })
     var id = that.data.audioInputId;
-    var value = that.data.audioInputValue+' ';
-    var audioDescList = that.data.audioDescList;
+    // var value = that.data.audioInputValue+' ';
+    // var audioDescList = that.data.audioDescList;
 
+    // var test = 'audioDescList[' + id + ']';
+    // that.setData({
+    //   [test]: value
+    // })
+    var value = e.currentTarget.dataset.info+'';
     var test = 'audioDescList[' + id + ']';
     that.setData({
-      [test]: value
+      [test]: value,
+      subinfo3:''
     })
   },
   //取消
@@ -930,7 +1027,7 @@ Page({
      //判断是否为快捷输入
     if (target==="RadioModal") {
       //判断快捷输入是否有数据
-      console.log("JSON.stringify:",JSON.stringify(tipsList),"_____tip:",tipsList)
+     // console.log("JSON.stringify:",JSON.stringify(tipsList),"_____tip:",tipsList)
       if (JSON.stringify(tipsList) != '[]' && tipsList.length>0) {
         that.setData({
           idModelShow: '0',
@@ -944,7 +1041,6 @@ Page({
           icon: 'none',
           duration: 1500
         })
-
       }
     }else{
        that.setData({
@@ -1736,8 +1832,24 @@ Page({
           // wx.setStorageSync("pointName", pointName);
           // wx.setStorageSync("pointTypeId", pointTypeId);
           // wx.setStorageSync("pointId", pointId);
+
+          if(!app.data.locationIsHaveAnswer.hasOwnProperty(pointId)){
+            if(app.data.locationIsHaveAnswer.pointId!==1){
+              //将上传中的标志放到全局变量中
+              app.data.locationIsHaveAnswer[pointId] = 1;
+            }
+          }
           wx.navigateBack({
-            delta: 1
+            delta: 1,
+            success:function(){
+              var pages = getCurrentPages(); //当前页面栈
+              if (pages.length > 1) {
+                //console.log(pages)
+                var beforePage = pages[pages.length - 1]; //获取上一个页面实例对象
+                beforePage.data.submitStatus="1"
+                beforePage.checkIsRecord();
+              }
+            }
           })
           // router.redirectTo({url:"../quota_list/quota_list?pointName=" + pointName + "&pointTypeId=" + pointTypeId + '&pointId=' + pointId})
           // wx.navigateTo({
@@ -1779,11 +1891,11 @@ Page({
         pointName: pointName,
         pointTypeId: pointTypeId
       })
-      beforePage.changeData(); //触发父页面中的方法
+      beforePage.changeData(1); //触发父页面中的方法
     }
   },
   showCopyTap:function(res){
-    console.log(res)
+    //console.log(res)
     var type = res.currentTarget.dataset.type;
     var index = res.currentTarget.dataset.index;
     var that = this;
@@ -1820,7 +1932,7 @@ Page({
     var resType = app.data.tmpImgUrl.resType;
     // 0 剪切   1复制  2粘贴
     var Mtype = res.currentTarget.dataset.type;
-    console.log(tempImg)
+    //console.log(tempImg)
     //剪切
     if(Mtype==0){
       if(tempImg.src==undefined){
@@ -1884,7 +1996,7 @@ Page({
         return
       }
       app.data.tmpImgUrl = {'type':'0','src':tempImg.src,'resType':tempImg.type,'imgSrc':tempImg.imgSrc }
-      console.log('复制')
+     // console.log('复制')
     }else{ //粘贴
       if(!imgUrl){
         wx.showToast({
@@ -1980,7 +2092,7 @@ Page({
           app.data.tmpImgUrl = {'type':'','src':'','resType':'','imgSrc':''}
         }
       }
-      console.log('粘贴')
+      //console.log('粘贴')
     }
     that.hideModal();
   } ,
@@ -1988,9 +2100,5 @@ Page({
     this.setData({
       modalName: null
     })
-  }
-
-  // onUnload: function() {
-  //   this.changeParentData();
-  // }
+  },
 })

@@ -183,17 +183,17 @@
 </view>
 
 
-<modal hidden="{{modalHiddenInput1}}" bindconfirm="sub1" bindcancel="cancel1">
+<modal hidden="{{modalHiddenInput1}}" bindconfirm="sub1" bindcancel="cancel1" data-info='{{subinfo1}}'>
   <view class="cu-form-group">
-    <textarea bindinput="text1Input" style="font-size:{{fontSize}}rpx;color: black;"  value="{{imgDescList[imageInputId]}}" placeholder="请输入对图片资源的描述"></textarea>
+    <textarea bindinput="text1Input" bindblur="text1blur" style="font-size:{{fontSize}}rpx;color: black;"  value="{{imgDescList[imageInputId]}}" placeholder="请输入对图片资源的描述"></textarea>
   </view>
 </modal>
-<modal hidden="{{modalHiddenInput2}}" bindconfirm="sub2" bindcancel="cancel2">
+<modal hidden="{{modalHiddenInput2}}" bindconfirm="sub2" bindcancel="cancel2" data-info='{{subinfo2}}'>
   <view class="cu-form-group">
     <textarea bindinput="text2Input" style="font-size:{{fontSize}}rpx;color: black;" value="{{voidDescList[videoInputId]}}"  placeholder="请输入对视频资源的描述"></textarea>
   </view>
 </modal>
-<modal hidden="{{modalHiddenInput3}}" bindconfirm="sub3" bindcancel="cancel3">
+<modal hidden="{{modalHiddenInput3}}" bindconfirm="sub3" bindcancel="cancel3" data-info='{{subinfo3}}'>
   <view class="cu-form-group">
     <textarea bindinput="text3Input" style="font-size:{{fontSize}}rpx;color: black;" value="{{audioDescList[audioInputId]}}"  placeholder="请输入对音频资源的描述"></textarea>
   </view>
@@ -262,6 +262,10 @@
   <text class="cuIcon-title text-{{bgColor}} text-user"></text>
   <view class="title-user" style="font-size:{{fontSize}}rpx">问题处数</view>
   <input placeholder="请输入数字"  disabled="{{disabled}}" style="font-size:{{fontSize28}}rpx" value='{{amountValue}}' type="number" bindinput='textAmountScore'></input>
+  <button class="cu-btn round" bindtap='queNumAdd'>+</button>
+  <button class="cu-btn round" style="margin-left: 30rpx; font-size: 40rpx;" bindtap='queNumCut'>-</button>
+  <!-- <text class="cuIcon-add lg text-gray" bindtap='queNumAdd'></text>
+  <text class="cuIcon-move lg text-gray" style="margin-left: 25rpx;" bindtap='queNumCut'></text> -->
 </view>
 <!-- 打分 -->
 
@@ -280,10 +284,9 @@
 
 </view>
 <view class="radioChange_user">
-  <radio-group bindchange="radioChange" data-id="{{item.id}}">
+  <radio-group id="result" bindchange="radioChange" data-id="{{item.id}}">
     <label class="radio" wx:for="{{items}}" wx:key="index">
       <radio class="{{bgColor}} margin-left-sm" value="{{item.id}}" checked="{{item.id==checkedid? true : false}}"/><text style="font-size:{{fontSize28}}rpx">{{item.content}}</text>
-
     </label>
   </radio-group>
 

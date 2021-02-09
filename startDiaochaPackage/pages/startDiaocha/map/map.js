@@ -35,6 +35,7 @@ Page({
   onLoad: function(options) {
     var that = this;
     var markersList = wx.getStorageSync('markersList');
+    //console.log(markersList)
     var projectId = options.projectId;
     var isGrade = options.isGrade;
     var requestUrl = options.requestUrl;
@@ -227,7 +228,9 @@ Page({
         address: list[i].address,
         pointId: list[i].pointId,
         pointTypeId:list[i].pointTypeId,
-        submitStatus:list[i].submitStatus
+        submitStatus:list[i].submitStatus,
+        isRecord:list[i].isRecord,
+        timeInterval:list[i].timeInterval
       })
     }
     that.setData({
@@ -283,9 +286,12 @@ Page({
     var name = item.title;
     var pointTypeId = item.pointTypeId;
     var firstQuestion = item.submitStatus;
+    var timeInterval = item.timeInterval;
+    var isRecord = item.isRecord;
+    var submitStatus = item.submitStatus;
     // var id = that.data.pointId;
     wx.navigateTo({
-      url: "../point_detail/point_detail?id=" + id + "&name=" + name + "&pointTypeId=" + pointTypeId + "&firstQuestion=" + firstQuestion + "&projectId=" + projectId + "&isGrade=" + isGrade + "&requestUrl=" + requestUrl + "&fontSize=" + fontSize + "&bgColor=" + bgColor
+      url: "../point_detail/point_detail?id=" + id + "&name=" + name + "&pointTypeId=" + pointTypeId + "&firstQuestion=" + firstQuestion + "&projectId=" + projectId + "&isGrade=" + isGrade + "&requestUrl=" + requestUrl + "&fontSize=" + fontSize + "&bgColor=" + bgColor +"&timeInterval="+timeInterval+"&isRecord="+isRecord+"&submitStatus="+submitStatus
     })
   }
 })

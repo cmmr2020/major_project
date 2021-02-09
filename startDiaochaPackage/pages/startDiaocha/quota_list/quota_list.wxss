@@ -587,3 +587,13 @@ margin-left: 20rpx;
 margin-left: 20rpx;
 /*border: 0.02px solid darkgray;*/
 }
+/* 横着的分割View样式 */
+/*分割线样式*/
+.divLine{
+  background: #E0E3DA;
+  width: 100%;
+  height: 5rpx;
+ }
+  .hidenModel{
+   display: none;
+ } 

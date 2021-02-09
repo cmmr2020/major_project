@@ -15,5 +15,5 @@
       <text style="font-size:{{fontSize}}rpx">{{item.name}}</text>
     </view>
   </view>
-  <view><button open-type="contact">客服人员</button></view>
+  <!-- <view><button open-type="contact">客服人员</button></view> -->
   
