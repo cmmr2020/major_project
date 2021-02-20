@@ -45,6 +45,7 @@ Page({
       },
       success: (res) => {
         var arr = [];
+        console.log(res)
         if (res.data.status == 'success') {
           var projectList = res.data.retObj;
           for (var i = 0; i < projectList.length; i++) {

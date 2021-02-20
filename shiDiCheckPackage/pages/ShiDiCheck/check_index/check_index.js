@@ -62,6 +62,7 @@ Page({
     fontSize28:'',
     fontSize20:'',
     bgColor:'',
+    isNull:''
   },
   /**
    * 生命周期函数--监听页面加载
@@ -146,11 +147,13 @@ var bgColor = wx.getStorageSync('bgColor');
         select_all: false, //全选按钮图标判断
         pageCount: '', //总任务数置空
         //每次切换问题，给pagenum重新赋值为1
-        pageNum: 1
+        pageNum: 1,
+        isNull:''
       })
     } else {
       this.setData({
         TabCur: null,
+        isNull:''
       })
     }
     //根据问题Id发请求
@@ -253,6 +256,9 @@ var bgColor = wx.getStorageSync('bgColor');
             })
             console.log("待审核数据：", that.data.tasks)
           } else {
+            that.setData({
+              isNull :'true'
+            })
             wx.showToast({
               title: '该状态下无任务',
               icon: 'none', // "success", "loading", "none"
@@ -313,6 +319,9 @@ var bgColor = wx.getStorageSync('bgColor');
             })
             console.log("未整改、整改合格数据：", that.data.tasks)
           } else {
+            that.setData({
+              isNull :'true'
+            })
             wx.showToast({
               title: '该状态下无任务',
               icon: 'none', // "success", "loading", "none"
@@ -321,6 +330,9 @@ var bgColor = wx.getStorageSync('bgColor');
             })
           }
         } else {
+          that.setData({
+            isNull :'true'
+          })
           wx.showToast({
             title: '获取任务失败',
             icon: 'none', // "success", "loading", "none"
@@ -371,6 +383,9 @@ var bgColor = wx.getStorageSync('bgColor');
             })
             console.log("权属异议数据：", that.data.tasks)
           } else {
+            that.setData({
+              isNull :'true'
+            })
             wx.showToast({
               title: '该状态下无任务',
               icon: 'none', // "success", "loading", "none"

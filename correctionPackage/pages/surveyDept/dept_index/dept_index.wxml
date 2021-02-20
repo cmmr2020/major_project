@@ -2,7 +2,7 @@
 <swiper class='swiperClass' autoplay indicator-color="#a39f99" indicator-active-color="#f49641" interval="4000" duration="1000" previous-margin="80rpx" next-margin="80rpx" circular bindchange="bindchange" style='height: {{swiperHeight}}rpx'>
   <block wx:for="{{swiperList}}" wx:key="index">
     <swiper-item>
-      <image bindtap='toswiper' src="{{item.imageUrl}}" class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}" mode='aspectFill'></image>
+      <image bindtap='toswiper' src="{{item.imageUrl}}"  class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}" mode='aspectFill'></image>
     </swiper-item>
   </block>
 </swiper>
@@ -19,7 +19,7 @@
   <view class="cu-card article">
     <navigator wx:if="{{TabCur==9}}" wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_detail/dept_task_detail?id={{item.id}}&projectId={{item.projectId}}'>
       <view class="content">
-        <image src="{{item.url==''? '/images/null.png' : item.url}}" mode="aspectFill"></image>
+        <image src="{{item.url==''? '../../../../images/null.png' : item.url}}"  mode="aspectFill"></image>
         <view class="desc">
           <view class="text-bold text-content1 box" style="font-size:{{fontSize30}}rpx">{{item.questionContent}}</view>
           <view class='text-content text-cut box' style="font-size:{{fontSize}}rpx">{{item.address}}</view>
@@ -44,9 +44,9 @@
     </navigator>
   </view>
   <view class="cu-card article">
-    <navigator wx:if="{{TabCur==3 || TabCur==0}}" wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_Already/dept_task_Already?id={{item.id}}&projectId={{item.projectId}}'>
+    <navigator open-type="redirect" wx:if="{{TabCur==3 || TabCur==0}}" wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_Already/dept_task_Already?id={{item.id}}&projectId={{item.projectId}}'>
       <view class="content">
-        <image src="{{item.url==''? '/images/null.png' : item.url}}" mode="aspectFill"></image>
+        <image src="{{item.url==''? '../../../../images/null.png' : item.url}}" mode="aspectFill"></image>
         <view class="desc">
           <view class="text-bold text-content1 box" style="font-size:{{fontSize30}}rpx">{{item.questionContent}}</view>
           <view class='text-content text-cut box' style="font-size:{{fontSize28}}rpx">{{item.address}}</view>
@@ -61,5 +61,5 @@
 
 </view>
 <view class="imagesize {{isNull=='true'?'show':'hide'}}">
-  <image src='../../../images/null.png' mode='scaleToFill' style='height:100%;width:100%'></image>
+  <image src='../../../../images/null.png' mode='scaleToFill' style='height:100%;width:100%'></image>
 </view>

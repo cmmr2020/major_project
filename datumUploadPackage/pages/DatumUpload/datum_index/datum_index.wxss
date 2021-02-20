@@ -4,7 +4,21 @@ page {
   width: 100vw;
   overflow: hidden;
 }
-
+.imagesize{
+  display:flex;
+  height: 950rpx;              
+  justify-content: center;
+  align-items:center;
+ }
+ .imagesize image { 
+   width:100%;
+   }
+.hide{
+  display: none
+}
+.show{
+  display: block
+}
 .DrawerPage {
   position: fixed;
   width: 100vw;

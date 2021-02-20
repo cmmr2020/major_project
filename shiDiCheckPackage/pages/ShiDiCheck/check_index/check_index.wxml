@@ -188,5 +188,9 @@
         </view> -->
       </view>
     </view>
+ 
   </view>
 </view>
+<view class="imagesize {{isNull=='true'?'show':'hide'}}">
+  <image src='../../../../images/null.png' mode='scaleToFill' style='height:100%;width:100%'></image>
+</view> 

@@ -1014,7 +1014,6 @@ Page({
   //提交按钮
   submit: async function() {
     var that = this;
-
     //举报图片集合
     var reportImg = that.data.imgList;
     //举报视频集合
@@ -1046,7 +1045,10 @@ Page({
     }
 
 
-
+    wx.showLoading({
+      title: '提交中',
+      mask:true
+    })
     for (var index = 0; index < reportImg.length; index++) {
       //举报图片
       await that.uploadImage(reportImg[index]).then((res) => {
@@ -1075,15 +1077,21 @@ Page({
 
     console.log("本地总资源:", length)
     // 资源全部上传成功 上传答案
+    wx.hideLoading()
     if (length == rsLength) {
-      wx.showToast({
-        title: '资源上传中',
-        icon: 'none',
-        duration: 1000,
-        mask: true
-      })
+      wx.showLoading({
+              title: '资源上传中',
+              mask:true
+            })
+      // wx.showToast({
+      //   title: '资源上传中',
+      //   icon: 'none',
+      //   duration: 1000,
+      //   mask: true
+      // })
       console.log("全部上传成功了")
       that.uploadAnswerTrue();
+      wx.hideLoading()
     } else { //有资源上传失败
       wx.showToast({
         title: '有资源上传失败',
@@ -1355,8 +1363,9 @@ Page({
       },
       success: (res) => {
         if (res.data.status == 'success') {
-          router.navigateTo({
-            url: "../dept_index/dept_index?projectId=" + projectId
+          router.navigateBack({
+            delta:1
+            //url: "../dept_index/dept_index?projectId=" + projectId
           })
           // wx.navigateTo({
           //   url: "../dept_index/dept_index?projectId=" + projectId

@@ -25,6 +25,7 @@ Page({
     fontSize28:'',
     fontSize30:'',
     bgColor:'',
+    isNull:''
   },
 
   /**
@@ -105,6 +106,9 @@ Page({
 
           that.goTaskDetail(id);
            }else{
+               that.setData({
+                isNull:'true'
+               })
                wx.showToast({
                   title: '该项目下无数据',
                   icon: 'none', // "success", "loading", "none"

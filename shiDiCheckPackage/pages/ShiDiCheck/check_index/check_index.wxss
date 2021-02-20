@@ -21,6 +21,15 @@
   width: 44rpx;
   height: 44rpx;
 }
+.imagesize{
+  display:flex;
+  height: 950rpx;              
+  justify-content: center;
+  align-items:center;
+ }
+ .imagesize image { 
+   width:100%;
+   }
 .header .header_con .right{
   color: #ff4965;
 }
@@ -191,4 +200,10 @@ display:-webkit-box;
 -webkit-line-clamp: 1;
 -webkit-box-orient: vertical;
 text-align: left;
+}
+.hide{
+  display: none
+}
+.show{
+  display: block
 }

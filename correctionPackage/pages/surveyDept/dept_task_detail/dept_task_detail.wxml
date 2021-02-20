@@ -63,7 +63,7 @@
       </view>
       <!-- 静态图 -->
       <view class="content shadow">
-        <image class="image-audio-user" src="../../../images/yuyin-ico.png" mode="scaleToFill"></image>
+        <image class="image-audio-user" src="../../../../images/yuyin-ico.png" mode="scaleToFill"></image>
       </view>
 
     </view>
@@ -153,7 +153,7 @@
       </view>
       <!-- 静态图 -->
       <view class="content shadow">
-        <image class="image-audio-user" src="../../../images/yuyin-ico.png" mode="scaleToFill"></image>
+        <image class="image-audio-user" src="../../../../images/yuyin-ico.png" mode="scaleToFill"></image>
       </view>
 
     </view>
@@ -280,7 +280,7 @@
 
 <modal title="{{remainTimeText}}" hidden="{{modalHidden}}" bindconfirm="stopRecord" bindcancel="modalCandel">
   <view>
-    <image class="image-audio" src="../../../images/audio.gif" mode='aspectFill'></image>
+    <image class="image-audio" src="../../../../images/audio.gif" mode='aspectFill'></image>
   </view>
 </modal>
 
