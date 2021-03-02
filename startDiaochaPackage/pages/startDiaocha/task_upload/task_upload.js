@@ -776,7 +776,11 @@ Page({
       })
     return;
   }
+ 
   if(AmountValue!==""){
+    if(typeof(AmountValue)!=='number'){
+      AmountValue = parseInt(AmountValue)
+    } 
     setValue=AmountValue+1;
   }
   that.setData({

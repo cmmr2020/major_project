@@ -390,7 +390,7 @@ Page({
           'projectId': projectId
         },
         success(res) {
-          // console.log("后台返回的规范文件res：", res)
+           console.log("后台返回的规范文件res：", res)
           var map = JSON.parse(res.data);
           if (map.url != null && map.url != '') {
             resolve(res.data)
