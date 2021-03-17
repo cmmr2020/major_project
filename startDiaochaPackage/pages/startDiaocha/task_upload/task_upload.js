@@ -1507,7 +1507,7 @@ Page({
             // console.log("找到问题了：",i,"000:",imgDescList)
             if (imgDescList.length > i) {
               var desc = imgDescList[i];
-              var desc1 = desc.substring(0, desc.length - 1);
+              var desc1 = desc.substring(0, desc.length);
             } else {
               var desc1 = '';
             }
@@ -1611,7 +1611,7 @@ Page({
             // 操作成功
             if (voidDescList.length > j) {
               var desc = voidDescList[j];
-              var desc1 = desc.substring(0, desc.length - 1);
+              var desc1 = desc.substring(0, desc.length);
             } else {
               var desc1 = '';
             }
@@ -1704,7 +1704,7 @@ Page({
 
             if (audioDescList.length > k) {
               var desc = audioDescList[k];
-              var desc1 = desc.substring(0, desc.length - 1);
+              var desc1 = desc.substring(0, desc.length);
             } else {
               var desc1 = '';
             }

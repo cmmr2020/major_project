@@ -240,6 +240,15 @@ Page({
           var quotaList = res.data.retObj;
           var pointTypeId = that.data.pointTypeId
           // console.log("指标分类userid：",userIndex)
+          if(typeof(quotaList) == "undefined"){
+            that.setData({
+              list: [],
+              quotaName: [],
+              listData: [],
+              tips: []
+            })
+            return;
+          }
           if(userIndex===0){
               let arr = [];
               let ayy = [];
@@ -303,6 +312,7 @@ Page({
     var projectId = that.data.projectId;
     var pointId = that.data.pointId;
     var requestUrl = that.data.requestUrl; //服务器路径
+    var pointTypeId = that.data.pointTypeId;
     wx.request({
       // 必需
       url: requestUrl + '/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuotaId',
@@ -540,6 +550,15 @@ Page({
             var quotaList = res.data.retObj;
             let arr = [];
             let ayy = [];
+            if(typeof(quotaList) == "undefined"){
+              that.setData({
+                list: [],
+                quotaName: [],
+                listData: [],
+                tips: []
+              })
+              return;
+            }
             for (let i = 0; i < quotaList.length; i++) {
               if (i === 0) {
                 arr.push(quotaList[i].id),
