@@ -1,0 +1,58 @@
+<!-- <view class="cu-bar bg-white solid-bottom margin-top">
+  <view class="action" style="width: 100%">
+    <text>{{projectName}}</text>
+  </view>
+</view> -->
+ <view class="grid col-2 padding-sm">
+  <view class="padding-sm" >
+    <view class="bg-gradual-blue padding radius text-center shadow-blur" style="height: 100%;">
+      <view class="margin-top-sm text-Abc" style="font-size:35rpx">测评点位数</view>
+      <view class="text-lg" style="margin-block-start: 15px;"></view>   
+      <view class="text-lg" style="margin-block-start: 15px;font-size:40rpx">633</view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc"></view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc"></view>
+        </view>
+      </view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc"></view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc"></view>
+        </view>
+      </view> 
+    </view>
+  </view>
+  <view class="padding-sm">
+    <view class="bg-gradual-blue padding radius text-center shadow-blur">
+      <view class="margin-top-sm text-Abc"  style="font-size:35rpx">测评指标合格率</view>
+      <view class="text-lg" style="margin-block-start: 15px;"></view>   
+      <view class="text-lg" style="margin-block-start: 15px;font-size:35rpx">88.28%</view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc">合格数</view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc">测评数</view>
+        </view>
+      </view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc">23647</view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc">26786</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="container1">
+  <ec-canvas id="mychart-dom-multi-bar" canvas-id="mychart-multi-bar" ec-canvas force-use-old-canvas="true" ec="{{ ecBar }}"></ec-canvas>
+  <ec-canvas id="mychart-dom-multi-scatter" canvas-id="mychart-multi-scatter" ec="{{ ecScatter }}"></ec-canvas>
+  </view>

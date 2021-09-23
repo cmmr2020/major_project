@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "ec-canvas": "../../../../ec-canvas/ec-canvas"
+  },
+  "navigationBarTitleText":"研发项目实地测评数据分析"
+}

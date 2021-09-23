@@ -98,7 +98,7 @@ Page({
       mask: true
     })
     // var requestUrl = that.data.requestUrl; //服务器路径
-    console.log("requestUrl:",requestUrl);
+    //console.log("requestUrl:",requestUrl);
     wx.request({
       // 必需
       url: requestUrl + '/wechat/api/fieldLocation/getFieldPointLocationList',
@@ -112,7 +112,7 @@ Page({
         'Content-Type': 'application/json'
       },
       success: (res) => {
-        console.log("出来：",res)
+        //console.log("出来：",res)
         wx.hideLoading();
         if (res.data.status ==="success") {
           var mapList = res.data.retObj;
@@ -236,6 +236,8 @@ Page({
   showModal:function(e){
     var that = this;
     let locationId = e.currentTarget.dataset.index;
+    let checkstatus =e.currentTarget.dataset.checkstatus
+    console.log(checkstatus)
       wx.showModal({
       title: '提示',
       content: '确定提交该点位下的资源吗？',
@@ -243,7 +245,7 @@ Page({
       success (res) {
         if (res.confirm) {
           // console.log('用户点击缺认')
-          that.submit(locationId);
+          that.submit(locationId,checkstatus);
         } else if (res.cancel) {
           console.log('用户点击取消')
         }
@@ -252,19 +254,23 @@ Page({
     },
 
 
-  submit: function(locationId) {
+  submit: function(locationId,checkstatus) {
     var that = this;
     // let locationId = e.currentTarget.dataset.index;
     var surveyorId = that.data.surveyorId;
     var projectId = that.data.projectId;
     var requestUrl = that.data.requestUrl; //服务器路径
+    let status = 2;
+    if(checkstatus=='4'){
+      status = 5;
+    }
     wx.request({
       // 必需
       url: requestUrl + '/wechat/api/fieldLocation/updateCheckStatus',
       data: {
         surveyorId: surveyorId,
         locationId: locationId,
-        status: '2'
+        status: status
       },
       header: {
         'Content-Type': 'application/json'

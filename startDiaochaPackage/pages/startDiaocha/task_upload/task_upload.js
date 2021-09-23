@@ -104,6 +104,7 @@ Page({
     subinfo1:'',
     subinfo2:'',
     subinfo3:'',
+    isPhoto:'',
   },
 
   onLoad: function(options) {
@@ -131,9 +132,10 @@ Page({
         fontSize30:parseInt(data.fontSize)-2,
         bgColorUi:data.bgColorUi,
         requestUrl:data.requestUrl,
-        pageType:data.pageType
+        pageType:data.pageType,
+        isPhoto:app.data.isPhoto
       })
-
+      console.log(app.data.isPhoto)
         if (data.isGrade == 0) {
         that.setData({
           isGrade: false
@@ -898,7 +900,6 @@ Page({
       modalHiddenInput1: false,
       subinfo1:that.data.imgDescList[id]
     })
-
   },
   startInput2: function(e) {
     var that = this;
@@ -1332,8 +1333,9 @@ Page({
       })
     }
     var isHeGe = that.data.isHeGe;
+
     if (audioSrc.length === 0) {
-      if ((reportImg.length + reportVideo.length) < 1) {
+      if (((reportImg.length + reportVideo.length) < 1 && that.data.isPhoto ==1) ||((reportImg.length + reportVideo.length) < 1&&isHeGe==1)) {
         wx.showToast({
           title: '请拍摄举报图片/视频',
           icon: 'none',
@@ -1903,10 +1905,13 @@ Page({
     var type = res.currentTarget.dataset.type;
     var index = res.currentTarget.dataset.index;
     var that = this;
+    // 0 未调查页面   1已调查页面
     var pageType = that.data.pageType;
-    if(pageType =='1'){
-       return;
-    }
+    //console.log(pageType)
+    //2021/6/18 应调查部需求,开放已调查页面的 资源复制 移动功能
+    // if(pageType =='1'){
+    //    return;
+    // }
     if(type==2){
       this.setData({
         modalName: 'DialogModal2',

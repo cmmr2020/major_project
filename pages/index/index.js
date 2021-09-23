@@ -53,7 +53,7 @@ onShareAppMessage: function (res) {
             },
             success(res) {
               if (res.data.status == 'success') {
-                // console.log("获取的用户信息：", res.data.retObj)
+                 console.log("获取的用户信息：", res.data.retObj)
                 app.openid = res.data.retObj.openId;
                 // console.log("这是初始化appid：", app.openid)
                 // app.existence = res.data.retObj.existence;

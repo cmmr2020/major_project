@@ -66,6 +66,7 @@ Page({
               isCheck: projectList[i].isCheck,
               isConsistent: projectList[i].isConsistent,
               isGrade: projectList[i].isGrade,
+              isPhoto: projectList[i].isPhoto,
               latitude: projectList[i].latitude,
               longitude: projectList[i].longitude,
               name: projectList[i].name,
@@ -101,11 +102,13 @@ Page({
   },
   //点击
     go:function(e){
+      //console.log(e)
     var that = this;
     var projectId = e.currentTarget.dataset.id;
     var terminalUserId = that.data.terminalUserId; 
     var isGrade = e.currentTarget.dataset.isgrade;
-    // console.log("项目id",projectId)
+    app.data.isPhoto = e.currentTarget.dataset.isphoto;
+     //console.log(app.data.isPhoto)
     that.validTime(projectId,terminalUserId,isGrade);
   },
 
