@@ -1,4 +1,4 @@
-import * as echarts from '../../../../ec-canvas/echarts';
+import * as echarts from '../../../ec-canvas/echarts';
 // 引入跳转js
 import router from '../../../../utils/router.js';
 const app = getApp();

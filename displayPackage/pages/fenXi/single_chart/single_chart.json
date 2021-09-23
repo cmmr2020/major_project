@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "ec-canvas": "../../../ec-canvas/ec-canvas"
+  },
+  "backgroundColor":"#100C2A",
+  "navigationBarTitleText":"研发项目实地测评数据分析",
+  "pageOrientation":"landscape",
+  "disableScroll":true
+}

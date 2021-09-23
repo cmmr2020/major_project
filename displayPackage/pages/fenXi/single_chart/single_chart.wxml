@@ -1,0 +1,14 @@
+<view class="container2">
+    <view wx:if="{{show_bar_index==1}}">
+      <ec-canvas id="mychart-dom-multi-bar1"  canvas-id="mychart-multi-bar" ec-canvas force-use-old-canvas="true" ec="{{ ecBar1 }}"></ec-canvas>
+    </view>
+    <view wx:elif="{{show_bar_index==2}}">
+      <ec-canvas id="mychart-dom-multi-bar2" canvas-id="mychart-multi-bar2" ec-canvas force-use-old-canvas="true" ec="{{ ecBar2 }}"></ec-canvas>
+    </view>
+    <view wx:if="{{show_bar_index==3}}">
+      <ec-canvas id="mychart-dom-multi-bar3" canvas-id="mychart-multi-bar3" ec-canvas force-use-old-canvas="true" ec="{{ ecBar3 }}"></ec-canvas>
+    </view>
+    <view wx:elif="{{show_bar_index==4}}">
+      <ec-canvas id="mychart-dom-multi-bar4" canvas-id="mychart-multi-bar4" ec-canvas force-use-old-canvas="true" ec="{{ ecBar4 }}"></ec-canvas>
+    </view>
+</view>

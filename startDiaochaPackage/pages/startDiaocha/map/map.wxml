@@ -1,6 +1,6 @@
 
 <view class="container">
-  <map id="maps" latitude="{{lat}}" longitude="{{lng}}" markers="{{covers}}" bindmarkertap="marker" scale="11"></map>
+  <map id="maps" layer-style="1" latitude="{{lat}}" longitude="{{lng}}" markers="{{covers}}" bindmarkertap="marker" scale="11"></map>
   <cover-view class="footer-box">
     <cover-view class="result-box">
       <cover-view class="info list-item">

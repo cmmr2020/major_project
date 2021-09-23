@@ -168,12 +168,9 @@ Page({
           url: "../../correctionPackage/pages/surveyDept/dept_project/dept_project"
         })
         break;
-      case "实时监控":
-        wx.showToast({
-          title: '待开发',
-          icon: 'loading',
-          duration: 1000,
-          mask: true
+      case "地图展示":
+        router.navigateTo({
+          url:"../../displayPackage/pages/fenXi/projectList/projectList?type=1"
         })
         break;
       case "统计排名":
@@ -203,7 +200,7 @@ Page({
         break;
       case "数据分析":
        router.navigateTo({
-         url: "../../displayPackage/pages/fenXi/projectList/projectList"
+         url: "../../displayPackage/pages/fenXi/projectList/projectList?type=0"
          // url: "../fenXi/index/index"
         })
         break;

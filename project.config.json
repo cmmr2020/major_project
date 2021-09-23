@@ -29,7 +29,7 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "bundle": false,
+    "bundle": true,
     "useIsolateContext": true,
     "useCompilerModule": true,
     "userConfirmedUseCompilerModuleSwitch": false,
@@ -39,7 +39,7 @@
     "minifyWXSS": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.11.2",
+  "libVersion": "2.19.3",
   "appid": "wxdbe935e1d22c40e0",
   "projectname": "cmmr",
   "debugOptions": {

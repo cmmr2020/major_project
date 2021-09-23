@@ -1,10 +1,13 @@
 const app = getApp();
+var type = ''; //请求项目列表类型  0大屏  1地图
 Page({
 
   data: {
     requestUrl: '', //服务器路径
     colorList: ['green', 'blue', 'cyan', 'olive', 'orange', 'red', 'brown', 'pink', 'mauve', 'purple'],
     elements: [],
+    govId:'',
+    projectType:0
   },
 
 
@@ -12,9 +15,12 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (option) {
+    console.log(option)
+    type = option.type;
     var requestUrl = app.globalData.requestUrl; //服务器路径
     this.setData({
-      requestUrl: requestUrl
+      requestUrl: requestUrl,
+      projectType:type
     })
     var that = this;
     var terminalUserId = app.terminalUserId;
@@ -29,10 +35,11 @@ Page({
     var colorList = that.data.colorList;
     wx.request({
       // 必需
-      url: requestUrl + '/mobile/fieldTask/getFieldProjectListByUser',
+      url: requestUrl + '/mobile/fieldTask/getFieldProjectListForMapOrDisplayByUser',
       // url: 'http://192.168.15.71:8083/wechat/api/fieldProject/getListByTerminalUserId',
       data: {
-        terminalUserId: terminalUserId
+        terminalUserId: terminalUserId,
+        type: type
       },
       header: {
         'Content-Type': 'application/json'
@@ -41,7 +48,10 @@ Page({
         var arr = [];
         if (res.data.status == 'success') {
           var projectList = res.data.retObj;
-          console.log("项目列表：",projectList)
+          that.setData({
+            govId:res.data.message
+          })
+          console.log(projectList)
           for (var i = 0; i < projectList.length; i++) {
             var color = colorList[i];
             arr.push({
@@ -68,7 +78,7 @@ Page({
           })
         } else {
           wx.showToast({
-            title: res.data.message,
+            title: '暂无数据',
             icon: 'none',
             duration: 1000,
             mask: true

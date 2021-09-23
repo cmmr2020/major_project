@@ -3,12 +3,13 @@
     <text>{{projectName}}</text>
   </view>
 </view> -->
- <view class="grid col-2 padding-sm">
-  <view class="padding-sm" >
+<!--统计展示-->
+ <view class="grid col-2 padding-sm ">
+  <view class="padding-sm  {{isLoadStatistics==true?'show':'hide'}}" >
     <view class="bg-gradual-blue padding radius text-center shadow-blur" style="height: 100%;">
-      <view class="margin-top-sm text-Abc" style="font-size:35rpx">测评点位数</view>
+      <view class="margin-top-sm text-Abc my-text-style">测评点位数</view>
       <view class="text-lg" style="margin-block-start: 15px;"></view>   
-      <view class="text-lg" style="margin-block-start: 15px;font-size:40rpx">633</view>
+      <view  style="margin-block-start: 15px;font-size: 50rpx;font-weight: bolder;">{{point_total}}</view>
       <view style="width:100%;">
         <view style="width:50%;display:inline-block">
           <view class="margin-top-sm text-Abc"></view>
@@ -27,32 +28,77 @@
       </view> 
     </view>
   </view>
-  <view class="padding-sm">
+  <view class="padding-sm  {{isLoadStatistics==true?'show':'hide'}}">
     <view class="bg-gradual-blue padding radius text-center shadow-blur">
-      <view class="margin-top-sm text-Abc"  style="font-size:35rpx">测评指标合格率</view>
+      <view class="margin-top-sm text-Abc my-text-style">测评指标合格率</view>
       <view class="text-lg" style="margin-block-start: 15px;"></view>   
-      <view class="text-lg" style="margin-block-start: 15px;font-size:35rpx">88.28%</view>
+        <view class="my-num-style" style="margin-block-start: 15px;">{{quota_rate_num}}</view>
       <view style="width:100%;">
         <view style="width:50%;display:inline-block">
-          <view class="margin-top-sm text-Abc">合格数</view>
+          <view class="margin-top-sm text-Abc my-text-style">合格数</view>
         </view>
         <view style="width:50%;;display:inline-block">
-          <view class="margin-top-sm text-Abc">测评数</view>
+          <view class="margin-top-sm text-Abc my-text-style">测评数</view>
         </view>
       </view>
       <view style="width:100%;">
         <view style="width:50%;display:inline-block">
-          <view class="margin-top-sm text-Abc">23647</view>
+          <view class="margin-top-sm text-Abc my-num-style">{{quota_ok_num}}</view>
         </view>
         <view style="width:50%;;display:inline-block">
-          <view class="margin-top-sm text-Abc">26786</view>
+          <view class="margin-top-sm text-Abc my-num-style">{{quota_total}}</view>
         </view>
       </view>
     </view>
   </view>
 </view>
-
+<!--图表-->
 <view class="container1">
-  <ec-canvas id="mychart-dom-multi-bar" canvas-id="mychart-multi-bar" ec-canvas force-use-old-canvas="true" ec="{{ ecBar }}"></ec-canvas>
-  <ec-canvas id="mychart-dom-multi-scatter" canvas-id="mychart-multi-scatter" ec="{{ ecScatter }}"></ec-canvas>
+  <view class="{{IsShowInfo==true?'hide':'show'}}">
+    <ec-canvas id="mychart-dom-multi-bar"  canvas-id="mychart-multi-bar" ec-canvas force-use-old-canvas="true" ec="{{ ecBar1 }}"></ec-canvas>
+    <ec-canvas id="mychart-dom-multi-bar2" canvas-id="mychart-multi-bar2" ec-canvas force-use-old-canvas="true" ec="{{ ecBar2 }}"></ec-canvas>
+    <ec-canvas id="mychart-dom-multi-bar3" canvas-id="mychart-multi-bar3" ec-canvas force-use-old-canvas="true" ec="{{ ecBar3 }}"></ec-canvas>
+    <ec-canvas id="mychart-dom-multi-bar4" canvas-id="mychart-multi-bar4" ec-canvas force-use-old-canvas="true" ec="{{ ecBar4 }}"></ec-canvas>
+    <ec-canvas id="mychart-dom-multi-bar5" canvas-id="mychart-multi-bar5" ec-canvas force-use-old-canvas="true" ec="{{ ecBar5 }}"></ec-canvas>
   </view>
+</view>
+  <view id="mychart-dom-multi-bar6" class="{{isLoadImg==true?'show':'hide'}}">
+  <view class="cu-bar">
+    <view class="action" style="width:100%">
+     <text style="font-size:40rpx;font-family:ui-monospace;font-weight:bold;color:whit;">实时上报问题图片</text>
+    </view>
+  </view>
+ <!-- 图片详情 -->
+ <view class="cu-modal {{IsShowInfo==true?'show':'hide'}}">
+  <view class="cu-dialog">
+    <view class="bg-img" style="background-image: url('{{imgInfoUrl}}');height:400px;">
+      <view class="cu-bar justify-end text-white">
+        <view class="action" bindtap="hideModal">
+          <text class="cuIcon-close " style="color:#0075c1;font-size: 50rpx;font-weight: bold;z-index: 999999;"></text>
+        </view>
+      </view>
+    </view>
+    <view class="padding bg-white" style="color: #ffeb7b;font-size: 30rpx;line-height: 1.5;background-color: #100C2A;">
+      <view class="text-left padding">问题：{{imgInfoDesc}}</view>
+      <view class="text-left padding">点位：{{imgInfoLocation}}</view>
+      <view class="text-left padding">定位：{{imgInfoAddr}}</view>
+      <view class="padding flex flex-direction">
+       <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white" role="button" aria-disabled="false" bindtap="hideModal">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+  <!-- 轮播 -->
+  <swiper class="card-swiper {{DotStyle?'square-dot':'round-dot'}}" indicator-dots="true" circular="true" autoplay="true" interval="5000" duration="500" bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
+  <swiper-item wx:for="{{swiperList}}" wx:key class="{{cardCur==index?'cur':''}}">
+    <view class="swiper-item"  bindtap="toswiper" data-location="{{item.location}}" data-addr="{{item.addr}}" data-desc="{{item.desc}}" data-src="{{item.url}}">
+      <image src="{{item.url}}" mode="aspectFill" wx:if="{{item.type=='image'}}" ></image>
+      <!-- <video src="{{item.url}}" autoplay loop muted show-play-btn="{{false}}" controls="{{false}}" objectFit="cover" wx:if="{{item.type=='video'}}"></video> -->
+    </view>
+  </swiper-item>
+</swiper>
+<view class="cu-bar margin-top">
+</view>
+</view>
+

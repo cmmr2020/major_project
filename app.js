@@ -98,7 +98,7 @@ App({
       },
     ],
     userInfo: null,
-     requestUrl: 'https://wxp.diaochaonline.com'//35
+    requestUrl: 'https://wxp.diaochaonline.com'//35
    // requestUrl: 'https://wmccpr.diaochaonline.com'//线上
    //requestUrl:'https://cmmrpr.diaochaonline.com'//13o
       //requestUrl:'http://221.216.95.200:8286'//35

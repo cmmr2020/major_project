@@ -154,6 +154,19 @@
         {
           "name": "displayPackage/pages/fenXi/test/test",
           "pathName": "displayPackage/pages/fenXi/test/test",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "displayPackage/pages/fenXi/map/map",
+          "pathName": "displayPackage/pages/fenXi/map/map",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "displayPackage/pages/fenXi/single_chart/single_chart",
+          "pathName": "displayPackage/pages/fenXi/single_chart/single_chart",
+          "query": "",
           "scene": null
         }
       ]

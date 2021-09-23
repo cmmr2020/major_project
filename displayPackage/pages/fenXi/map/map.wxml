@@ -1,0 +1,68 @@
+<view class="page-body">
+  <view class="grid col-3 padding-sm ">
+    <view class="padding-sm {{isLoadStatistics==true?'show':'hide'}}">
+      <view class="bg-gradual-blue padding radius text-center shadow-blur">
+        <view class="text-lg" style="font-size: 25rpx;">测评指标数</view>
+          <view class="margin-top-sm text-Abc my-num-style">{{quota_total}}</view>
+      </view>
+    </view>
+    <view class="padding-sm {{isLoadStatistics==true?'show':'hide'}}">
+      <view class="bg-gradual-blue padding radius text-center shadow-blur">
+        <view class="text-lg" style="font-size: 25rpx;">合格数</view>
+        <view class="margin-top-sm text-Abc my-num-style">{{quota_ok_num}}</view>
+      </view>
+    </view>
+    <view class="padding-sm {{isLoadStatistics==true?'show':'hide'}}">
+      <view class="bg-gradual-blue padding radius text-center shadow-blur">
+        <view class="text-lg" style="font-size: 25rpx;">不合格数</view>
+        <view class="margin-top-sm text-Abc my-num-style">{{quota_not_ok_num}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="page-section page-section-gap">
+    <map id="myMap" subkey="FJVBZ-T7YE5-3WCIN-QTA3Y-OMDO7-GBBKW" style="width: 100%; height: 100%;"
+      latitude="{{latitude}}" longitude="{{longitude}}" bindtap="simtap"  bindmarkertap="markertap"   markers="{{markers}}"  scale="12"
+      min-scale="5" max-scale="20" layer-style="1" enable-building="true" enable-poi="false">
+    </map>
+  </view>
+
+  <!-- 附近点位测评数据弹出层 -->
+  <view class="cu-modal {{showLocationInfo==true?'show':'hide'}}">
+    <view class="cu-dialog">
+      <view class="cu-bar bg-white justify-end" style="background-color: rgb(9,139,175);color: rgb(247,255,175);">
+        <view class="content">{{model_title}}</view>
+        <view class="action" bindtap="closeModel">
+          <text class="cuIcon-close text-red"></text>
+        </view>
+      </view>
+      <view class="cu-list grid col-3" 
+        style="background-color: #062234;margin-top: 0; border: 1px solid #f1dede;">
+        <view class="cu-item" style="border-right: 1px solid #f1dede;">
+          <text style="color:#F7FFAF; font-size: 30rpx;">具体点位名称</text>
+        </view>
+        <view class="cu-item" style="border-right: 1px solid #f1dede;">
+          <text style="color:#F7FFAF; font-size: 30rpx;">点位类型名称</text>
+        </view>
+        <view class="cu-item">
+          <text style="color:#F7FFAF; font-size: 30rpx;">不合格指标数</text>
+        </view>
+      </view>
+      <view class="cu-list grid col-3" wx:for="{{location_info_list}}" wx:key
+        style="background-color: #062234;margin-top: 0; border: 1px solid #f1dede;">
+        <view class="cu-item" style="border-right: 1px solid #f1dede;">
+          <text style="color:#F7FFAF; font-size: 30rpx;">{{item.locationName}}</text>
+        </view>
+        <view class="cu-item" style="border-right: 1px solid #f1dede;">
+          <text style="color:#F7FFAF; font-size: 30rpx;">{{item.pointName}}</text>
+        </view>
+        <view class="cu-item">
+          <text style="color:#F7FFAF; font-size: 30rpx;">{{item.okNum}}</text>
+        </view>
+      </view>
+      <view class="flex flex-direction" style="z-index: 2;position: relative">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white" role="button"
+        aria-disabled="false" bindtap="closeModel">关闭</button>
+    </view>
+    </view>
+  </view>
+</view>
