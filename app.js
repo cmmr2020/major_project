@@ -7,7 +7,8 @@ App({
     timeInterval : '120000', //记录行走经纬度时时间间隔 单位毫秒, 2分钟
     locationIsHaveAnswer:{},//记录点位是否已上传答案  [{locationId:submitStatus}]  //点位测评状态  0 未上传  1上传中  2测评完毕  待提交
     locationUpdateFlag:false,
-    isPhoto:1 //当前项目达标指标是否必须拍照 0否  1是   默认 1
+    isPhoto:1, //当前项目达标指标是否必须拍照 0否  1是   默认 1
+    isStars:0 //当前政府是否开启地图星级模式 0否  1是   默认 0
   },
   onLaunch: function() {
     // 展示本地存储能力

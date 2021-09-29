@@ -60,6 +60,7 @@ onShareAppMessage: function (res) {
                 // // console.log("是否有菜单",app.existence)
                 // // 调查员id
                 app.terminalUserId = res.data.retObj.terminalUserId;
+                app.data.isStars = res.data.retObj.government.stars;
                 // console.log("调查员Id", app.terminalUserId)
                 // console.log("菜单", res.data.retObj.qxMenus)
                 // 跳转菜单页

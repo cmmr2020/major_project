@@ -3,5 +3,6 @@
     "ec-canvas": "../../../ec-canvas/ec-canvas"
   },
   "backgroundColor":"#100C2A",
-  "disableScroll":true
+  "disableScroll":true,
+  "component":true
 }

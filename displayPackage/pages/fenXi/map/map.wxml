@@ -18,16 +18,31 @@
         <view class="margin-top-sm text-Abc my-num-style">{{quota_not_ok_num}}</view>
       </view>
     </view>
+    <view class="mytxt {{map_Type===2?'show':'hide'}}"  style="width: 100%;">
+      <text style="width: 100%;"> 全部点位数：{{locationNum}}</text>
+      <view style="width: 100%;">说明：<image src="../../../../images/R.png"></image>:95-100(包含95)<image src="../../../../images/P.png"></image>:90-95(包含90)<image src="../../../../images/Y.png"></image>:80-90(包含80)<image src="../../../../images/G.png"></image>:75-80(包含75)<image src="../../../../images/B.png"></image>:75以下
+      </view>
+    </view>
   </view>
   <view class="page-section page-section-gap">
-    <map id="myMap" subkey="FJVBZ-T7YE5-3WCIN-QTA3Y-OMDO7-GBBKW" style="width: 100%; height: 100%;"
-      latitude="{{latitude}}" longitude="{{longitude}}" bindtap="simtap"  bindmarkertap="markertap"   markers="{{markers}}"  scale="12"
-      min-scale="5" max-scale="20" layer-style="1" enable-building="true" enable-poi="false">
-    </map>
+    <view class="flex flex-direction {{is_stars == true?'show':'hide'}}" style="z-index: 1110;position: fixed;right: 0;">
+      <button class="cu-btn round button-hover sm" style="background-color:#0075c1;color: white; margin:10rpx" role="button"
+        aria-disabled="false" bindtap="changeMap">切换模式</button>
+    </view>
+    <!--指标map-->
+      <map class="{{map_Type===1?'show':'hide'}}" id="myMap" subkey="FJVBZ-T7YE5-3WCIN-QTA3Y-OMDO7-GBBKW" style="width: 100%; height: 100%;"
+        latitude="{{latitude}}" longitude="{{longitude}}" bindtap="simtap"  bindmarkertap="markertap"   markers="{{markers}}"  scale="14"
+        min-scale="5" max-scale="20" layer-style="1" enable-building="true" enable-poi="false">
+      </map>
+    <!--指标map-->
+      <map class="{{map_Type===2?'show':'hide'}}" id="myMap2" subkey="FJVBZ-T7YE5-3WCIN-QTA3Y-OMDO7-GBBKW" style="width: 100%; height: 100%;"
+        latitude="{{latitude2}}" longitude="{{longitude2}}"   bindmarkertap="markertap2"   markers="{{markers2}}"  scale="14"
+        min-scale="5" max-scale="20" layer-style="1" enable-building="true" enable-poi="false">
+      </map>
   </view>
 
   <!-- 附近点位测评数据弹出层 -->
-  <view class="cu-modal {{showLocationInfo==true?'show':'hide'}}">
+  <view class="cu-modal {{showQuotaInfo==true?'show':'hide'}} ">
     <view class="cu-dialog">
       <view class="cu-bar bg-white justify-end" style="background-color: rgb(9,139,175);color: rgb(247,255,175);">
         <view class="content">{{model_title}}</view>
@@ -47,7 +62,7 @@
           <text style="color:#F7FFAF; font-size: 30rpx;">不合格指标数</text>
         </view>
       </view>
-      <view class="cu-list grid col-3" wx:for="{{location_info_list}}" wx:key
+      <view class="cu-list grid col-3" wx:for="{{quota_info_list}}" wx:key
         style="background-color: #062234;margin-top: 0; border: 1px solid #f1dede;">
         <view class="cu-item" style="border-right: 1px solid #f1dede;">
           <text style="color:#F7FFAF; font-size: 30rpx;">{{item.locationName}}</text>
@@ -59,10 +74,52 @@
           <text style="color:#F7FFAF; font-size: 30rpx;">{{item.okNum}}</text>
         </view>
       </view>
-      <view class="flex flex-direction" style="z-index: 2;position: relative">
-      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white" role="button"
+    </view>
+  </view>
+  <view class="flex flex-direction {{showQuotaInfo==true?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
         aria-disabled="false" bindtap="closeModel">关闭</button>
+  </view>
+
+    <!-- 具体点位测评数据弹出层 -->
+    <view class="cu-modal {{showLocationInfo==true?'show':'hide'}} ">
+    <view class="cu-dialog">
+      <view class="cu-bar bg-white justify-end" style="background-color: rgb(9,139,175);color: rgb(247,255,175);">
+        <view class="content">{{model_title2}}</view>
+        <view class="action" bindtap="closeModel2">
+          <text class="cuIcon-close text-red"></text>
+        </view>
+      </view>
+      <view class="cu-list grid col-3" 
+        style="background-color: #062234;margin-top: 0; border: 1px solid #f1dede;">
+        <view class="cu-item" style="border-right: 1px solid #f1dede;">
+          <text style="color:#F7FFAF; font-size: 30rpx;">指标名称</text>
+        </view>
+        <view class="cu-item" style="border-right: 1px solid #f1dede;">
+          <text style="color:#F7FFAF; font-size: 30rpx;">测评结果</text>
+        </view>
+        <view class="cu-item">
+          <text style="color:#F7FFAF; font-size: 30rpx;">责任单位</text>
+        </view>
+      </view>
+      <view class="cu-list grid col-3" wx:for="{{location_info_list}}" wx:key
+        style="background-color: #062234;margin-top: 0; border: 1px solid #f1dede;">
+        <view class="cu-item" style="border-right: 1px solid #f1dede;justify-content: center;">
+          <text style="color:#F7FFAF; font-size: 30rpx;">{{item.content}}</text>
+        </view>
+        <view class="cu-item" style="border-right: 1px solid #f1dede;justify-content: center;">
+          <text style="color:#F7FFAF; font-size: 30rpx;">{{item.optiono}}</text>
+        </view>
+        <view class="cu-item" style="justify-content: center;">
+        <view wx:for="{{item.departmentList}}" wx:for-item="item2" wx:key>
+          <text style="color:#F7FFAF; font-size: 30rpx;">{{item2.name}}</text>
+        </view>
+        </view>
+      </view>
     </view>
-    </view>
+  </view>
+  <view class="flex flex-direction {{showLocationInfo==true?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
+        aria-disabled="false" bindtap="closeModel2">关闭</button>
   </view>
 </view>

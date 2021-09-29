@@ -65,3 +65,15 @@ page{
 .hide{
   display: none;
 }
+image{
+  width: 30rpx;
+  height: 30rpx;
+}
+.mytxt{
+    width: 100%;
+    font-size: 25rpx;
+    margin-left: 3%;
+    line-height: 30rpx;
+    letter-spacing: 1rpx;
+    color: white;
+}
