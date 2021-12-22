@@ -213,18 +213,18 @@ Page({
     var requestUrl = that.data.requestUrl; //请求路径
     var recheckId = that.data.recheckId; //复查id
 
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/getReviewAnswerDetail',
-      data: {
+
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/review/getReviewAnswerDetail',
+      {
         questionId: questionId,
         locationId: pointId,
         recheckId: recheckId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log("获取答案资源：", res.data.retObj)
         if (res.data.status == 'success') {
 
@@ -242,14 +242,49 @@ Page({
           })
         }
 
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/getReviewAnswerDetail',
+    //   data: {
+    //     questionId: questionId,
+    //     locationId: pointId,
+    //     recheckId: recheckId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     // console.log("获取答案资源：", res.data.retObj)
+    //     if (res.data.status == 'success') {
+
+    //       var anniuList = res.data.retObj.optionList;
+    //       for (var i = 0; i < anniuList.length; i++) {
+    //         if (anniuList[i].content == '达标') {
+    //           var dabiaoOption = anniuList[i].id;
+    //         }
+    //       }
+
+    //       that.setData({
+    //         tipsList: res.data.retObj.infoList, //问题描述
+    //         items: anniuList, //选项
+    //         dabiaoOption: dabiaoOption //达标按钮的id
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   /**
@@ -1601,21 +1636,19 @@ Page({
     // }
     // console.log("问题时间：", answerTime),
     //   console.log("点位开始时间：", beginTime)
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/saveReviewAnswerAndResource',
-      // url: 'http://192.168.5.105:8088/mobile/review/saveReviewAnswerAndResource',
-      method: 'POST',
-      data: {
+
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/review/saveReviewAnswerAndResource',
+      {
         reviewAnswerStr: JSON.stringify(fieldAnswer),
         reviewResourceStr: JSON.stringify(resourceList),
         recheckId:recheckId,
         terminalUserId:surveyorId
       },
-      header: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log("后台答案返回数据",res)
         if (res.data.status == 'success') {
           wx.setStorageSync("pointName", pointName);
@@ -1636,19 +1669,66 @@ Page({
             mask: true
           })
         }
+
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '资源上传失败',
           icon: 'none',
           duration: 1000,
           mask: true
         })
-      },
-      complete: (res) => {
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/saveReviewAnswerAndResource',
+    //   // url: 'http://192.168.5.105:8088/mobile/review/saveReviewAnswerAndResource',
+    //   method: 'POST',
+    //   data: {
+    //     reviewAnswerStr: JSON.stringify(fieldAnswer),
+    //     reviewResourceStr: JSON.stringify(resourceList),
+    //     recheckId:recheckId,
+    //     terminalUserId:surveyorId
+    //   },
+    //   header: {
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   },
+    //   success: (res) => {
+    //     // console.log("后台答案返回数据",res)
+    //     if (res.data.status == 'success') {
+    //       wx.setStorageSync("pointName", pointName);
+    //       wx.setStorageSync("pointTypeId", pointTypeId);
+    //       wx.setStorageSync("pointId", pointId);
+    //       wx.navigateBack({
+    //         delta: 1
+    //       })
+    //       // router.redirectTo({url:"../quota_list/quota_list?pointName=" + pointName + "&pointTypeId=" + pointTypeId + '&pointId=' + pointId})
+    //       // wx.navigateTo({
+    //       //   url: "../quota_list/quota_list?pointName=" + pointName + "&pointTypeId=" + pointTypeId + '&pointId=' + pointId
+    //       // })
+    //     } else {
+    //       wx.showToast({
+    //         title: '资源上传失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '资源上传失败',
+    //       icon: 'none',
+    //       duration: 1000,
+    //       mask: true
+    //     })
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
     // console.log("可以了")
   },
 

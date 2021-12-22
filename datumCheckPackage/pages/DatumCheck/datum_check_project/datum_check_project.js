@@ -33,17 +33,16 @@ Page({
     var that = this;
     var requestUrl = that.data.requestUrl; //服务器路径
     var colorList = that.data.colorList;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/datumTask/getDatumProjectListByTerminalUserId',
-      // url: 'http://192.168.15.71:8083/wechat/api/fieldProject/getListByTerminalUserId',
-      data: {
+
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/datumTask/getDatumProjectListByTerminalUserId',
+      {
         terminalUserId: terminalUserId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         var arr = [];
         if (res.data.status == 'success') {
           var projectList = res.data.retObj;
@@ -81,13 +80,66 @@ Page({
           })
         }
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/datumTask/getDatumProjectListByTerminalUserId',
+    //   // url: 'http://192.168.15.71:8083/wechat/api/fieldProject/getListByTerminalUserId',
+    //   data: {
+    //     terminalUserId: terminalUserId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     var arr = [];
+    //     if (res.data.status == 'success') {
+    //       var projectList = res.data.retObj;
+    //       console.log("进来看看", projectList)
+    //       for (var i = 0; i < projectList.length; i++) {
+    //         var color = colorList[i];
+    //         arr.push({
+    //           color: color,
+    //           id: projectList[i].id,
+    //           code: projectList[i].code,
+    //           createBy: projectList[i].createBy,
+    //           createTime: projectList[i].createTime,
+    //           isCheck: projectList[i].isCheck,
+    //           isConsistent: projectList[i].isConsistent,
+    //           isGrade: projectList[i].isGrade,
+    //           latitude: projectList[i].latitude,
+    //           longitude: projectList[i].longitude,
+    //           name: projectList[i].name,
+    //           status: projectList[i].status,
+    //           updateBy: projectList[i].updateBy,
+    //           updateTime: projectList[i].updateTime,
+    //           version: projectList[i].version
+    //         })
+    //       }
+
+    //       that.setData({
+    //         elements: arr
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: res.data.message,
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
 
   },
 

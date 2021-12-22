@@ -36,16 +36,16 @@ Page({
     var that = this;
     var requestUrl = that.data.requestUrl; //服务器路径
     var colorList = that.data.colorList;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/getReviewProjectListByTerminalUserId',
-      data: {
+
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/review/getReviewProjectListByTerminalUserId',
+      {
         terminalUserId: terminalUserId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log("项目数据", res.data.retObj)
         var arr = [];
         if (res.data.status == 'success') {
@@ -92,14 +92,76 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/getReviewProjectListByTerminalUserId',
+    //   data: {
+    //     terminalUserId: terminalUserId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     // console.log("项目数据", res.data.retObj)
+    //     var arr = [];
+    //     if (res.data.status == 'success') {
+    //       var projectList = res.data.retObj;
+    //       if (typeof (projectList) === "undefined") {
+    //         wx.showToast({
+    //           title: '该调查员没有绑定项目',
+    //           icon: 'none',
+    //           duration: 3000,
+    //           mask: true
+    //         })
+    //       } else {
+    //       for (var i = 0; i < projectList.length; i++) {
+    //         var color = colorList[i];
+    //         arr.push({
+    //           color: color,
+    //           id: projectList[i].id,
+    //           code: projectList[i].code,
+    //           createBy: projectList[i].createBy,
+    //           createTime: projectList[i].createTime,
+    //           isCheck: projectList[i].isCheck,
+    //           isConsistent: projectList[i].isConsistent,
+    //           isGrade: projectList[i].isGrade,
+    //           latitude: projectList[i].latitude,
+    //           longitude: projectList[i].longitude,
+    //           name: projectList[i].name,
+    //           status: projectList[i].status,
+    //           updateBy: projectList[i].updateBy,
+    //           updateTime: projectList[i].updateTime,
+    //           version: projectList[i].version
+    //         })
+    //       }
+
+    //       that.setData({
+    //         elements: arr
+    //       })
+    //       // console.log("修改后的项目数据", arr)
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取项目列表失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
 
   },
     go:function(e){

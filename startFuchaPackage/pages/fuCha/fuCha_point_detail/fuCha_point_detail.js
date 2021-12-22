@@ -62,16 +62,15 @@ Page({
   getPointDetail: function (pointId) {
     var that = this;
     var requestUrl = that.data.requestUrl; //服务器路径
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/getFieldReviewLocationDetail',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/review/getFieldReviewLocationDetail',
+      {
         id: pointId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log("点位详情",res)
         if (res.data.status == 'success') {
           that.setData({
@@ -86,14 +85,44 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/getFieldReviewLocationDetail',
+    //   data: {
+    //     id: pointId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     // console.log("点位详情",res)
+    //     if (res.data.status == 'success') {
+    //       that.setData({
+    //         list: res.data.retObj
+    //       })
+
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取点位树失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   // //返回指标树页面

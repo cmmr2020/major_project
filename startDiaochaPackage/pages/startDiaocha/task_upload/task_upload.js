@@ -161,19 +161,17 @@ Page({
     var projectId = that.data.projectId;
     var pointId = that.data.pointId;
     var requestUrl = that.data.requestUrl; //请求路径
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldAnswer/getAnswerResourceDetailByQuestionId',
-      // url: 'http://192.168.5.105:8088/wechat/api/fieldAnswer/getAnswerResourceDetailByQuestionId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldAnswer/getAnswerResourceDetailByQuestionId',
+      {
         questionId: questionId,
         projectId: projectId,
         locationId: pointId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           var anniuList = res.data.retObj.optionList;
           for (var i = 0; i < anniuList.length; i++) {
@@ -222,12 +220,79 @@ Page({
           // console.log("选中的id:", that.data.checkedid)
         }
 
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {}
-    })
+      (err) =>{
+
+      }
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldAnswer/getAnswerResourceDetailByQuestionId',
+    //   // url: 'http://192.168.5.105:8088/wechat/api/fieldAnswer/getAnswerResourceDetailByQuestionId',
+    //   data: {
+    //     questionId: questionId,
+    //     projectId: projectId,
+    //     locationId: pointId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status == 'success') {
+    //       var anniuList = res.data.retObj.optionList;
+    //       for (var i = 0; i < anniuList.length; i++) {
+    //         if (anniuList[i].content == '达标') {
+    //           var dabiaoOption = anniuList[i].id;
+    //         }
+    //       }
+    //       that.setData({
+    //         tipsList: res.data.retObj.infoList, //问题描述
+    //         items: anniuList, //选项
+    //         dabiaoOption: dabiaoOption //达标按钮的id
+    //       })
+
+    //       if (res.data.retObj.address != null) {
+    //         for (var i = 0; i < anniuList.length; i++) {
+    //           if (anniuList[i].id == res.data.retObj.optionId) {
+    //             if (anniuList[i].content == '达标') {
+    //               that.setData({
+    //                 isDaBiao: 0
+    //               })
+    //             } else {
+    //               that.setData({
+    //                 isDaBiao: 1
+    //               })
+    //             }
+    //           }
+    //         }
+    //         that.setData({
+    //           address: res.data.retObj.address, //地址
+    //           amountValue:res.data.retObj.amount,
+    //           checkedid: res.data.retObj.optionId, //按钮id判断页面是否选中
+    //           optionId: res.data.retObj.optionId, //封装按钮id值
+    //           ScoreValue: res.data.retObj.deduction * 10 //评分
+    //         })
+    //       }
+    //       if (res.data.retObj.resourceMap != null) {
+    //         var images = res.data.retObj.resourceMap.images;
+    //         var videos = res.data.retObj.resourceMap.videos;
+    //         var audios = res.data.retObj.resourceMap.audios;
+    //         console.log("资源列表：", images)
+    //         if (typeof(images) === "undefined" || typeof(videos) === "undefined" || typeof(audios) === "undefined") {
+    //           return;
+    //         }
+    //         that.downlodaResource(images, videos, audios);
+    //       }
+    //       // console.log("选中的id:", that.data.checkedid)
+    //     }
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {}
+    // })
   },
 
   downlodaResource: async function(images, videos, audios) {
@@ -1820,20 +1885,17 @@ Page({
     }
     // console.log("问题时间：", answerTime),
     //   console.log("点位开始时间：", beginTime)
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldAnswer/saveFieldAnswer',
-      // url: 'http://192.168.5.105:8088/wechat/api/fieldAnswer/saveFieldAnswer',
-      method: 'POST',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/wechat/api/fieldAnswer/saveFieldAnswer',
+      {
         beginTime: beginTime,
         fieldAnswerStr: JSON.stringify(fieldAnswer),
         resourceListStr: JSON.stringify(resourceList)
       },
-      header: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           // wx.setStorageSync("pointName", pointName);
           // wx.setStorageSync("pointTypeId", pointTypeId);
@@ -1869,19 +1931,80 @@ Page({
             mask: true
           })
         }
+
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '资源上传失败',
           icon: 'none',
           duration: 1000,
           mask: true
         })
-      },
-      complete: (res) => {
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldAnswer/saveFieldAnswer',
+    //   // url: 'http://192.168.5.105:8088/wechat/api/fieldAnswer/saveFieldAnswer',
+    //   method: 'POST',
+    //   data: {
+    //     beginTime: beginTime,
+    //     fieldAnswerStr: JSON.stringify(fieldAnswer),
+    //     resourceListStr: JSON.stringify(resourceList)
+    //   },
+    //   header: {
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status == 'success') {
+    //       // wx.setStorageSync("pointName", pointName);
+    //       // wx.setStorageSync("pointTypeId", pointTypeId);
+    //       // wx.setStorageSync("pointId", pointId);
+
+    //       if(!app.data.locationIsHaveAnswer.hasOwnProperty(pointId)){
+    //         if(app.data.locationIsHaveAnswer.pointId!==1){
+    //           //将上传中的标志放到全局变量中
+    //           app.data.locationIsHaveAnswer[pointId] = 1;
+    //         }
+    //       }
+    //       wx.navigateBack({
+    //         delta: 1,
+    //         success:function(){
+    //           var pages = getCurrentPages(); //当前页面栈
+    //           if (pages.length > 1) {
+    //             //console.log(pages)
+    //             var beforePage = pages[pages.length - 1]; //获取上一个页面实例对象
+    //             beforePage.data.submitStatus="1"
+    //             beforePage.checkIsRecord();
+    //           }
+    //         }
+    //       })
+    //       // router.redirectTo({url:"../quota_list/quota_list?pointName=" + pointName + "&pointTypeId=" + pointTypeId + '&pointId=' + pointId})
+    //       // wx.navigateTo({
+    //       //   url: "../quota_list/quota_list?pointName=" + pointName + "&pointTypeId=" + pointTypeId + '&pointId=' + pointId
+    //       // })
+    //     } else {
+    //       wx.showToast({
+    //         title: '资源上传失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '资源上传失败',
+    //       icon: 'none',
+    //       duration: 1000,
+    //       mask: true
+    //     })
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   changeParentData: function() {

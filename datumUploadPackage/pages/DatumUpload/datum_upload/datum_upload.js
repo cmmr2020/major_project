@@ -527,19 +527,18 @@ Page({
     var terminalUserId = that.data.terminalUserId;
     var commitContent = that.data.desc;
     var datumResourceStr = JSON.stringify(resourceList);
-    wx.request({
-      url: requestUrl + '/mobile/datumTask/saveDatumReport',
-      method: 'POST',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/datumTask/saveDatumReport',
+      {
         'id': taskId,
         'commitContent': commitContent,
         'terminalUserId': terminalUserId,
         'datumResourceStr': datumResourceStr
       },
-      header: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         console.log("上传答案数据：", res)
         if (res.data.status == 'success') {
 
@@ -551,19 +550,55 @@ Page({
           // })
 
         }
+
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '资源上传失败',
           icon: 'none',
           duration: 1000,
           mask: true
         })
-      },
-      complete: (res) => {
 
       }
-    })
+    )
+    // wx.request({
+    //   url: requestUrl + '/mobile/datumTask/saveDatumReport',
+    //   method: 'POST',
+    //   data: {
+    //     'id': taskId,
+    //     'commitContent': commitContent,
+    //     'terminalUserId': terminalUserId,
+    //     'datumResourceStr': datumResourceStr
+    //   },
+    //   header: {
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   },
+    //   success: (res) => {
+    //     console.log("上传答案数据：", res)
+    //     if (res.data.status == 'success') {
+
+    //       wx.navigateBack({
+    //         delta: 1
+    //       })
+    //       // router.redirectTo({
+    //       //   url: "../datum_index/datum_index?projectId=" + projectId
+    //       // })
+
+    //     }
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '资源上传失败',
+    //       icon: 'none',
+    //       duration: 1000,
+    //       mask: true
+    //     })
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
 })

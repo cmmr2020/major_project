@@ -61,79 +61,149 @@ Page({
     var pageNum = that.data.pageNum;
     var pageSize = that.data.pageSize;
     var content = that.data.searchDesc;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/datumTask/getReportDatumTaskList',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/datumTask/getReportDatumTaskList',
+      {
         'terminalUserId': terminalUserId,
         'projectId': projectId,
         'pageNum': pageNum,
         'pageSize': pageSize,
         'content': content
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log("后端材料任务：", res)
         if (res.data.message === "success") {
-           if (res.data.retObj.list.length>'0') {
-          var taskList = res.data.retObj.list;
-          var list = [];
-          var id = '';
-          for (var i = 0; i < taskList.length; i++) {
-            var content = taskList[i].content.split("—");
-            id = taskList[0].id;
-            list.push({
-              id: taskList[i].id,
-              content: content[content.length - 1]
-            })
-          }
-          that.setData({
-            maxPageNum: res.data.retObj.pageCount,
-            pageCount: res.data.retObj.count,
-            taskList: list
-          })
-          if (res.data.retObj.pageCount === that.data.pageNum) {
-            that.setData({
-              next: true
-            })
-          } else {
-            that.setData({
-              next: false
-            })
-          }
+          if (res.data.retObj.list.length>'0') {
+         var taskList = res.data.retObj.list;
+         var list = [];
+         var id = '';
+         for (var i = 0; i < taskList.length; i++) {
+           var content = taskList[i].content.split("—");
+           id = taskList[0].id;
+           list.push({
+             id: taskList[i].id,
+             content: content[content.length - 1]
+           })
+         }
+         that.setData({
+           maxPageNum: res.data.retObj.pageCount,
+           pageCount: res.data.retObj.count,
+           taskList: list
+         })
+         if (res.data.retObj.pageCount === that.data.pageNum) {
+           that.setData({
+             next: true
+           })
+         } else {
+           that.setData({
+             next: false
+           })
+         }
 
-          that.goTaskDetail(id);
-           }else{
-               that.setData({
-                isNull:'true'
+         that.goTaskDetail(id);
+          }else{
+              that.setData({
+               isNull:'true'
+              })
+              wx.showToast({
+                 title: '该项目下无数据',
+                 icon: 'none', // "success", "loading", "none"
+                 duration: 1500,
+                 mask: true,
+
                })
-               wx.showToast({
-                  title: '该项目下无数据',
-                  icon: 'none', // "success", "loading", "none"
-                  duration: 1500,
-                  mask: true,
+           }
+       } else {
+         wx.showToast({
+           title: '获取材料任务列表失败',
+           icon: 'none', // "success", "loading", "none"
+           duration: 1500,
+           mask: false,
 
-                })
-            }
-        } else {
-          wx.showToast({
-            title: '获取材料任务列表失败',
-            icon: 'none', // "success", "loading", "none"
-            duration: 1500,
-            mask: false,
-
-          })
-        }
-      },
-      fail: (res) => {
+         })
+       }
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/datumTask/getReportDatumTaskList',
+    //   data: {
+    //     'terminalUserId': terminalUserId,
+    //     'projectId': projectId,
+    //     'pageNum': pageNum,
+    //     'pageSize': pageSize,
+    //     'content': content
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     // console.log("后端材料任务：", res)
+    //     if (res.data.message === "success") {
+    //        if (res.data.retObj.list.length>'0') {
+    //       var taskList = res.data.retObj.list;
+    //       var list = [];
+    //       var id = '';
+    //       for (var i = 0; i < taskList.length; i++) {
+    //         var content = taskList[i].content.split("—");
+    //         id = taskList[0].id;
+    //         list.push({
+    //           id: taskList[i].id,
+    //           content: content[content.length - 1]
+    //         })
+    //       }
+    //       that.setData({
+    //         maxPageNum: res.data.retObj.pageCount,
+    //         pageCount: res.data.retObj.count,
+    //         taskList: list
+    //       })
+    //       if (res.data.retObj.pageCount === that.data.pageNum) {
+    //         that.setData({
+    //           next: true
+    //         })
+    //       } else {
+    //         that.setData({
+    //           next: false
+    //         })
+    //       }
+
+    //       that.goTaskDetail(id);
+    //        }else{
+    //            that.setData({
+    //             isNull:'true'
+    //            })
+    //            wx.showToast({
+    //               title: '该项目下无数据',
+    //               icon: 'none', // "success", "loading", "none"
+    //               duration: 1500,
+    //               mask: true,
+
+    //             })
+    //         }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取材料任务列表失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
    getDatumTaskListSearCh: function() {
     var that = this;
@@ -142,20 +212,19 @@ Page({
     var terminalUserId = that.data.terminalUserId;
     var pageSize = that.data.pageSize;
     var content = that.data.searchDesc;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/datumTask/getReportDatumTaskList',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/datumTask/getReportDatumTaskList',
+      {
         'terminalUserId': terminalUserId,
         'projectId': projectId,
         'pageNum': 1,
         'pageSize': pageSize,
         'content': content
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         console.log("后端材料任务来了来了：", res)
         if (res.data.message === "success") {
           var taskList = res.data.retObj.list;
@@ -200,13 +269,75 @@ Page({
           })
         }
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/datumTask/getReportDatumTaskList',
+    //   data: {
+    //     'terminalUserId': terminalUserId,
+    //     'projectId': projectId,
+    //     'pageNum': 1,
+    //     'pageSize': pageSize,
+    //     'content': content
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     console.log("后端材料任务来了来了：", res)
+    //     if (res.data.message === "success") {
+    //       var taskList = res.data.retObj.list;
+    //       var list = [];
+    //       var id = '';
+    //       for (var i = 0; i < taskList.length; i++) {
+    //         var content = taskList[i].content.split("—");
+    //         id = taskList[0].id;
+    //         list.push({
+    //           id: taskList[i].id,
+    //           content: content[content.length - 1]
+    //         })
+    //       }
+    //       that.setData({
+    //         userIndex:'',
+    //         maxPageNum: res.data.retObj.pageCount,
+    //         pageCount: res.data.retObj.count,
+    //         taskList: list
+    //       })
+    //       if (res.data.retObj.pageCount === 1) {
+    //         //初始化
+    //         that.setData({
+    //           pageNum:1,
+    //           last:true,
+    //           next: true
+    //         })
+    //       } else {
+    //         that.setData({
+    //           pageNum:1,
+    //           next: false
+    //         })
+    //       }
+
+    //       that.goTaskDetail(id);
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取材料任务列表失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
 
@@ -298,16 +429,15 @@ Page({
     var that = this;
     var requestUrl = that.data.requestUrl;
 
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/datumTask/getReportDatumTaskDetail',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/datumTask/getReportDatumTaskDetail',
+      {
         'id': id
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         console.log("后端任务详情：", res)
         if (res.data.status === "success") {
 
@@ -324,14 +454,46 @@ Page({
 
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/datumTask/getReportDatumTaskDetail',
+    //   data: {
+    //     'id': id
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     console.log("后端任务详情：", res)
+    //     if (res.data.status === "success") {
+
+    //       that.setData({
+    //         detailList: res.data.retObj
+    //       })
+
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取任务详情失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
   //上传资源
   goUpload: function(e) {

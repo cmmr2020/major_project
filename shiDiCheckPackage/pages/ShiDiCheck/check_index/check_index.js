@@ -92,16 +92,15 @@ var bgColor = wx.getStorageSync('bgColor');
     var that = this;
     var projectId = that.data.projectId;
     var requestUrl = that.data.requestUrl;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/getDepartmentListByProjectId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/fieldTask/getDepartmentListByProjectId',
+      {
         projectId: projectId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         console.log("后台返回的部门数据：", res)
         if (res.data.status === "success") {
           var list = res.data.retObj;
@@ -126,13 +125,51 @@ var bgColor = wx.getStorageSync('bgColor');
         }
 
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/getDepartmentListByProjectId',
+    //   data: {
+    //     projectId: projectId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     console.log("后台返回的部门数据：", res)
+    //     if (res.data.status === "success") {
+    //       var list = res.data.retObj;
+    //       var depName = [];
+    //       for (var i = 0; i < list.length; i++) {
+    //         depName.push(
+    //           list[i].name
+    //         )
+    //       }
+    //       that.setData({
+    //         depList: list,
+    //         pickerDep: depName
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取部门数据失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
   /**
    * 动态改变问题类型的ID，传参加载ID下的任务列表
@@ -212,11 +249,11 @@ var bgColor = wx.getStorageSync('bgColor');
     var terminalUserId = that.data.terminalUserId; //调查员id
     var pageNum = that.data.pageNum; //当前页
 
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
-      // url: 'http://192.168.15.71:8083/mobile/fieldTask/getCheckFieldTaskList',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
+      {
         'terminalUserId': terminalUserId,
         'projectId': projectId,
         'pageSize': '10',
@@ -224,10 +261,8 @@ var bgColor = wx.getStorageSync('bgColor');
         'result': result,
         'auditType': auditType
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           // console.log("打印出来看看？",res.data.retObj)
           if (res.data.retObj.list.length != 0) {
@@ -276,15 +311,86 @@ var bgColor = wx.getStorageSync('bgColor');
           })
         }
 
-
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
+    //   // url: 'http://192.168.15.71:8083/mobile/fieldTask/getCheckFieldTaskList',
+    //   data: {
+    //     'terminalUserId': terminalUserId,
+    //     'projectId': projectId,
+    //     'pageSize': '10',
+    //     'pageNum': pageNum,
+    //     'result': result,
+    //     'auditType': auditType
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       // console.log("打印出来看看？",res.data.retObj)
+    //       if (res.data.retObj.list.length != 0) {
+    //         var list = res.data.retObj.list;
+    //         var arr = [];
+    //         for (var i = 0; i < list.length; i++) {
+    //           arr.push({
+    //             checked: false,
+    //             id: list[i].id,
+    //             projectId: list[i].projectId,
+    //             questionContent: list[i].questionContent,
+    //             questionId: list[i].questionId,
+    //             result: list[i].result,
+    //             url: list[i].url,
+    //             code: list[i].code,
+    //             answerTime: list[i].answerTime,
+    //             answerId: list[i].answerId,
+    //             address: list[i].address
+    //           })
+    //         }
+    //         // console.log("这是转换后的数组：",arr)
+    //         that.setData({
+    //           pageCount: res.data.retObj.count, //总任务数
+    //           maxPageNum: res.data.retObj.pageCount, //总页数
+    //           tasks: that.data.tasks.concat(arr)
+    //         })
+    //         console.log("待审核数据：", that.data.tasks)
+    //       } else {
+    //         that.setData({
+    //           isNull :'true'
+    //         })
+    //         wx.showToast({
+    //           title: '该状态下无任务',
+    //           icon: 'none', // "success", "loading", "none"
+    //           duration: 1500,
+    //           mask: false,
+    //         })
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取任务失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+
+    //       })
+    //     }
+
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
   //------------- 获取审核任务列表(未整改、整改合格)--------
   getCheckFieldTaskListTwo: function(result) {
@@ -293,22 +399,19 @@ var bgColor = wx.getStorageSync('bgColor');
     var requestUrl = that.data.requestUrl; //服务器路径
     var terminalUserId = that.data.terminalUserId; //调查员id
     var pageNum = that.data.pageNum; //当前页
-
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
-      // url: 'http://192.168.15.71:8083/mobile/fieldTask/getCheckFieldTaskList',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
+      {
         'terminalUserId': terminalUserId,
         'projectId': projectId,
         'pageSize': '10',
         'pageNum': pageNum,
         'result': result
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           // console.log("打印出来看看？",res.data.retObj)
           if (res.data.retObj.list.length != 0) {
@@ -341,16 +444,71 @@ var bgColor = wx.getStorageSync('bgColor');
 
           })
         }
-
-
-      },
-      fail: (res) => {
+        
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
+    //   // url: 'http://192.168.15.71:8083/mobile/fieldTask/getCheckFieldTaskList',
+    //   data: {
+    //     'terminalUserId': terminalUserId,
+    //     'projectId': projectId,
+    //     'pageSize': '10',
+    //     'pageNum': pageNum,
+    //     'result': result
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       // console.log("打印出来看看？",res.data.retObj)
+    //       if (res.data.retObj.list.length != 0) {
+    //         that.setData({
+    //           pageCount: res.data.retObj.count, //总任务数
+    //           maxPageNum: res.data.retObj.pageCount, //总页数
+    //           tasks: that.data.tasks.concat(res.data.retObj.list)
+    //         })
+    //         console.log("未整改、整改合格数据：", that.data.tasks)
+    //       } else {
+    //         that.setData({
+    //           isNull :'true'
+    //         })
+    //         wx.showToast({
+    //           title: '该状态下无任务',
+    //           icon: 'none', // "success", "loading", "none"
+    //           duration: 1500,
+    //           mask: false,
+    //         })
+    //       }
+    //     } else {
+    //       that.setData({
+    //         isNull :'true'
+    //       })
+    //       wx.showToast({
+    //         title: '获取任务失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+
+    //       })
+    //     }
+
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   //------------- 获取权属异议任务列表--------
@@ -360,19 +518,18 @@ var bgColor = wx.getStorageSync('bgColor');
     var projectId = that.data.projectId;
     var terminalUserId = that.data.terminalUserId; //调查员id
     var pageNum = that.data.pageNum; //当前页
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/getDissentFieldTaskList',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/fieldTask/getDissentFieldTaskList',
+      {
         'terminalUserId': terminalUserId,
         'pageNum': pageNum,
         'pageSize': '10',
         'projectId': projectId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           // console.log("打印出来看看？",res.data.retObj)
           if (res.data.retObj.list.length != 0) {
@@ -404,13 +561,61 @@ var bgColor = wx.getStorageSync('bgColor');
         }
 
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/getDissentFieldTaskList',
+    //   data: {
+    //     'terminalUserId': terminalUserId,
+    //     'pageNum': pageNum,
+    //     'pageSize': '10',
+    //     'projectId': projectId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       // console.log("打印出来看看？",res.data.retObj)
+    //       if (res.data.retObj.list.length != 0) {
+    //         that.setData({
+    //           pageCount: res.data.retObj.count, //总任务数
+    //           maxPageNum: res.data.retObj.pageCount, //总页数
+    //           tasks: that.data.tasks.concat(res.data.retObj.list)
+    //         })
+    //         console.log("权属异议数据：", that.data.tasks)
+    //       } else {
+    //         that.setData({
+    //           isNull :'true'
+    //         })
+    //         wx.showToast({
+    //           title: '该状态下无任务',
+    //           icon: 'none', // "success", "loading", "none"
+    //           duration: 1500,
+    //           mask: false,
+    //         })
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取任务失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   //--------上拉函数-----------
@@ -566,20 +771,18 @@ var bgColor = wx.getStorageSync('bgColor');
   batchTGandNTG: function(requestUrl, tId, terminalUserId, result) {
     var that = this;
     var projectId = that.data.projectId;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/batchCheck',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/fieldTask/batchCheck',
+      {
         'taskIds': tId,
         'auditContent': '',
         'result': result,
         'terminalUserId': terminalUserId
       },
-      method: "POST",
-      header: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           router.navigateTo({
             url: "../check_index/check_index?projectId=" + projectId
@@ -592,33 +795,63 @@ var bgColor = wx.getStorageSync('bgColor');
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/batchCheck',
+    //   data: {
+    //     'taskIds': tId,
+    //     'auditContent': '',
+    //     'result': result,
+    //     'terminalUserId': terminalUserId
+    //   },
+    //   method: "POST",
+    //   header: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       router.navigateTo({
+    //         url: "../check_index/check_index?projectId=" + projectId
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: res.data.message,
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
   //批量长期整改
   batchLong: function(requestUrl, tId, terminalUserId, longTask) {
     var that = this;
     var projectId = that.data.projectId;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/batchCheck',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/fieldTask/batchCheck',
+      {
         'taskIds': tId,
         'auditContent': '',
         'longTask': longTask,
         'terminalUserId': terminalUserId
       },
-      method: "POST",
-      header: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           router.navigateTo({
             url: "../check_index/check_index?projectId=" + projectId
@@ -631,14 +864,46 @@ var bgColor = wx.getStorageSync('bgColor');
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/batchCheck',
+    //   data: {
+    //     'taskIds': tId,
+    //     'auditContent': '',
+    //     'longTask': longTask,
+    //     'terminalUserId': terminalUserId
+    //   },
+    //   method: "POST",
+    //   header: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       router.navigateTo({
+    //         url: "../check_index/check_index?projectId=" + projectId
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: res.data.message,
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
   //弹出框
   start: function() {
@@ -672,22 +937,20 @@ var bgColor = wx.getStorageSync('bgColor');
     }
     var checkStandardNum = that.data.desc1;
     var auditContent = that.data.desc2;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/batchCheckToUnPassWithAuditContent',
-      data: {
+    
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/fieldTask/batchCheckToUnPassWithAuditContent',
+      {
         'auditType': auditType,
         'taskIds': tId,
         'auditContent': auditContent,
         'checkStandardNum': checkStandardNum,
         'terminalUserId': terminalUserId
       },
-      method: "POST",
-      header: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      success: (res) => {
-        console.log("批量审核不通过(整改说明)后台数据", res)
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           router.navigateTo({
             url: "../check_index/check_index?projectId=" + projectId
@@ -700,14 +963,49 @@ var bgColor = wx.getStorageSync('bgColor');
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/batchCheckToUnPassWithAuditContent',
+    //   data: {
+    //     'auditType': auditType,
+    //     'taskIds': tId,
+    //     'auditContent': auditContent,
+    //     'checkStandardNum': checkStandardNum,
+    //     'terminalUserId': terminalUserId
+    //   },
+    //   method: "POST",
+    //   header: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   success: (res) => {
+    //     console.log("批量审核不通过(整改说明)后台数据", res)
+    //     if (res.data.status === "success") {
+    //       router.navigateTo({
+    //         url: "../check_index/check_index?projectId=" + projectId
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: res.data.message,
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
 
   },
   //取消
@@ -827,20 +1125,17 @@ var bgColor = wx.getStorageSync('bgColor');
     })
     var departmentId = depList[depId].id;
 
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/updateDepartment',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/fieldTask/updateDepartment',
+      {
         'id': taskIdByDep,
         'terminalUserId': terminalUserId,
         'departmentId': departmentId
       },
-      method: "POST",
-      header: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      success: (res) => {
-        console.log("更改部门后台返回数据：", res)
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
 
           router.navigateTo({
@@ -854,14 +1149,48 @@ var bgColor = wx.getStorageSync('bgColor');
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/updateDepartment',
+    //   data: {
+    //     'id': taskIdByDep,
+    //     'terminalUserId': terminalUserId,
+    //     'departmentId': departmentId
+    //   },
+    //   method: "POST",
+    //   header: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   success: (res) => {
+    //     console.log("更改部门后台返回数据：", res)
+    //     if (res.data.status === "success") {
+
+    //       router.navigateTo({
+    //         url: "../check_index/check_index?projectId=" + projectId
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: res.data.message,
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
 
 
 

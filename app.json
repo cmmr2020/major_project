@@ -87,6 +87,13 @@
         "pages/fenXi/map/map",
         "pages/paiMing/index/index"
       ]
+    },
+    {
+      "root":"fenPeiDWPackage",
+      "pages":[
+        "pages/projectList/projectList",
+        "pages/locationList/locationList"
+      ]
     }
   ],
   "window": {

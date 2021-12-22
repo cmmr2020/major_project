@@ -511,14 +511,16 @@ Page({
     var projectId = that.data.projectId; //项目id
     var taskId = that.data.taskId; //任务id
     var requestUrl = that.data.requestUrl; //请求路径
-    wx.request({
-      url: requestUrl + "/mobile/fieldTask/getFieldTaskDetail",
-      // url: "http://192.168.15.71:8083/mobile/fieldTask/getFieldTaskAnswerDetail",
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + "/mobile/fieldTask/getFieldTaskDetail",
+      {
         'projectId': projectId,
         'taskId': taskId
       },
-      success(res) {
+      app.seesionId,
+      (res) =>{
         console.log("任务详情：", res.data.retObj)
         if (res.data.status === "success") {
 
@@ -556,12 +558,63 @@ Page({
           })
 
         }
+
       },
-      //请求失败
-      fail: function(err) {},
-      //请求完成后执行的函数
-      complete: function() {}
-    })
+      (err) =>{
+
+      }
+    )
+    // wx.request({
+    //   url: requestUrl + "/mobile/fieldTask/getFieldTaskDetail",
+    //   // url: "http://192.168.15.71:8083/mobile/fieldTask/getFieldTaskAnswerDetail",
+    //   data: {
+    //     'projectId': projectId,
+    //     'taskId': taskId
+    //   },
+    //   success(res) {
+    //     console.log("任务详情：", res.data.retObj)
+    //     if (res.data.status === "success") {
+
+    //       var images = res.data.retObj.answerResourceMap[0];
+    //       var videos = res.data.retObj.answerResourceMap[2];
+    //       var audios = res.data.retObj.answerResourceMap[1];
+    //       console.log("图片列表：", images, "---------视频列表：", videos, "-------音频列表：", audios)
+
+    //       // console.log("图片列表：",images,"---------视频列表：",videos,"-------音频列表：",audios )
+
+    //       var images_dep = res.data.retObj.taskResourceMap[0];
+    //       var videos_dep = res.data.retObj.taskResourceMap[2];
+    //       var audios_dep = res.data.retObj.taskResourceMap[1];
+    //       //如果整改资源为空则隐藏整改资源页面
+    //       if (images_dep == null && videos_dep == null && audios_dep == null) {
+    //         that.setData({
+    //           checkShow: true
+    //         })
+    //       }
+
+    //       that.downlodaResource(images, videos, audios);
+    //       that.downlodaResource_dep(images_dep, videos_dep, audios_dep);
+
+    //       that.setData({
+    //         address: res.data.retObj.address,
+    //         //经纬度
+    //         latitude: res.data.retObj.latitude,
+    //         longitude: res.data.retObj.longitude,
+    //         code: res.data.retObj.code,
+    //         pointName: res.data.retObj.pointName,
+    //         locationName: res.data.retObj.locationName,
+    //         auditContent: res.data.retObj.auditContent,
+    //         questionContent: res.data.retObj.questionContent,
+    //         commitContent: res.data.retObj.commitContent
+    //       })
+
+    //     }
+    //   },
+    //   //请求失败
+    //   fail: function(err) {},
+    //   //请求完成后执行的函数
+    //   complete: function() {}
+    // })
   },
 
 
@@ -1346,22 +1399,19 @@ Page({
     //复选框
     var dissent = that.data.dissent;
 
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/fieldTask/saveResource',
-      // url: 'http://192.168.15.71:8083/wechat/api/fieldAnswer/saveFieldAnswer',
-      method: 'POST',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/fieldTask/saveResource',
+      {
         terminalUserId: terminalUserId,
         taskId: taskId,
         remarks: remarks,
         dissent: dissent,
         resourceListStr: JSON.stringify(resourceList)
       },
-      header: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           router.navigateBack({
             delta:1
@@ -1373,18 +1423,54 @@ Page({
           console.log("好了，这下上传成功了。")
         }
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '资源上传失败',
           icon: 'none',
           duration: 1000,
           mask: true
         })
-      },
-      complete: (res) => {
-
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/fieldTask/saveResource',
+    //   // url: 'http://192.168.15.71:8083/wechat/api/fieldAnswer/saveFieldAnswer',
+    //   method: 'POST',
+    //   data: {
+    //     terminalUserId: terminalUserId,
+    //     taskId: taskId,
+    //     remarks: remarks,
+    //     dissent: dissent,
+    //     resourceListStr: JSON.stringify(resourceList)
+    //   },
+    //   header: {
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status == 'success') {
+    //       router.navigateBack({
+    //         delta:1
+    //         //url: "../dept_index/dept_index?projectId=" + projectId
+    //       })
+    //       // wx.navigateTo({
+    //       //   url: "../dept_index/dept_index?projectId=" + projectId
+    //       // })
+    //       console.log("好了，这下上传成功了。")
+    //     }
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '资源上传失败',
+    //       icon: 'none',
+    //       duration: 1000,
+    //       mask: true
+    //     })
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
 })

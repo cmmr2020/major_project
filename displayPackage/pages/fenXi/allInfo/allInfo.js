@@ -153,16 +153,15 @@ Page({
   },
   initQuotaInfo:function(){
     var that = this;
-    wx.request({
-      // 必需
-      url: requestUrl + '/private/largeScreenDisplay/getQuotaScoreMap',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getQuotaScoreMap',
+      {
         projectId:projectId,
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           var okNum = res.data.retObj.okNum;
           var allNum = res.data.retObj.all;
@@ -189,28 +188,73 @@ Page({
         }
 
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '网络错误',
           icon: 'none', // "success", "loading", "none"
           duration: 1500,
           mask: false,
         })
+
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/private/largeScreenDisplay/getQuotaScoreMap',
+    //   data: {
+    //     projectId:projectId,
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       var okNum = res.data.retObj.okNum;
+    //       var allNum = res.data.retObj.all;
+    //       var okRateStr = parseFloat(okNum)/parseFloat(allNum)*100
+    //       that.setData({
+    //         quota_total:allNum,
+    //         quota_ok_num:okNum,
+    //         quota_rate_num:(okRateStr.toFixed(2))+'%',
+    //       })
+    //       if(loadFlag){
+    //         that.setData({
+    //           isLoadStatistics:true
+    //         })
+    //       }else{
+    //         loadFlag = true
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取数据失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '网络错误',
+    //       icon: 'none', // "success", "loading", "none"
+    //       duration: 1500,
+    //       mask: false,
+    //     })
+    //   }
+    // })
   },
   initPointInfo:function(){
     var that = this
-    wx.request({
-      // 必需
-      url: requestUrl + '/private/largeScreenDisplay/getQLocationCheckNumAndFieldTaskInfoMap',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getQLocationCheckNumAndFieldTaskInfoMap',
+      {
         projectId:projectId,
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           if(loadFlag){
             that.setData({
@@ -232,15 +276,56 @@ Page({
         }
 
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '网络错误',
           icon: 'none', // "success", "loading", "none"
           duration: 1500,
           mask: false,
         })
+
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/private/largeScreenDisplay/getQLocationCheckNumAndFieldTaskInfoMap',
+    //   data: {
+    //     projectId:projectId,
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       if(loadFlag){
+    //         that.setData({
+    //           isLoadStatistics:true
+    //         })
+    //       }else{
+    //         loadFlag = true
+    //       }
+    //       that.setData({
+    //         point_total:res.data.retObj.locationNum,
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取数据失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '网络错误',
+    //       icon: 'none', // "success", "loading", "none"
+    //       duration: 1500,
+    //       mask: false,
+    //     })
+    //   }
+    // })
   },
 
   inintchar1:function(){
@@ -258,17 +343,17 @@ Page({
       });
       barChart.showLoading(load_option)
     });
-      wx.request({
-        // 必需
-        url: requestUrl + '/private/largeScreenDisplay/getPointQuotaScoreMap',
-        data: {
-          projectId:projectId,
-        },
-        header: {
-          'Content-Type': 'application/json'
-        },
-        success: (res) => {
-          barChart.hideLoading();
+    
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getPointQuotaScoreMap',
+      {
+        projectId:projectId,
+      },
+      app.seesionId,
+      (res) =>{
+        barChart.hideLoading();
           if (res.data.status === "success") {
             this.ecComponent = this.selectComponent('#mychart-dom-multi-bar');
             this.ecComponent.init((canvas, width, height, dpr) => {
@@ -294,17 +379,65 @@ Page({
               mask: false,
             })
           }
+
+      },
+      (err) =>{
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none', // "success", "loading", "none"
+          duration: 1500,
+          mask: false,
+        })
+
+      }
+    )
+      // wx.request({
+      //   // 必需
+      //   url: requestUrl + '/private/largeScreenDisplay/getPointQuotaScoreMap',
+      //   data: {
+      //     projectId:projectId,
+      //   },
+      //   header: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   success: (res) => {
+      //     barChart.hideLoading();
+      //     if (res.data.status === "success") {
+      //       this.ecComponent = this.selectComponent('#mychart-dom-multi-bar');
+      //       this.ecComponent.init((canvas, width, height, dpr) => {
+      //         // 获取组件的 canvas、width、height 后的回调函数
+      //         // 在这里初始化图表
+      //         barChart = echarts.init(canvas,  'dark', {
+      //           width: width,
+      //           height: height,
+      //           devicePixelRatio: dpr // new
+      //         });
+      //       that.setOption1(barChart,res.data.retObj,limiNum)
+      //       // canvas.setChart(barChart);
+      //       // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+      //       that.ecBar1 = barChart;
+      //       // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+      //       return barChart;
+      //     });
+      //     } else {
+      //       wx.showToast({
+      //         title: '获取数据失败',
+      //         icon: 'none', // "success", "loading", "none"
+      //         duration: 1500,
+      //         mask: false,
+      //       })
+      //     }
   
-        },
-        fail: (res) => {
-          wx.showToast({
-            title: '网络错误',
-            icon: 'none', // "success", "loading", "none"
-            duration: 1500,
-            mask: false,
-          })
-        }
-      })
+      //   },
+      //   fail: (res) => {
+      //     wx.showToast({
+      //       title: '网络错误',
+      //       icon: 'none', // "success", "loading", "none"
+      //       duration: 1500,
+      //       mask: false,
+      //     })
+      //   }
+      // })
   },
   setOption1:function (myChar,data,limiNum) {
     var that = this
@@ -552,53 +685,100 @@ Page({
       });
       barChart.showLoading(load_option)
     });
-      wx.request({
-        // 必需
-        url: requestUrl + '/private/largeScreenDisplay/getLowestPointMap',
-        data: {
-          projectId:projectId,
-        },
-        header: {
-          'Content-Type': 'application/json'
-        },
-        success: (res) => {
-          barChart.hideLoading();
-          if (res.data.status === "success") {
-            this.ecComponent = this.selectComponent('#mychart-dom-multi-bar2');
-            this.ecComponent.init((canvas, width, height, dpr) => {
-              // 获取组件的 canvas、width、height 后的回调函数
-              // 在这里初始化图表
-              barChart = echarts.init(canvas,  'dark', {
-                width: width,
-                height: height,
-                devicePixelRatio: dpr // new
-              });
-            that.setOption2(barChart,res.data.retObj,limiNum)
-            // canvas.setChart(barChart);
-            // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
-            that.ecBar2 = barChart;
-            // 注意这里一定要返回 chart 实例，否则会影响事件处理等
-            return barChart;
-          });
-          } else {
-            wx.showToast({
-              title: '获取数据失败',
-              icon: 'none', // "success", "loading", "none"
-              duration: 1500,
-              mask: false,
-            })
-          }
-  
-        },
-        fail: (res) => {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getLowestPointMap',
+      {
+        projectId:projectId,
+      },
+      app.seesionId,
+      (res) =>{
+        barChart.hideLoading();
+        if (res.data.status === "success") {
+          this.ecComponent = this.selectComponent('#mychart-dom-multi-bar2');
+          this.ecComponent.init((canvas, width, height, dpr) => {
+            // 获取组件的 canvas、width、height 后的回调函数
+            // 在这里初始化图表
+            barChart = echarts.init(canvas,  'dark', {
+              width: width,
+              height: height,
+              devicePixelRatio: dpr // new
+            });
+          that.setOption2(barChart,res.data.retObj,limiNum)
+          // canvas.setChart(barChart);
+          // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+          that.ecBar2 = barChart;
+          // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+          return barChart;
+        });
+        } else {
           wx.showToast({
-            title: '网络错误',
+            title: '获取数据失败',
             icon: 'none', // "success", "loading", "none"
             duration: 1500,
             mask: false,
           })
         }
-      })
+
+      },
+      (err) =>{
+        wx.showToast({
+          title: '获取数据失败',
+          icon: 'none', // "success", "loading", "none"
+          duration: 1500,
+          mask: false,
+        })
+
+      }
+    )
+      // wx.request({
+      //   // 必需
+      //   url: requestUrl + '/private/largeScreenDisplay/getLowestPointMap',
+      //   data: {
+      //     projectId:projectId,
+      //   },
+      //   header: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   success: (res) => {
+      //     barChart.hideLoading();
+      //     if (res.data.status === "success") {
+      //       this.ecComponent = this.selectComponent('#mychart-dom-multi-bar2');
+      //       this.ecComponent.init((canvas, width, height, dpr) => {
+      //         // 获取组件的 canvas、width、height 后的回调函数
+      //         // 在这里初始化图表
+      //         barChart = echarts.init(canvas,  'dark', {
+      //           width: width,
+      //           height: height,
+      //           devicePixelRatio: dpr // new
+      //         });
+      //       that.setOption2(barChart,res.data.retObj,limiNum)
+      //       // canvas.setChart(barChart);
+      //       // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+      //       that.ecBar2 = barChart;
+      //       // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+      //       return barChart;
+      //     });
+      //     } else {
+      //       wx.showToast({
+      //         title: '获取数据失败',
+      //         icon: 'none', // "success", "loading", "none"
+      //         duration: 1500,
+      //         mask: false,
+      //       })
+      //     }
+  
+      //   },
+      //   fail: (res) => {
+      //     wx.showToast({
+      //       title: '网络错误',
+      //       icon: 'none', // "success", "loading", "none"
+      //       duration: 1500,
+      //       mask: false,
+      //     })
+      //   }
+      // })
   },
   setOption2:function(myChar,data,limiNum){
     var that = this;
@@ -756,17 +936,17 @@ Page({
       });
       barChart.showLoading(load_option)
     });
-      wx.request({
-        // 必需
-        url: requestUrl + '/private/largeScreenDisplay/getDeptQuotaScoreMap',
-        data: {
+    
+      //调用全局 请求方法
+      app.wxRequest(
+        'GET',
+        requestUrl + '/private/largeScreenDisplay/getDeptQuotaScoreMap',
+        {
           projectId:projectId,
           govId:govId,
         },
-        header: {
-          'Content-Type': 'application/json'
-        },
-        success: (res) => {
+        app.seesionId,
+        (res) =>{
           barChart.hideLoading();
           if (res.data.status === "success") {
             this.ecComponent = this.selectComponent('#mychart-dom-multi-bar3');
@@ -793,17 +973,66 @@ Page({
               mask: false,
             })
           }
-  
+
         },
-        fail: (res) => {
+        (err) =>{
           wx.showToast({
             title: '网络错误',
             icon: 'none', // "success", "loading", "none"
             duration: 1500,
             mask: false,
           })
+
         }
-      })
+      )
+      // wx.request({
+      //   // 必需
+      //   url: requestUrl + '/private/largeScreenDisplay/getDeptQuotaScoreMap',
+      //   data: {
+      //     projectId:projectId,
+      //     govId:govId,
+      //   },
+      //   header: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   success: (res) => {
+      //     barChart.hideLoading();
+      //     if (res.data.status === "success") {
+      //       this.ecComponent = this.selectComponent('#mychart-dom-multi-bar3');
+      //       this.ecComponent.init((canvas, width, height, dpr) => {
+      //         // 获取组件的 canvas、width、height 后的回调函数
+      //         // 在这里初始化图表
+      //         barChart = echarts.init(canvas,  'dark', {
+      //           width: width,
+      //           height: height,
+      //           devicePixelRatio: dpr // new
+      //         });
+      //       that.setOption3(barChart,res.data.retObj,limiNum)
+      //       // canvas.setChart(barChart);
+      //       // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+      //       that.ecBar3 = barChart;
+      //       // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+      //       return barChart;
+      //     });
+      //     } else {
+      //       wx.showToast({
+      //         title: '获取数据失败',
+      //         icon: 'none', // "success", "loading", "none"
+      //         duration: 1500,
+      //         mask: false,
+      //       })
+      //     }
+  
+      //   },
+      //   fail: (res) => {
+      //     wx.showToast({
+      //       title: '网络错误',
+      //       icon: 'none', // "success", "loading", "none"
+      //       duration: 1500,
+      //       mask: false,
+      //     })
+      //   }
+      // })
   },
   setOption3:function (myChar,data,limiNum) {
     var that = this
@@ -1049,17 +1278,16 @@ Page({
       });
       barChart.showLoading(load_option)
     });
-      wx.request({
-        // 必需
-        url: requestUrl + '/private/largeScreenDisplay/getLowestQuotaMap',
-        data: {
-          projectId:projectId,
-        },
-        header: {
-          'Content-Type': 'application/json'
-        },
-        success: (res) => {
-          barChart.hideLoading();
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getLowestQuotaMap',
+      {
+        projectId:projectId,
+      },
+      app.seesionId,
+      (res) =>{
+        barChart.hideLoading();
           if (res.data.status === "success") {
             this.ecComponent = this.selectComponent('#mychart-dom-multi-bar4');
             this.ecComponent.init((canvas, width, height, dpr) => {
@@ -1085,17 +1313,65 @@ Page({
               mask: false,
             })
           }
+
+      },
+      (err) =>{
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none', // "success", "loading", "none"
+          duration: 1500,
+          mask: false,
+        })
+
+      }
+    )
+      // wx.request({
+      //   // 必需
+      //   url: requestUrl + '/private/largeScreenDisplay/getLowestQuotaMap',
+      //   data: {
+      //     projectId:projectId,
+      //   },
+      //   header: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   success: (res) => {
+      //     barChart.hideLoading();
+      //     if (res.data.status === "success") {
+      //       this.ecComponent = this.selectComponent('#mychart-dom-multi-bar4');
+      //       this.ecComponent.init((canvas, width, height, dpr) => {
+      //         // 获取组件的 canvas、width、height 后的回调函数
+      //         // 在这里初始化图表
+      //         barChart = echarts.init(canvas,  'dark', {
+      //           width: width,
+      //           height: height,
+      //           devicePixelRatio: dpr // new
+      //         });
+      //       that.setOption4(barChart,res.data.retObj,limiNum)
+      //       // canvas.setChart(barChart);
+      //       // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+      //       that.ecBar4 = barChart;
+      //       // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+      //       return barChart;
+      //     });
+      //     } else {
+      //       wx.showToast({
+      //         title: '获取数据失败',
+      //         icon: 'none', // "success", "loading", "none"
+      //         duration: 1500,
+      //         mask: false,
+      //       })
+      //     }
   
-        },
-        fail: (res) => {
-          wx.showToast({
-            title: '网络错误',
-            icon: 'none', // "success", "loading", "none"
-            duration: 1500,
-            mask: false,
-          })
-        }
-      })
+      //   },
+      //   fail: (res) => {
+      //     wx.showToast({
+      //       title: '网络错误',
+      //       icon: 'none', // "success", "loading", "none"
+      //       duration: 1500,
+      //       mask: false,
+      //     })
+      //   }
+      // })
   },
   setOption4:function (myChar,data,limiNum) {
     var that = this
@@ -1247,17 +1523,16 @@ Page({
       });
       barChart.showLoading(load_option)
     });
-      wx.request({
-        // 必需
-        url: requestUrl + '/private/largeScreenDisplay/getlastDayQuotaScore',
-        data: {
-          projectId:projectId,
-        },
-        header: {
-          'Content-Type': 'application/json'
-        },
-        success: (res) => {
-          barChart.hideLoading();
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getlastDayQuotaScore',
+      {
+        projectId:projectId,
+      },
+      app.seesionId,
+      (res) =>{
+        barChart.hideLoading();
           if (res.data.status === "success") {
             this.ecComponent = this.selectComponent('#mychart-dom-multi-bar5');
             this.ecComponent.init((canvas, width, height, dpr) => {
@@ -1283,17 +1558,65 @@ Page({
               mask: false,
             })
           }
+
+      },
+      (err) =>{
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none', // "success", "loading", "none"
+          duration: 1500,
+          mask: false,
+        })
+
+      }
+    )
+      // wx.request({
+      //   // 必需
+      //   url: requestUrl + '/private/largeScreenDisplay/getlastDayQuotaScore',
+      //   data: {
+      //     projectId:projectId,
+      //   },
+      //   header: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   success: (res) => {
+      //     barChart.hideLoading();
+      //     if (res.data.status === "success") {
+      //       this.ecComponent = this.selectComponent('#mychart-dom-multi-bar5');
+      //       this.ecComponent.init((canvas, width, height, dpr) => {
+      //         // 获取组件的 canvas、width、height 后的回调函数
+      //         // 在这里初始化图表
+      //         barChart = echarts.init(canvas,  'dark', {
+      //           width: width,
+      //           height: height,
+      //           devicePixelRatio: dpr // new
+      //         });
+      //       that.setOption5(barChart,res.data.retObj,limiNum)
+      //       // canvas.setChart(barChart);
+      //       // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+      //       that.ecBar5 = barChart;
+      //       // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+      //       return barChart;
+      //     });
+      //     } else {
+      //       wx.showToast({
+      //         title: '获取数据失败',
+      //         icon: 'none', // "success", "loading", "none"
+      //         duration: 1500,
+      //         mask: false,
+      //       })
+      //     }
   
-        },
-        fail: (res) => {
-          wx.showToast({
-            title: '网络错误',
-            icon: 'none', // "success", "loading", "none"
-            duration: 1500,
-            mask: false,
-          })
-        }
-      })
+      //   },
+      //   fail: (res) => {
+      //     wx.showToast({
+      //       title: '网络错误',
+      //       icon: 'none', // "success", "loading", "none"
+      //       duration: 1500,
+      //       mask: false,
+      //     })
+      //   }
+      // })
   },
   setOption5:function (myChar,data,limiNum) {
     var title=['指标合格数','指标不合格数'];
@@ -1389,16 +1712,15 @@ Page({
   },
   inintPic:function(){
     var that = this;
-    wx.request({
-      // 必需
-      url: requestUrl + '/private/largeScreenDisplay/getDeptResourceList',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getDeptResourceList',
+      {
         projectId:projectId,
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           //console.log(res.data.retObj)
           var data =res.data.retObj;
@@ -1425,16 +1747,64 @@ Page({
             mask: false,
           })
         }
+
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '网络错误',
           icon: 'none', // "success", "loading", "none"
           duration: 1500,
           mask: false,
         })
+
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/private/largeScreenDisplay/getDeptResourceList',
+    //   data: {
+    //     projectId:projectId,
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       //console.log(res.data.retObj)
+    //       var data =res.data.retObj;
+    //       var list = [];
+    //       for(let i=0; i<data.length; i++){
+    //         list.push({
+    //           'id':data[i].resourceId,
+    //           'type':'image','url':data[i].url,
+    //           'addr':(data[i].addr==null?'暂无':data[i].addr),
+    //           'desc':(data[i].description==null?'暂无':data[i].description),
+    //           'location':data[i].locationName
+    //       })
+    //       }
+    //       that.setData({
+    //         swiperList:list,
+    //         isLoadImg:true
+    //       })
+    //       that.towerSwiper('swiperList');
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取数据失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '网络错误',
+    //       icon: 'none', // "success", "loading", "none"
+    //       duration: 1500,
+    //       mask: false,
+    //     })
+    //   }
+    // })
   },
   toswiper:function(e){
     const that = this;

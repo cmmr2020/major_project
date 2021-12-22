@@ -3,6 +3,7 @@ const QQMapWX = require('../../libs/qqmap-wx-jssdk.min.js');
 // 引入跳转js
 import router from '../../utils/router.js';
 const app = getApp();
+var requestUrl = app.globalData.requestUrl; //请求路径
 let qqmapsdk;
 Page({
   /**
@@ -109,7 +110,6 @@ Page({
   // 保存用户登录信息
   saveUserLog: function() {
     var that = this;
-    var requestUrl = app.globalData.requestUrl; //请求路径
     var longitude = that.data.longitude;
     var latitude = that.data.latitude;
     var address = that.data.address;
@@ -168,6 +168,9 @@ Page({
           url: "../../correctionPackage/pages/surveyDept/dept_project/dept_project"
         })
         break;
+      case "分配点位":
+        that.checkUser(app.terminalUserId)
+        break;
       case "地图展示":
         router.navigateTo({
           url:"../../displayPackage/pages/fenXi/projectList/projectList?type=1"
@@ -212,6 +215,91 @@ Page({
       default:
         // console.log("default");
     }
-  }
+  },
+  //校验用户是否是组长
+  checkUser:function(terminalUserId){
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/wechat/api/distributeLocation/checkTerminalUser',
+      {
+        'terminalUserId': terminalUserId 
+      },
+      app.seesionId,
+      (res) =>{
+        if(res.data.status == "success"){
+          if(res.data.message == '1'){
+            app.groupIdList = res.data.retObj
+            router.navigateTo({
+              url: "../../fenPeiDWPackage/pages/projectList/projectList"
+            })
+          }else{
+            wx.showModal({
+              title: '提示',
+              content: '您没有此权限,请联系督导!',
+              success (res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                }
+              }
+            })
+          }
+        }
+      },
+      (err) =>{
+        wx.showModal({
+          title: '提示',
+          content: '系统错误!',
+          // success (res) {
+          //   if (res.confirm) {
+          //     console.log('用户点击确定')
+          //   }
+          // }
+        })
 
+      }
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/distributeLocation/checkTerminalUser',
+    //   method: "POST",
+    //   data: {
+    //     'terminalUserId': terminalUserId 
+    //   },
+    //   header: {
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   },
+    //   success: (res) => {
+    //     if(res.data.status == "success"){
+    //       if(res.data.retObj == '1'){
+    //         router.navigateTo({
+    //           url: "../../fenPeiDWPackage/pages/projectList/projectList"
+    //         })
+    //       }else{
+    //         wx.showModal({
+    //           title: '提示',
+    //           content: '您没有此权限,请联系督导!',
+    //           success (res) {
+    //             if (res.confirm) {
+    //               console.log('用户点击确定')
+    //             }
+    //           }
+    //         })
+    //       }
+    //     }
+    //   },
+    //   fail: (res) => {
+    //     wx.showModal({
+    //       title: '提示',
+    //       content: '系统错误!',
+    //       // success (res) {
+    //       //   if (res.confirm) {
+    //       //     console.log('用户点击确定')
+    //       //   }
+    //       // }
+    //     })
+    //   }
+    // })
+  }
 })

@@ -147,17 +147,15 @@ Page({
     var that = this;
     var projectId = that.data.projectId;
     var requestUrl = that.data.requestUrl;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/dataStatistics/getDataByPoint',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/dataStatistics/getDataByPoint',
+      {
         projectId: projectId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
-
+      app.seesionId,
+      (res) =>{
         if (res.data.names.length >0) {
           console.log("点位打印数据：", res.data)
           var name = res.data.names;
@@ -194,14 +192,67 @@ Page({
            }
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/dataStatistics/getDataByPoint',
+    //   data: {
+    //     projectId: projectId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+
+    //     if (res.data.names.length >0) {
+    //       console.log("点位打印数据：", res.data)
+    //       var name = res.data.names;
+    //       var name2 = [];
+    //       for (var i = 0; i < name.length; i++) {
+    //         if (name[i].length > 8) {
+    //           var name3 = name[i].substr(0, 8)
+    //         } else {
+    //           var name3 = name[i]
+    //         }
+    //         name2.push(
+    //           name3
+    //         )
+    //       }
+    //       that.setData({
+    //         answerNums: res.data.answerNums,
+    //         names: name2,
+    //         scores: res.data.scores
+    //       })
+    //     } else {
+    //       wx.showModal({
+    //         title: '提示',
+    //         content: "该类型下无数据",
+    //         showCancel: false,
+    //         confirmColor: "#0081ff",
+    //           success(res) {
+    //            if (res.confirm) {
+    //           wx.navigateBack({
+    //             delta: 1
+    //           })
+    //           } else if (res.cancel) {
+    //             console.log('用户点击取消')
+    //           }
+    //        }
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   }
 
 });

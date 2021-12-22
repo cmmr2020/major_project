@@ -99,20 +99,16 @@ Page({
     })
     // var requestUrl = that.data.requestUrl; //服务器路径
     //console.log("requestUrl:",requestUrl);
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldLocation/getFieldPointLocationList',
-      // url: 'http://localhost:8088/wechat/api/fieldLocation/getFieldPointLocationList',
-      // url: 'http://192.168.5.105:8080/wechat/api/fieldLocation/getFieldPointLocationList',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldLocation/getFieldPointLocationList',
+      {
         terminalUserId: terminalUserId,
         projectId: projectId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
-        //console.log("出来：",res)
+      app.seesionId,
+      (res) =>{
         wx.hideLoading();
         if (res.data.status ==="success") {
           var mapList = res.data.retObj;
@@ -176,14 +172,97 @@ Page({
               }
             })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldLocation/getFieldPointLocationList',
+    //   // url: 'http://localhost:8088/wechat/api/fieldLocation/getFieldPointLocationList',
+    //   // url: 'http://192.168.5.105:8080/wechat/api/fieldLocation/getFieldPointLocationList',
+    //   data: {
+    //     terminalUserId: terminalUserId,
+    //     projectId: projectId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     //console.log("出来：",res)
+    //     wx.hideLoading();
+    //     if (res.data.status ==="success") {
+    //       var mapList = res.data.retObj;
+    //       // console.log("有没有点位：",mapList)
+    //        if (typeof(mapList) === "undefined" ) {
+    //           wx.showToast({
+    //             title: '该调查员没有分配点位',
+    //             icon: 'none',
+    //             duration: 2000,
+    //             mask: true
+    //           })
+    //         }else{
+    //       let map = [];
+    //       for (let i = 0; i < mapList.length; i++) {
+    //         if (mapList[i].locationList != null) {
+    //           map.push({
+    //             pointTypeId:mapList[i].id,
+    //             isRecord:mapList[i].isRecord==null?app.data.isRecord:mapList[i].isRecord,
+    //             timeInterval:mapList[i].timeInterval==null?app.data.timeInterval:mapList[i].timeInterval,
+    //             list: mapList[i].locationList
+    //           })
+    //         }
+    //       }
+    //       let mapLists = [];
+    //       for (let i = 0; i < map.length; i++) {
+    //         for (let j = 0; j < map[i].list.length; j++) {
+    //           mapLists.push({
+    //             pointTypeId:map[i].pointTypeId,
+    //             longitude: map[i].list[j].longitude,
+    //             latitude: map[i].list[j].latitude,
+    //             name: map[i].list[j].name,
+    //             address: map[i].list[j].address,
+    //             pointId: map[i].list[j].id,
+    //             submitStatus: map[i].list[j].submitStatus,
+    //             isRecord:map[i].isRecord,
+    //             timeInterval:map[i].timeInterval
+    //           })
+    //           let pointId = map[i].list[j].id
+    //           if(!app.data.locationIsHaveAnswer.hasOwnProperty(pointId)){
+    //             if(map[i].list[j].submitStatus===1){
+    //               //将上传中的标志放到全局变量中
+    //               app.data.locationIsHaveAnswer[pointId] = 1;
+    //             }
+    //           }
+    //         }        
+    //       }
+    //       that.setData({
+    //         list: res.data.retObj,
+    //         markersList: mapLists
+    //       })
+    //       wx.setStorageSync('markersList', mapLists);
+    //       //console.log("点位", mapLists)
+    //       }
+    //     } else {
+    //       wx.showModal({
+    //           title: '提示',
+    //           content: "获取点位树失败",
+    //           showCancel:false,
+    //           confirmColor:"#0081ff",
+    //           success (res) {
+    //           }
+    //         })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
 
@@ -264,55 +343,123 @@ Page({
     if(checkstatus=='4'){
       status = 5;
     }
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldLocation/updateCheckStatus',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldLocation/updateCheckStatus',
+      {
         surveyorId: surveyorId,
         locationId: locationId,
         status: status
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           var value = wx.getStorageSync(locationId)
           if (value) {
-            wx.request({
-              // 必需
-              url: requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
-              method:'POST',
-              dataType:'json',
-              data: {
+            //调用全局 请求方法
+            app.wxRequest(
+              'POST',
+              requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
+              {
                 "surveyorId": surveyorId,
                 "locationId": locationId,
                 "projectId": projectId,
                 "addressJsonStr": value,
                 "type":0
               },
-              header: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-              success: (res) => {
-
-              },
-              fail: (res) => {
-              },
-              complete: (res) => {
+              app.seesionId,
+              (res) =>{
                 //清空缓存的该点位行走路线经纬度
-                 wx.removeStorageSync(locationId)
+                wx.removeStorageSync(locationId)
+              },
+              (err) =>{
+
               }
-            })
+            )
+            // wx.request({
+            //   // 必需
+            //   url: requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
+            //   method:'POST',
+            //   dataType:'json',
+            //   data: {
+            //     "surveyorId": surveyorId,
+            //     "locationId": locationId,
+            //     "projectId": projectId,
+            //     "addressJsonStr": value,
+            //     "type":0
+            //   },
+            //   header: {
+            //     'Content-Type': 'application/x-www-form-urlencoded'
+            //   },
+            //   success: (res) => {
+
+            //   },
+            //   fail: (res) => {
+            //   },
+            //   complete: (res) => {
+            //     //清空缓存的该点位行走路线经纬度
+            //      wx.removeStorageSync(locationId)
+            //   }
+            // })
           }
         }
         that.getLocationList(surveyorId, projectId,requestUrl);
       },
-      fail: (res) => {
-      },
-      complete: (res) => {
+      (err) =>{
+
       }
-    })
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldLocation/updateCheckStatus',
+    //   data: {
+    //     surveyorId: surveyorId,
+    //     locationId: locationId,
+    //     status: status
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status == 'success') {
+    //       var value = wx.getStorageSync(locationId)
+    //       if (value) {
+    //         wx.request({
+    //           // 必需
+    //           url: requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
+    //           method:'POST',
+    //           dataType:'json',
+    //           data: {
+    //             "surveyorId": surveyorId,
+    //             "locationId": locationId,
+    //             "projectId": projectId,
+    //             "addressJsonStr": value,
+    //             "type":0
+    //           },
+    //           header: {
+    //             'Content-Type': 'application/x-www-form-urlencoded'
+    //           },
+    //           success: (res) => {
+
+    //           },
+    //           fail: (res) => {
+    //           },
+    //           complete: (res) => {
+    //             //清空缓存的该点位行走路线经纬度
+    //              wx.removeStorageSync(locationId)
+    //           }
+    //         })
+    //       }
+    //     }
+    //     that.getLocationList(surveyorId, projectId,requestUrl);
+    //   },
+    //   fail: (res) => {
+    //   },
+    //   complete: (res) => {
+    //   }
+    // })
   },
   changeData: function() {
     console.log("接收id：", this.data.surveyorId)

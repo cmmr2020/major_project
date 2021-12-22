@@ -77,19 +77,18 @@ Page({
     var that = this;
     var requestUrl = that.data.requestUrl; //服务器路径
     var userIndex = that.data.userIndex;//用户操作的行
-    
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/getQuotaListByLocationId',
-      data: {
+
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/review/getQuotaListByLocationId',
+      {
         terminalUserId: terminalUserId,
         locationId: locationId,
         projectId: projectId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log('指标列表', res.data.retObj)
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj;
@@ -142,14 +141,85 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/getQuotaListByLocationId',
+    //   data: {
+    //     terminalUserId: terminalUserId,
+    //     locationId: locationId,
+    //     projectId: projectId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     // console.log('指标列表', res.data.retObj)
+    //     if (res.data.status == 'success') {
+    //       var quotaList = res.data.retObj;
+    //       var pointTypeId = that.data.pointTypeId
+    //       // console.log("指标分类userid：",userIndex)
+    //       if (userIndex === 0) {
+    //         let arr = [];
+    //         let ayy = [];
+    //         for (let i = 0; i < quotaList.length; i++) {
+    //           if (i === 0) {
+    //             arr.push(quotaList[i].id),
+    //               ayy.push(quotaList[i].content)
+    //           }
+    //         }
+    //         // 数组转字符得到第一个指标的id
+    //         var arrtest = arr.join();
+    //         var ayytest = ayy.join();
+    //         // console.log("arrtest:",arrtest,"ayytest:",ayytest)
+    //         that.setData({
+    //           list: res.data.retObj,
+    //           quotaName: ayytest
+    //         })
+    //         // 加载第一个指标下的问题
+    //         that.getQuotaDetail(arrtest);
+    //       } else {
+    //         let testx = [];
+    //         let testy = [];
+    //         for (let j = 0; j < quotaList.length; j++) {
+    //           if (j === userIndex) {
+    //             testx.push(quotaList[j].id),
+    //               testy.push(quotaList[j].content)
+    //           }
+    //         }
+    //         // 数组转字符得到第一个指标的id
+    //         var testxx = testx.join();
+    //         var testyy = testy.join();
+    //         // console.log("testxx:",testxx,"testyy:",testyy)
+    //         that.setData({
+    //           list: res.data.retObj,
+    //           quotaName: testyy
+    //         })
+    //         // 加载第一个指标下的问题
+    //         that.getQuotaDetail(testxx);
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取指标列表失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   // 获取指标下的问题
@@ -159,20 +229,18 @@ Page({
     var projectId = that.data.projectId;
     var locationId = that.data.pointId;
     var requestUrl = that.data.requestUrl; //服务器路径
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/getDetailQuestionListByLocationIdAndQuotaId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/review/getDetailQuestionListByLocationIdAndQuotaId',
+      {
         terminalUserId: terminalUserId,
         quotaId: quotaId,
         projectId: projectId,
         locationId: locationId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
-
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj.questions;
           console.log("指标下的详情111111：", res.data.retObj)
@@ -216,13 +284,74 @@ Page({
         }
 
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/getDetailQuestionListByLocationIdAndQuotaId',
+    //   data: {
+    //     terminalUserId: terminalUserId,
+    //     quotaId: quotaId,
+    //     projectId: projectId,
+    //     locationId: locationId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+
+    //     if (res.data.status == 'success') {
+    //       var quotaList = res.data.retObj.questions;
+    //       console.log("指标下的详情111111：", res.data.retObj)
+
+    //       let ayy = [];
+    //       for (let i = 0; i < quotaList.length; i++) {
+    //           // 拼装数据
+    //           ayy.push({
+    //             code: quotaList[i].code,
+    //             content: quotaList[i].content,
+    //             url: quotaList[i].url,
+    //             fqtCode: quotaList[i].fqtCode,
+    //             fqtId: quotaList[i].fqtId,
+    //             grade: quotaList[i].grade,
+    //             id: quotaList[i].id,
+    //             isRecord: quotaList[i].isRecord,
+    //             projectId: quotaList[i].projectId,
+    //             quotaId: quotaList[i].quotaId,
+    //             status: quotaList[i].status,
+    //             finished: quotaList[i].finished,
+    //             isAmount: quotaList[i].isAmount,
+    //             recheckId:quotaList[i].recheckId
+    //           })
+    //       }
+    //       // console.log("这是提示：",arr)
+    //       // console.log("删选后的指标详情",ayy)
+
+    //       that.setData({
+    //         listData: ayy,
+    //         quotaId: quotaId,
+    //         tips: res.data.retObj.tip
+    //       })
+
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取点位树失败',
+    //         icon: 'loading',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
 
@@ -374,18 +503,17 @@ Page({
     var that = this;
     var requestUrl = that.data.requestUrl; //服务器路径
     var userIndex = that.data.userIndex; //用户操作的行
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/getQuestionClassifyListByLocationId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/review/getQuestionClassifyListByLocationId',
+      {
         terminalUserId: terminalUserId,
         projectId: projectId,
         locationId: locationId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log('指标列表数据', res.data.retObj)
         if (res.data.status == 'success') {
           var pointTypeId = that.data.pointTypeId
@@ -439,14 +567,85 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/getQuestionClassifyListByLocationId',
+    //   data: {
+    //     terminalUserId: terminalUserId,
+    //     projectId: projectId,
+    //     locationId: locationId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     // console.log('指标列表数据', res.data.retObj)
+    //     if (res.data.status == 'success') {
+    //       var pointTypeId = that.data.pointTypeId
+    //       // that.setData({
+    //       //   list: res.data.retObj,
+    //       //   quotaName: ayytest
+    //       // })
+    //       // console.log("userIndex",userIndex)
+    //       if (userIndex === 0) {
+    //         var quotaList = res.data.retObj;
+    //         let arr = [];
+    //         let ayy = [];
+    //         for (let i = 0; i < quotaList.length; i++) {
+    //           if (i === 0) {
+    //             arr.push(quotaList[i].id),
+    //               ayy.push(quotaList[i].content)
+    //           }
+    //         }
+    //         // 数组转字符得到第一个指标的id
+    //         var arrtest = arr.join();
+    //         var ayytest = ayy.join();
+    //         that.setData({
+    //           list: res.data.retObj,
+    //           quotaName: ayytest
+    //         })
+    //         // 加载第一个指标下的问题
+    //         that.getProblemByfenlei(arrtest);
+    //       } else {
+    //         var quotaList = res.data.retObj;
+    //         let user = [];
+    //         let usery = [];
+    //         for (let j = 0; j < quotaList.length; j++) {
+    //           if (j === userIndex) {
+    //             user.push(quotaList[j].id),
+    //               usery.push(quotaList[j].content)
+    //           }
+    //         }
+    //         var userIndexId = user.join();
+    //         var userY = usery.join();
+    //         that.setData({
+    //           list: res.data.retObj,
+    //           quotaName: userY
+    //         })
+    //         that.getProblemByfenlei(userIndexId);
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取指标列表失败',
+    //         icon: 'loading',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   //  问题分类下的问题列表
@@ -456,20 +655,18 @@ Page({
     var terminalUserId = that.data.terminalUserId;
     var projectId = that.data.projectId;
     var locationId = that.data.pointId;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/getDetailQuestionListByLocationIdAndClassifyId',
-        // url: 'http://192.168.5.105:8088/mobile/review/getDetailQuestionListByLocationIdAndClassifyId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/review/getDetailQuestionListByLocationIdAndClassifyId',
+      {
         terminalUserId: terminalUserId,
         classifyId: questionClassifyId,
         projectId: projectId,
         locationId: locationId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj.questions;
           console.log("问题分类下的详情：", res.data.retObj)
@@ -510,14 +707,74 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/getDetailQuestionListByLocationIdAndClassifyId',
+    //     // url: 'http://192.168.5.105:8088/mobile/review/getDetailQuestionListByLocationIdAndClassifyId',
+    //   data: {
+    //     terminalUserId: terminalUserId,
+    //     classifyId: questionClassifyId,
+    //     projectId: projectId,
+    //     locationId: locationId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status == 'success') {
+    //       var quotaList = res.data.retObj.questions;
+    //       console.log("问题分类下的详情：", res.data.retObj)
+
+    //       let ayy = [];
+    //       for (let i = 0; i < quotaList.length; i++) {
+    //           // 拼装数据
+    //           ayy.push({
+    //             code: quotaList[i].code,
+    //             content: quotaList[i].content,
+    //             url: quotaList[i].url,
+    //             fqtCode: quotaList[i].fqtCode,
+    //             fqtId: quotaList[i].fqtId,
+    //             grade: quotaList[i].grade,
+    //             id: quotaList[i].id,
+    //             isRecord: quotaList[i].isRecord,
+    //             projectId: quotaList[i].projectId,
+    //             quotaId: quotaList[i].quotaId,
+    //             status: quotaList[i].status,
+    //             finished: quotaList[i].finished,
+    //             isAmount: quotaList[i].isAmount,
+    //             recheckId:quotaList[i].recheckId
+    //           })
+    //       }
+    //       // console.log("这是提示：",arr)
+    //       // console.log("删选后的指标详情",ayy)
+
+    //       that.setData({
+    //         listData: ayy,
+    //         tips: res.data.retObj.tip
+    //       })
+
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取点位树失败',
+    //         icon: 'loading',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   changeData: function() {

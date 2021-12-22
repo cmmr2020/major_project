@@ -49,10 +49,10 @@
         <view>
         <view style="text-align: center"> 
           <button class="cu-btn round lg {{item.finished==0?'bg-red':'bg-blue'}}"  bindtap="goToUpload" data-code='{{item.code}}' data-id='{{item.id}}'  data-type='{{item.finished}}' data-content='{{item.content}}'
-            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}">{{item.finished==0?'未测评':'已测评'}}</button>
+            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}" data-resourceCount="{{item.resourceCount}}">{{item.finished==0?'未测评':'已测评'}}</button>
           <button class="cu-btn round lg {{item.finished==0?'bg-red':'bg-blue'}}" style="margin-left:100rpx"
           bindtap="goToUpload" data-code='{{item.code}}' data-id='{{item.id}}'  data-type='{{item.finished}}' data-content='{{item.content}}'
-            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}">资源：{{item.resourceCount}}</button>
+            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}" data-resourceCount="{{item.resourceCount}}">资源：{{item.resourceCount}}</button>
         </view>    
         </view>  
           </view>
@@ -120,10 +120,10 @@
         <view>
         <view style="text-align: center"> 
           <button class="cu-btn round lg {{item.finished==0?'bg-red':'bg-blue'}}"  bindtap="goToUpload" data-code='{{item.code}}' data-id='{{item.id}}'  data-type='{{item.finished}}' data-content='{{item.content}}'
-            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}">{{item.finished==0?'未测评':'已测评'}}</button>
+            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}" data-resourceCount="{{item.resourceCount}}">{{item.finished==0?'未测评':'已测评'}}</button>
           <button class="cu-btn round lg {{item.finished==0?'bg-red':'bg-blue'}}" style="margin-left:100rpx"
           bindtap="goToUpload" data-code='{{item.code}}' data-id='{{item.id}}'  data-type='{{item.finished}}' data-content='{{item.content}}'
-            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}">资源：{{item.resourceCount}}</button>
+            data-grade='{{item.grade}}' data-quotaid='{{item.quotaId}}' data-isamount="{{item.isAmount}}" data-resourceCount="{{item.resourceCount}}">资源：{{item.resourceCount}}</button>
         </view>    
         </view>  
           </view>

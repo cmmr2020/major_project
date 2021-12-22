@@ -29,17 +29,16 @@ Page({
   },
   getData: function (projectId, pointId, requestUrl) {
     var that = this;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/dataStatistics/getRandedTreeDataByPoint',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/dataStatistics/getRandedTreeDataByPoint',
+      {
         projectId: projectId,
         pointId: pointId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.retObj) {
           console.log("打印数据：", res.data.retObj)
           that.setData({
@@ -54,14 +53,45 @@ Page({
             success(res) { }
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/dataStatistics/getRandedTreeDataByPoint',
+    //   data: {
+    //     projectId: projectId,
+    //     pointId: pointId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.retObj) {
+    //       console.log("打印数据：", res.data.retObj)
+    //       that.setData({
+    //         list: res.data.retObj
+    //       })
+    //     } else {
+    //       wx.showModal({
+    //         title: '提示',
+    //         content: "获取数据失败",
+    //         showCancel: false,
+    //         confirmColor: "#0081ff",
+    //         success(res) { }
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
 

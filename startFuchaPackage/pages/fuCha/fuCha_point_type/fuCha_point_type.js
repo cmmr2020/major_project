@@ -46,17 +46,16 @@ Page({
       mask: true
     })
     var requestUrl = that.data.requestUrl; //服务器路径
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/review/getFieldReviewPointLocationList',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/review/getFieldReviewPointLocationList',
+      {
         terminalUserId: terminalUserId,
         projectId: projectId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           wx.hideLoading();
 
@@ -105,14 +104,79 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/review/getFieldReviewPointLocationList',
+    //   data: {
+    //     terminalUserId: terminalUserId,
+    //     projectId: projectId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status == 'success') {
+    //       wx.hideLoading();
+
+    //       var mapList = res.data.retObj;
+    //         if (typeof(mapList) === "undefined" ) {
+    //           wx.showToast({
+    //             title: '该调查员没有分配点位',
+    //             icon: 'none',
+    //             duration: 3000,
+    //             mask: true
+    //           })
+    //         }else{
+    //       let map = [];
+    //       for (let i = 0; i < mapList.length; i++) {
+    //         if (mapList[i].locationList != null) {
+    //           map.push({
+    //             list: mapList[i].locationList
+    //           })
+    //         }
+    //       }
+
+    //       let mapLists = [];
+    //       for (let i = 0; i < map.length; i++) {
+    //         for (let j = 0; j < map[i].list.length; j++) {
+    //           mapLists.push({
+    //             pointTypeId:map[i].pointTypeId,
+    //             longitude: map[i].list[j].longitude,
+    //             latitude: map[i].list[j].latitude,
+    //             name: map[i].list[j].name,
+    //             address: map[i].list[j].address,
+    //             pointId: map[i].list[j].id
+    //           })
+    //         }
+    //       }
+    //       that.setData({
+    //         list: res.data.retObj,
+    //         markersList: mapLists
+    //       })
+    //       wx.setStorageSync('markersList', mapLists);
+    //     }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取点位树失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
 
@@ -181,31 +245,51 @@ Page({
     var surveyorId = that.data.surveyorId;
     var projectId = that.data.projectId;
     var requestUrl = that.data.requestUrl; //服务器路径
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldLocation/updateCheckStatus',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldLocation/updateCheckStatus',
+      {
         surveyorId: surveyorId,
         locationId: locationId,
         status: '2'
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log("提交按钮：", res.data)
 
         that.getLocationList(surveyorId, projectId);
 
-
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldLocation/updateCheckStatus',
+    //   data: {
+    //     surveyorId: surveyorId,
+    //     locationId: locationId,
+    //     status: '2'
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     // console.log("提交按钮：", res.data)
+
+    //     that.getLocationList(surveyorId, projectId);
+
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   changeData: function () {

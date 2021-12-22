@@ -61,16 +61,15 @@ Page({
     that.setData({
       modalHidden: false
     })
-    wx.request({
-      // 必需
-      url: requestUrl+'/mobile/datumTask/getResourceById',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl+'/mobile/datumTask/getResourceById',
+      {
         resourceId:id
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if(res.data.message==="success"){
           that.setData({
             documentDesc:res.data.retObj.auditContent,
@@ -85,13 +84,42 @@ Page({
           })
         }
       },
-      fail: (res) => {
-        
-      },
-      complete: (res) => {
-        
+      (err) =>{
+
       }
-    })
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl+'/mobile/datumTask/getResourceById',
+    //   data: {
+    //     resourceId:id
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if(res.data.message==="success"){
+    //       that.setData({
+    //         documentDesc:res.data.retObj.auditContent,
+    //         documentId:id
+    //       })
+    //     }else{
+    //       wx.showToast({
+    //         title: res.data.message,
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask:true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+        
+    //   },
+    //   complete: (res) => {
+        
+    //   }
+    // })
   },
   //确定--后台交互
   sub: function () {
@@ -118,48 +146,86 @@ Page({
     // console.log("auditContent",auditContent)
     // console.log("文档id：",documentId)
 
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/datumTask/updateDatumResource',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/datumTask/updateDatumResource',
+      {
         'terminalUserId': terminalUserId,
         'id': documentId,
         'auditContent': auditContent
       },
-      method: "POST",
-      header: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
-         wx.showToast({
-            title: "请求成功",
-            icon: 'none',
-            duration: 1000,
-            mask: true
-          })
-          //  var e = {
-          //   id: this.data.taskId,
-          //   projectId: this.data.projectId
-          // }
-
-          // this.onLoad(e); //最好是只写需要刷新的区域的代码，onload也可，效率低，有点low
-        } else {
           wx.showToast({
-            title: res.data.message,
-            icon: 'none',
-            duration: 1000,
-            mask: true
-          })
-        }
+             title: "请求成功",
+             icon: 'none',
+             duration: 1000,
+             mask: true
+           })
+           //  var e = {
+           //   id: this.data.taskId,
+           //   projectId: this.data.projectId
+           // }
+ 
+           // this.onLoad(e); //最好是只写需要刷新的区域的代码，onload也可，效率低，有点low
+         } else {
+           wx.showToast({
+             title: res.data.message,
+             icon: 'none',
+             duration: 1000,
+             mask: true
+           })
+         }
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/datumTask/updateDatumResource',
+    //   data: {
+    //     'terminalUserId': terminalUserId,
+    //     'id': documentId,
+    //     'auditContent': auditContent
+    //   },
+    //   method: "POST",
+    //   header: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //      wx.showToast({
+    //         title: "请求成功",
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //       //  var e = {
+    //       //   id: this.data.taskId,
+    //       //   projectId: this.data.projectId
+    //       // }
+
+    //       // this.onLoad(e); //最好是只写需要刷新的区域的代码，onload也可，效率低，有点low
+    //     } else {
+    //       wx.showToast({
+    //         title: res.data.message,
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
 
   },
   //取消
@@ -259,17 +325,16 @@ Page({
   getResourceList(taskId) {
     var that = this;
     var requestUrl = that.data.requestUrl;
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/datumTask/getDatumResourceListAndTaskByDatumDeptId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/datumTask/getDatumResourceListAndTaskByDatumDeptId',
+      {
         'id': taskId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
-          if (res.data.message == 'success') {
+      app.seesionId,
+      (res) =>{
+        if (res.data.message == 'success') {
           console.log("审核资源：",res.data.retObj)
           var gf = res.data.retObj.resource.authorityFile;
           var sm = res.data.retObj.resource.explainReport;
@@ -288,15 +353,49 @@ Page({
             mask: true
           })
         }
-
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/datumTask/getDatumResourceListAndTaskByDatumDeptId',
+    //   data: {
+    //     'id': taskId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //       if (res.data.message == 'success') {
+    //       console.log("审核资源：",res.data.retObj)
+    //       var gf = res.data.retObj.resource.authorityFile;
+    //       var sm = res.data.retObj.resource.explainReport;
+    //       var img = res.data.retObj.resource.scenePicture;
+    //       var tj = res.data.retObj.resource.statisticalTable;
+    //       var departmentTask =  res.data.retObj.departmentTask;
+    //       that.setData({
+    //         departmentTask: departmentTask
+    //       })
+    //       that.downlodaResource(gf, sm, img, tj);
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取资源失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
   downlodaResource: async function(gf, sm, img, tj) {
 
@@ -545,22 +644,21 @@ Page({
     var auditContent = that.data.desc;
     var taskId = that.data.taskId;
 
-    console.log("id", taskId)
-    console.log("合格字符串：", qualifiedResourceIds)
-    console.log("不合格字符串：", unQualifiedResourceIds)
-    console.log("审核意见：", auditContent)
-    console.log("状态：", status)
-    console.log("调查员id", terminalUserId)
+    // console.log("id", taskId)
+    // console.log("合格字符串：", qualifiedResourceIds)
+    // console.log("不合格字符串：", unQualifiedResourceIds)
+    // console.log("审核意见：", auditContent)
+    // console.log("状态：", status)
+    // console.log("调查员id", terminalUserId)
     wx.showLoading({
       title: '上传中',
       mask: true
     })
-    wx.request({
-      // 必需
-      url: requestUrl + '/mobile/datumTask/check',
-      // url: 'http://192.168.15.71:8083/wechat/api/fieldAnswer/saveFieldAnswer',
-      method: 'POST',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      requestUrl + '/mobile/datumTask/check',
+      {
         terminalUserId: terminalUserId,
         id: taskId,
         status: status,
@@ -568,33 +666,66 @@ Page({
         qualifiedResourceIds: qualifiedResourceIds,
         unQualifiedResourceIds: unQualifiedResourceIds
       },
-      header: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         console.log(res)
         if (res.data.status == 'success') {
           wx.hideLoading();
           wx.navigateBack({
           delta: 1
         })
-                  // router.redirectTo({
-          //   url: "../datum_check_index/datum_check_index?projectId=" + projectId
-          // })
-
         }
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '资源上传失败',
           icon: 'none',
           duration: 1000,
           mask: true
         })
-      },
-      complete: (res) => {
-
       }
-    })
+    )
+
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/mobile/datumTask/check',
+    //   // url: 'http://192.168.15.71:8083/wechat/api/fieldAnswer/saveFieldAnswer',
+    //   method: 'POST',
+    //   data: {
+    //     terminalUserId: terminalUserId,
+    //     id: taskId,
+    //     status: status,
+    //     auditContent: auditContent,
+    //     qualifiedResourceIds: qualifiedResourceIds,
+    //     unQualifiedResourceIds: unQualifiedResourceIds
+    //   },
+    //   header: {
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   },
+    //   success: (res) => {
+    //     console.log(res)
+    //     if (res.data.status == 'success') {
+    //       wx.hideLoading();
+    //       wx.navigateBack({
+    //       delta: 1
+    //     })
+    //               // router.redirectTo({
+    //       //   url: "../datum_check_index/datum_check_index?projectId=" + projectId
+    //       // })
+
+    //     }
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '资源上传失败',
+    //       icon: 'none',
+    //       duration: 1000,
+    //       mask: true
+    //     })
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 })

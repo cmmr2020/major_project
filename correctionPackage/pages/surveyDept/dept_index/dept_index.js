@@ -94,17 +94,34 @@ Page({
 
     let that = this;
     var requestUrl = that.data.requestUrl; //请求路径
-    wx.request({
-      url: requestUrl + "/wechat/api/carousel/getCarouselList",
-      success(res) {
-        // console.log(res);
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + "/wechat/api/carousel/getCarouselList",
+      '',
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           that.setData({
             swiperList: res.data.retObj
           })
         }
+      },
+      (err) =>{
+
       }
-    })
+    )
+    // wx.request({
+    //   url: requestUrl + "/wechat/api/carousel/getCarouselList",
+    //   success(res) {
+    //     // console.log(res);
+    //     if (res.data.status === "success") {
+    //       that.setData({
+    //         swiperList: res.data.retObj
+    //       })
+    //     }
+    //   }
+    // })
   },
   /**
    * 动态改变问题类型的ID，传参加载ID下的任务列表
@@ -145,24 +162,25 @@ Page({
     var pagenum = that.data.pagenum;
     var terminalUserId = that.data.terminalUserId;
     //console.log(e);
-    wx.request({
-      url: requestUrl + "/mobile/fieldTask/getRectifyFieldTaskList",
-      // url: "http://192.168.15.71:8083/mobile/fieldTask/getFieldTaskListByResult",
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + "/mobile/fieldTask/getRectifyFieldTaskList",
+      {
         "terminalUserId": terminalUserId,
         "pageNum": pagenum,
         "PageSize": '10',
         "projectId": projectId,
         "result": TabCur
       },
-      success(res) {
-        // console.log(res)
+      app.seesionId,
+      (res) =>{
         var list = res.data.retObj.list;
         if (list != 0) {
           that.setData({
             //1、that.data.taskList  获取当前页面存的taskList数组
-            //           //2、res.data.retObj   获取当前请求得到的taskList数组
-            //           //3、xxx.concat  把新加载的数组追加到当前页面之后
+            //2、res.data.retObj   获取当前请求得到的taskList数组
+            //3、xxx.concat  把新加载的数组追加到当前页面之后
             taskList: that.data.taskList.concat(res.data.retObj.list),
             maxPageNum: res.data.retObj.pageCount, //总页数
             isNull: ''
@@ -175,9 +193,43 @@ Page({
           })
         }
       },
-      fail: function(err) {}, //请求失败
-      complete: function() {} //请求完成后执行的函数
-    })
+      (err) =>{
+
+      }
+    )
+    // wx.request({
+    //   url: requestUrl + "/mobile/fieldTask/getRectifyFieldTaskList",
+    //   // url: "http://192.168.15.71:8083/mobile/fieldTask/getFieldTaskListByResult",
+    //   data: {
+    //     "terminalUserId": terminalUserId,
+    //     "pageNum": pagenum,
+    //     "PageSize": '10',
+    //     "projectId": projectId,
+    //     "result": TabCur
+    //   },
+    //   success(res) {
+    //     // console.log(res)
+    //     var list = res.data.retObj.list;
+    //     if (list != 0) {
+    //       that.setData({
+    //         //1、that.data.taskList  获取当前页面存的taskList数组
+    //         //           //2、res.data.retObj   获取当前请求得到的taskList数组
+    //         //           //3、xxx.concat  把新加载的数组追加到当前页面之后
+    //         taskList: that.data.taskList.concat(res.data.retObj.list),
+    //         maxPageNum: res.data.retObj.pageCount, //总页数
+    //         isNull: ''
+    //       })
+    //       // console.log("看看这个任务列表：", that.data.taskList)
+    //     } else {
+    //       that.setData({
+    //         isNull: 'true',
+    //         maxPageNum: 1
+    //       })
+    //     }
+    //   },
+    //   fail: function(err) {}, //请求失败
+    //   complete: function() {} //请求完成后执行的函数
+    // })
   },
 
   //上拉函数

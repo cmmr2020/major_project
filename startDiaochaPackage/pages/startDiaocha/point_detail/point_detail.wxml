@@ -35,6 +35,10 @@
   <text class="item-left" style="font-size:{{fontSize28}}rpx">{{list.tips}}</text>
   <text class="cuIcon-question text-orange"></text>
 </view>
+<view wx:if="{{list.isSpeechArt ==1}}" class="cu-form-group" >
+  <view class="title text-bold" style="font-size:{{fontSize30}}rpx">话术</view>
+  <text class="item-left" style="font-size:{{fontSize28}}rpx">{{list.speechArt==null?'暂无':list.speechArt}}</text>
+</view>
 
 
 <view class="padding_user">

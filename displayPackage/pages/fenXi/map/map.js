@@ -24,8 +24,8 @@ const markers_map2=new Map();
  * @returns 格式：经度最小值-经度最大值-纬度最小值-纬度最大值
  */
 function  inLongitudeLatitude(longitude,latitude,zoom){
-   console.log("MaxMinLongitudeLatitude",longitude,latitude);
-    console.log(zoom)
+  //  console.log("MaxMinLongitudeLatitude",longitude,latitude);
+  //   console.log(zoom)
   if (!longitude||!latitude||!zoom){
     return null;
   }
@@ -55,7 +55,7 @@ function  inLongitudeLatitude(longitude,latitude,zoom){
   dlng = dlng * 180 / Math.PI;// 角度转为弧度
   let dlat = distince / r;
   dlat = dlat * 180 / Math.PI;
-  console.log(dlat.constructor)
+  //console.log(dlat.constructor)
   let minlat = lat - dlat;
   let maxlat = lat + dlat;
   let minlng = lng - dlng;
@@ -107,32 +107,29 @@ Page({
       wx.setNavigationBarTitle({
       title: e.projectName+'地图展示'
     })
-    if(app.data.isStars==1){
-      this.setData({
-        is_stars : true
-      })
-    }
+
       wx.showLoading({
         title: '数据加载中',
       })
       projectId = e.projectId;
       this.initQuotaMap()
-      this.initLoactionMap()
+      if(app.data.isStars == 1){
+        this.initLoactionMap()
+      }
       this.initQuotaInfo();
     }
   },
   initQuotaMap(){
     var that = this;
-    wx.request({
-      // 必需
-      url: requestUrl + '/private/largeScreenDisplay/renderDataForMap',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/renderDataForMap',
+      {
         projectId:projectId,
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           //console.log(res)
           var dataList = res.data.retData
@@ -152,6 +149,8 @@ Page({
                   latitude: dataList[i].latitude,
                   longitude: dataList[i].longitude,
                   iconPath: icon_green,
+                  width:35,
+                  height:35
                 })
               }else{
                 allMarkers.push({
@@ -159,6 +158,8 @@ Page({
                   latitude: dataList[i].latitude,
                   longitude: dataList[i].longitude,
                   iconPath: icon_red,
+                  width:35,
+                  height:35
                 })
               }
             }
@@ -181,38 +182,110 @@ Page({
         }
 
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '网络错误',
           icon: 'none', // "success", "loading", "none"
           duration: 1500,
           mask: false,
         })
-      },
-      complete:(res) => {
-        // wx.hideLoading()
+
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/private/largeScreenDisplay/renderDataForMap',
+    //   data: {
+    //     projectId:projectId,
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       //console.log(res)
+    //       var dataList = res.data.retData
+    //       if(res.data.retData&&res.data.retData.length>1){
+    //         that.setData({
+    //           latitude:dataList[0].latitude,
+    //           longitude:dataList[0].longitude
+    //         })
+    //         for(let i=0; i<dataList.length; i++){
+    //           markers_map.set("'"+i+"'",{
+    //             latitude: dataList[i].latitude,
+    //             longitude: dataList[i].longitude
+    //           })
+    //           if(dataList[i].optionCode=='1'){//达标
+    //             allMarkers.push({
+    //               id: i,
+    //               latitude: dataList[i].latitude,
+    //               longitude: dataList[i].longitude,
+    //               iconPath: icon_green,
+    //               width:35,
+    //               height:35
+    //             })
+    //           }else{
+    //             allMarkers.push({
+    //               id: i,
+    //               latitude: dataList[i].latitude,
+    //               longitude: dataList[i].longitude,
+    //               iconPath: icon_red,
+    //               width:35,
+    //               height:35
+    //             })
+    //           }
+    //         }
+    //         this.addQuotaMarker()
+    //       }else{
+    //         wx.showToast({
+    //           title: '暂无数据',
+    //           icon: 'none', // "success", "loading", "none"
+    //           duration: 1500,
+    //           mask: false,
+    //         })
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取数据失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '网络错误',
+    //       icon: 'none', // "success", "loading", "none"
+    //       duration: 1500,
+    //       mask: false,
+    //     })
+    //   },
+    //   complete:(res) => {
+    //     // wx.hideLoading()
+    //   }
+    // })
   },
   initLoactionMap(){
     var that = this;
-    wx.request({
-      // 必需
-      url: requestUrl + '/private/largeScreenDisplay/getLocationDataForMap',
-      data: {
-        projectId:'ff80808178cb8dc80178dfb592f84609',
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getLocationDataForMap',
+      {
+        projectId:projectId,
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           var dataList = res.data.reportVo
           if(res.data.reportVo&&res.data.reportVo.length>1){
             that.setData({
-              latitude2:dataList[0].latitude,
-              longitude2:dataList[0].longitude,
-              locationNum:res.data.reportVo.length
+              latitude2:Number(dataList[0].latitude),
+              longitude2:Number(dataList[0].longitude),
+              locationNum:res.data.reportVo.length,
+              is_stars : true
             })
             for(let i=0; i<dataList.length; i++){
               let obj = dataList[i];
@@ -220,8 +293,8 @@ Page({
               if(obj.rate >= 95){
                 allMarkers2.push({
                   id: i,
-                  latitude: obj.latitude,
-                  longitude: obj.longitude,
+                  latitude: Number(obj.latitude),
+                  longitude: Number(obj.longitude),
                   iconPath: '../../../../images/R.png',
                   width:24,
                   height:24
@@ -229,8 +302,8 @@ Page({
               }else if(obj.rate >= 90 && obj.rate < 95){
                 allMarkers2.push({
                   id: i,
-                  latitude: obj.latitude,
-                  longitude: obj.longitude,
+                  latitude: Number(obj.latitude),
+                  longitude: Number(obj.longitude),
                   iconPath: '../../../../images/P.png',
                   width:24,
                   height:24
@@ -238,8 +311,8 @@ Page({
               }else if(obj.rate >= 80 && obj.rate < 90){
                 allMarkers2.push({
                   id: i,
-                  latitude: obj.latitude,
-                  longitude: obj.longitude,
+                  latitude: Number(obj.latitude),
+                  longitude: Number(obj.longitude),
                   iconPath: '../../../../images/Y.png',
                   width:24,
                   height:24
@@ -247,8 +320,8 @@ Page({
               }else if(obj.rate >= 75 && obj.rate < 80){
                 allMarkers2.push({
                   id: i,
-                  latitude: obj.latitude,
-                  longitude: obj.longitude,
+                  latitude: Number(obj.latitude),
+                  longitude: Number(obj.longitude),
                   iconPath: '../../../../images/G.png',
                   width:24,
                   height:24
@@ -256,8 +329,8 @@ Page({
               }else if(obj.rate < 75){
                 allMarkers2.push({
                   id: i,
-                  latitude: obj.latitude,
-                  longitude: obj.longitude,
+                  latitude: Number(obj.latitude),
+                  longitude: Number(obj.longitude),
                   iconPath: '../../../../images/B.png',
                   width:24,
                   height:24
@@ -284,32 +357,130 @@ Page({
         }
 
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '网络错误',
           icon: 'none', // "success", "loading", "none"
           duration: 1500,
           mask: false,
         })
-      },
-      complete:(res) => {
-        // wx.hideLoading()
+
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/private/largeScreenDisplay/getLocationDataForMap',
+    //   data: {
+    //     projectId:projectId,
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       var dataList = res.data.reportVo
+    //       if(res.data.reportVo&&res.data.reportVo.length>1){
+    //         that.setData({
+    //           latitude2:Number(dataList[0].latitude),
+    //           longitude2:Number(dataList[0].longitude),
+    //           locationNum:res.data.reportVo.length,
+    //           is_stars : true
+    //         })
+    //         for(let i=0; i<dataList.length; i++){
+    //           let obj = dataList[i];
+    //           markers_map2.set("'"+i+"'",{'id':obj.id,'name':obj.name});
+    //           if(obj.rate >= 95){
+    //             allMarkers2.push({
+    //               id: i,
+    //               latitude: Number(obj.latitude),
+    //               longitude: Number(obj.longitude),
+    //               iconPath: '../../../../images/R.png',
+    //               width:24,
+    //               height:24
+    //             })
+    //           }else if(obj.rate >= 90 && obj.rate < 95){
+    //             allMarkers2.push({
+    //               id: i,
+    //               latitude: Number(obj.latitude),
+    //               longitude: Number(obj.longitude),
+    //               iconPath: '../../../../images/P.png',
+    //               width:24,
+    //               height:24
+    //             })
+    //           }else if(obj.rate >= 80 && obj.rate < 90){
+    //             allMarkers2.push({
+    //               id: i,
+    //               latitude: Number(obj.latitude),
+    //               longitude: Number(obj.longitude),
+    //               iconPath: '../../../../images/Y.png',
+    //               width:24,
+    //               height:24
+    //             })
+    //           }else if(obj.rate >= 75 && obj.rate < 80){
+    //             allMarkers2.push({
+    //               id: i,
+    //               latitude: Number(obj.latitude),
+    //               longitude: Number(obj.longitude),
+    //               iconPath: '../../../../images/G.png',
+    //               width:24,
+    //               height:24
+    //             })
+    //           }else if(obj.rate < 75){
+    //             allMarkers2.push({
+    //               id: i,
+    //               latitude: Number(obj.latitude),
+    //               longitude: Number(obj.longitude),
+    //               iconPath: '../../../../images/B.png',
+    //               width:24,
+    //               height:24
+    //             })
+    //           }
+              
+    //         }
+    //         this.addLocationMarker()
+    //       }else{
+    //         wx.showToast({
+    //           title: '暂无数据',
+    //           icon: 'none', // "success", "loading", "none"
+    //           duration: 1500,
+    //           mask: false,
+    //         })
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取数据失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '网络错误',
+    //       icon: 'none', // "success", "loading", "none"
+    //       duration: 1500,
+    //       mask: false,
+    //     })
+    //   },
+    //   complete:(res) => {
+    //     // wx.hideLoading()
+    //   }
+    // })
   },
   //初始化指标数据
   initQuotaInfo:function(){
     var that = this;
-    wx.request({
-      // 必需
-      url: requestUrl + '/private/largeScreenDisplay/getQuotaScoreMap',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getQuotaScoreMap',
+      {
         projectId:projectId,
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status === "success") {
           var okNum = res.data.retObj.okNum;
           var allNum = res.data.retObj.all;
@@ -330,18 +501,58 @@ Page({
         }
 
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '网络错误',
           icon: 'none', // "success", "loading", "none"
           duration: 1500,
           mask: false,
         })
-      },
-      complete:(res) => {
-         wx.hideLoading()
+
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/private/largeScreenDisplay/getQuotaScoreMap',
+    //   data: {
+    //     projectId:projectId,
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status === "success") {
+    //       var okNum = res.data.retObj.okNum;
+    //       var allNum = res.data.retObj.all;
+    //       var not_ok_num = res.data.retObj.UnOkNum;
+    //       that.setData({
+    //         quota_total:allNum,
+    //         quota_ok_num:okNum,
+    //         quota_not_ok_num:not_ok_num,
+    //         isLoadStatistics:true
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取数据失败',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+    //       })
+    //     }
+
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '网络错误',
+    //       icon: 'none', // "success", "loading", "none"
+    //       duration: 1500,
+    //       mask: false,
+    //     })
+    //   },
+    //   complete:(res) => {
+    //      wx.hideLoading()
+    //   }
+    // })
   },
   addQuotaMarker() {
     const markers = allMarkers
@@ -394,57 +605,107 @@ Page({
           wx.showLoading({
             title: '数据加载中',
           })
-          wx.request({
-            // 必需
-            url: requestUrl + '/private/largeScreenDisplay/getLocationScoreList',
-            data: {
-              projectId: projectId,
-              minlat: latAndLngArr[0],
-              maxlat: latAndLngArr[1],
-              minlng: latAndLngArr[2],
-              maxlng: latAndLngArr[3]
-            },
-            header: {
-              'Content-Type': 'application/json'
-            },
-            success: (res) => {
-              if (res.data.status=='success') {
-                if (res.data.retObj.length > 1) {
-                  var arry = new Array();
-                  that.setData({
-                    quota_info_list:res.data.retObj,
-                    showQuotaInfo:true,
-                    model_title:latAndLngArr[4]+'米,附近点位测评情况'
-                  })
-                }else{
-                  wx.showToast({
-                    title: '暂无数据',
-                    icon: 'none', // "success", "loading", "none"
-                    duration: 1500,
-                    mask: false,
-                  })
-                }
-              }else{
-                wx.showToast({
-                  title: '暂无数据',
-                  icon: 'none', // "success", "loading", "none"
-                  duration: 1500,
-                  mask: false,
-                })
-              }
-            },
-            fail: (res) => {
-              wx.showToast({
-                title: '网络错误',
-                icon: 'none', // "success", "loading", "none"
-                duration: 1500,
-                mask: false,
-              })
-            },
-            complete:(res) => {
-              wx.hideLoading()
-            }
+          
+//调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getLocationScoreList',
+      {
+        projectId: projectId,
+        minlat: latAndLngArr[0],
+        maxlat: latAndLngArr[1],
+        minlng: latAndLngArr[2],
+        maxlng: latAndLngArr[3]
+      },
+      app.seesionId,
+      (res) =>{
+        if (res.data.status=='success') {
+          if (res.data.retObj.length > 1) {
+            var arry = new Array();
+            that.setData({
+              quota_info_list:res.data.retObj,
+              showQuotaInfo:true,
+              model_title:latAndLngArr[4]+'米,附近点位测评情况'
+            })
+          }else{
+            wx.showToast({
+              title: '暂无数据',
+              icon: 'none', // "success", "loading", "none"
+              duration: 1500,
+              mask: false,
+            })
+          }
+        }else{
+          wx.showToast({
+            title: '暂无数据',
+            icon: 'none', // "success", "loading", "none"
+            duration: 1500,
+            mask: false,
           })
+        }
+
+      },
+      (err) =>{
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none', // "success", "loading", "none"
+          duration: 1500,
+          mask: false,
+        })
+
+      }
+    )
+          // wx.request({
+          //   // 必需
+          //   url: requestUrl + '/private/largeScreenDisplay/getLocationScoreList',
+          //   data: {
+          //     projectId: projectId,
+          //     minlat: latAndLngArr[0],
+          //     maxlat: latAndLngArr[1],
+          //     minlng: latAndLngArr[2],
+          //     maxlng: latAndLngArr[3]
+          //   },
+          //   header: {
+          //     'Content-Type': 'application/json'
+          //   },
+          //   success: (res) => {
+          //     if (res.data.status=='success') {
+          //       if (res.data.retObj.length > 1) {
+          //         var arry = new Array();
+          //         that.setData({
+          //           quota_info_list:res.data.retObj,
+          //           showQuotaInfo:true,
+          //           model_title:latAndLngArr[4]+'米,附近点位测评情况'
+          //         })
+          //       }else{
+          //         wx.showToast({
+          //           title: '暂无数据',
+          //           icon: 'none', // "success", "loading", "none"
+          //           duration: 1500,
+          //           mask: false,
+          //         })
+          //       }
+          //     }else{
+          //       wx.showToast({
+          //         title: '暂无数据',
+          //         icon: 'none', // "success", "loading", "none"
+          //         duration: 1500,
+          //         mask: false,
+          //       })
+          //     }
+          //   },
+          //   fail: (res) => {
+          //     wx.showToast({
+          //       title: '网络错误',
+          //       icon: 'none', // "success", "loading", "none"
+          //       duration: 1500,
+          //       mask: false,
+          //     })
+          //   },
+          //   complete:(res) => {
+          //     wx.hideLoading()
+          //   }
+          // })
       }
       },
       fail:function(){
@@ -461,12 +722,12 @@ Page({
   markertap(e) {
     // console.log(markers_map)
     var obj = markers_map.get("'"+e.markerId+"'")
-    console.log(obj)
+    //console.log(obj)
     var that = this;
     mapCtx.getScale({
       success:function(res){
         var latAndLngArr = inLongitudeLatitude(obj.longitude, obj.latitude, res.scale)
-        console.log(latAndLngArr)
+        //console.log(latAndLngArr)
         if (latAndLngArr == null) {
           wx.showToast({
             title: '获取坐标指标失败',
@@ -480,20 +741,19 @@ Page({
           wx.showLoading({
             title: '数据加载中',
           })
-          wx.request({
-            // 必需
-            url: requestUrl + '/private/largeScreenDisplay/getLocationScoreList',
-            data: {
+          //调用全局 请求方法
+          app.wxRequest(
+            'GET',
+            requestUrl + '/private/largeScreenDisplay/getLocationScoreList',
+            {
               projectId: projectId,
               minlat: latAndLngArr[0],
               maxlat: latAndLngArr[1],
               minlng: latAndLngArr[2],
               maxlng: latAndLngArr[3]
             },
-            header: {
-              'Content-Type': 'application/json'
-            },
-            success: (res) => {
+            app.seesionId,
+            (res) =>{
               if (res.data.status=='success') {
                 if (res.data.retObj.length > 1) {
                   that.setData({
@@ -517,19 +777,68 @@ Page({
                   mask: false,
                 })
               }
+
             },
-            fail: (res) => {
+            (err) =>{
               wx.showToast({
                 title: '网络错误',
                 icon: 'none', // "success", "loading", "none"
                 duration: 1500,
                 mask: false,
               })
-            },
-            complete:(res) => {
-              wx.hideLoading()
+
             }
-          })
+          )
+          // wx.request({
+          //   // 必需
+          //   url: requestUrl + '/private/largeScreenDisplay/getLocationScoreList',
+          //   data: {
+          //     projectId: projectId,
+          //     minlat: latAndLngArr[0],
+          //     maxlat: latAndLngArr[1],
+          //     minlng: latAndLngArr[2],
+          //     maxlng: latAndLngArr[3]
+          //   },
+          //   header: {
+          //     'Content-Type': 'application/json'
+          //   },
+          //   success: (res) => {
+          //     if (res.data.status=='success') {
+          //       if (res.data.retObj.length > 1) {
+          //         that.setData({
+          //           quota_info_list:res.data.retObj,
+          //           showQuotaInfo:true,
+          //           model_title:latAndLngArr[4]+'米,附近点位测评情况'
+          //         })
+          //       }else{
+          //         wx.showToast({
+          //           title: '暂无数据',
+          //           icon: 'none', // "success", "loading", "none"
+          //           duration: 1500,
+          //           mask: false,
+          //         })
+          //       }
+          //     }else{
+          //       wx.showToast({
+          //         title: '暂无数据',
+          //         icon: 'none', // "success", "loading", "none"
+          //         duration: 1500,
+          //         mask: false,
+          //       })
+          //     }
+          //   },
+          //   fail: (res) => {
+          //     wx.showToast({
+          //       title: '网络错误',
+          //       icon: 'none', // "success", "loading", "none"
+          //       duration: 1500,
+          //       mask: false,
+          //     })
+          //   },
+          //   complete:(res) => {
+          //     wx.hideLoading()
+          //   }
+          // })
       }
       },
       fail:function(){
@@ -545,23 +854,21 @@ Page({
   markertap2(e) {
     // console.log(markers_map)
     var obj = markers_map2.get("'"+e.markerId+"'")
-    console.log(obj)
+    //console.log(obj)
     var that = this;
     wx.showLoading({
       title: '数据加载中',
     })
-    wx.request({
-      // 必需
-      url: requestUrl + '/private/largeScreenDisplay/getLocationQuotaDataForMap',
-      data: {
-        projectId: 'ff80808178cb8dc80178dfb592f84609',
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getLocationQuotaDataForMap',
+      {
+        projectId: projectId,
         locationId:obj.id
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
-        console.log(res)
+      app.seesionId,
+      (res) =>{
         if (res.data.status=='success') {
           if (res.data.reportVo.length > 1) {
             that.setData({
@@ -585,19 +892,66 @@ Page({
             mask: false,
           })
         }
+
       },
-      fail: (res) => {
+      (err) =>{
         wx.showToast({
           title: '网络错误',
           icon: 'none', // "success", "loading", "none"
           duration: 1500,
           mask: false,
         })
-      },
-      complete:(res) => {
-        wx.hideLoading()
+
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/private/largeScreenDisplay/getLocationQuotaDataForMap',
+    //   data: {
+    //     projectId: projectId,
+    //     locationId:obj.id
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     //console.log(res)
+    //     if (res.data.status=='success') {
+    //       if (res.data.reportVo.length > 1) {
+    //         that.setData({
+    //           location_info_list:res.data.reportVo,
+    //           showLocationInfo:true,
+    //           model_title2:obj.name
+    //         })
+    //       }else{
+    //         wx.showToast({
+    //           title: '暂无数据',
+    //           icon: 'none', // "success", "loading", "none"
+    //           duration: 1500,
+    //           mask: false,
+    //         })
+    //       }
+    //     }else{
+    //       wx.showToast({
+    //         title: '暂无数据',
+    //         icon: 'none', // "success", "loading", "none"
+    //         duration: 1500,
+    //         mask: false,
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '网络错误',
+    //       icon: 'none', // "success", "loading", "none"
+    //       duration: 1500,
+    //       mask: false,
+    //     })
+    //   },
+    //   complete:(res) => {
+    //     wx.hideLoading()
+    //   }
+    // })
   },
   translateMarker: function () {
     const length = this.data.markers.length
@@ -617,10 +971,10 @@ Page({
       },
       animationEnd() {
         that.setData({markers})
-        console.log('animation end')
+        //console.log('animation end')
       },
       complete(res) {
-        console.log('translateMarker', res)
+        //console.log('translateMarker', res)
       }
     })
   },
@@ -631,7 +985,7 @@ Page({
   changeMap(){
     let that = this;
     let type = that.data.map_Type;
-    console.log(type)
+    //console.log(type)
     if(type==1){
       that.setData({
         map_Type:2

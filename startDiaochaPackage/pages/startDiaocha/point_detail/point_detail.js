@@ -63,17 +63,15 @@ Page({
   getPointDetail: function(pointId) {
     var that = this;
     var requestUrl = that.data.requestUrl; //服务器路径
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldLocation/getFieldLocationDetailById',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldLocation/getFieldLocationDetailById',
+      {
         id: pointId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
-        // console.log("点位详情",res)
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           that.setData({
             list: res.data.retObj
@@ -87,14 +85,44 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldLocation/getFieldLocationDetailById',
+    //   data: {
+    //     id: pointId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //      console.log("点位详情",res)
+    //     if (res.data.status == 'success') {
+    //       that.setData({
+    //         list: res.data.retObj
+    //       })
+
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取点位树失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   goToquota_list: function() {

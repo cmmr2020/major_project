@@ -57,7 +57,40 @@ Page({
   getResourceList(taskId) {
     var that = this;
     var requestUrl = that.data.requestUrl;
-    wx.request({
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/datumTask/getDatumResourceListAndTaskByDatumDeptId',
+      {
+        'id': taskId
+      },
+      app.seesionId,
+      (res) =>{
+        if (res.data.message == 'success') {
+          console.log("材料下载：",res.data.retObj)
+          var gf = res.data.retObj.resource.authorityFile;
+          var sm = res.data.retObj.resource.explainReport;
+          var img = res.data.retObj.resource.scenePicture;
+          var tj = res.data.retObj.resource.statisticalTable;
+          var commitContent =  res.data.retObj.departmentTask.auditContent;
+          that.setData({
+            commitContent:commitContent
+          }) 
+          that.downlodaResource(gf, sm, img, tj);
+        } else {
+          wx.showToast({
+            title: '获取资源失败',
+            icon: 'none',
+            duration: 1000,
+            mask: true
+          })
+        }
+      },
+      (err) =>{
+
+      }
+    )
+   /* wx.request({
       // 必需
       url: requestUrl + '/mobile/datumTask/getDatumResourceListAndTaskByDatumDeptId',
       data: {
@@ -93,7 +126,7 @@ Page({
       complete: (res) => {
 
       }
-    })
+    })*/
   },
   downlodaResource: async function(gf, sm, img, tj) {
 

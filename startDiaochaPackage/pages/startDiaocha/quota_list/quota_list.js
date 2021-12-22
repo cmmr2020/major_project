@@ -2,6 +2,7 @@
 var app = getApp();
 // 引入跳转js
 import router from '../../../../utils/router.js';
+var show_history_ques_map = new Map();
 Page({
   data: {
     requestUrl: '', //服务器路径                          
@@ -105,7 +106,7 @@ Page({
   },
   checkIsRecord:function(){
     //console.log(app.data.locationUpdateFlag)
-    console.log(this.data)
+    //console.log(this.data)
     if(app.data.locationUpdateFlag===true){
       //console.log('定位已开,return')
       return
@@ -223,18 +224,17 @@ Page({
     var that = this;
     var requestUrl = that.data.requestUrl; //服务器路径
     var userIndex = that.data.userIndex;//用户操作的行
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/quota/getQuotaListByPointId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/quota/getQuotaListByPointId',
+      {
         pointId: pointTypeId,
         locationId: locationId,
         projectId: projectId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         // console.log('指标列表', res.data.retObj)
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj;
@@ -297,13 +297,91 @@ Page({
           })
         }
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/quota/getQuotaListByPointId',
+    //   data: {
+    //     pointId: pointTypeId,
+    //     locationId: locationId,
+    //     projectId: projectId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     // console.log('指标列表', res.data.retObj)
+    //     if (res.data.status == 'success') {
+    //       var quotaList = res.data.retObj;
+    //       var pointTypeId = that.data.pointTypeId
+    //       // console.log("指标分类userid：",userIndex)
+    //       if(typeof(quotaList) == "undefined"){
+    //         that.setData({
+    //           list: [],
+    //           quotaName: [],
+    //           listData: [],
+    //           tips: []
+    //         })
+    //         return;
+    //       }
+    //       if(userIndex===0){
+    //           let arr = [];
+    //           let ayy = [];
+    //           for (let i = 0; i < quotaList.length; i++) {
+    //             if (i === 0) {
+    //               arr.push(quotaList[i].id),
+    //                 ayy.push(quotaList[i].content)
+    //             }
+    //           }
+    //           // 数组转字符得到第一个指标的id
+    //           var arrtest = arr.join();
+    //           var ayytest = ayy.join();
+    //           // console.log("arrtest:",arrtest,"ayytest:",ayytest)
+    //           that.setData({
+    //             list: res.data.retObj,
+    //             quotaName: ayytest
+    //           })
+    //           // 加载第一个指标下的问题
+    //           that.getQuotaDetail(arrtest, pointTypeId);
+    //       }else{
+    //           let testx = [];
+    //           let testy = [];
+    //           for (let j = 0; j < quotaList.length; j++) {
+    //             if (j === userIndex) {
+    //               testx.push(quotaList[j].id),
+    //                 testy.push(quotaList[j].content)
+    //             }
+    //           }
+    //           // 数组转字符得到第一个指标的id
+    //           var testxx = testx.join();
+    //           var testyy = testy.join();
+    //           // console.log("testxx:",testxx,"testyy:",testyy)
+    //           that.setData({
+    //             list: res.data.retObj,
+    //             quotaName: testyy
+    //           })
+    //           // 加载第一个指标下的问题
+    //           that.getQuotaDetail(testxx, pointTypeId);
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取指标列表失败',
+    //         icon: 'none',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   // 获取指标下的问题
@@ -313,24 +391,21 @@ Page({
     var pointId = that.data.pointId;
     var requestUrl = that.data.requestUrl; //服务器路径
     var pointTypeId = that.data.pointTypeId;
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuotaId',
-      //  url: 'http://192.168.5.105:8088/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuotaId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuotaId',
+      {
         quotaId: quotaId,
         pointId: pointTypeId,
         projectId: projectId,
         locationId: pointId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj;
-          // console.log("指标下的详情111111：", quotaList)
-
+           //console.log("指标下的详情111111：", quotaList)
           let arr = [];
           let ayy = [];
           for (let i = 0; i < quotaList.length; i++) {
@@ -354,8 +429,15 @@ Page({
                 isAmount: quotaList[i].isAmount,
                 resourceCount:quotaList[i].resourceCount,
                 isOk:quotaList[i].isOk,
-                unqualified:quotaList[i].unqualified
+                unqualified:quotaList[i].unqualified,
+                isFacilities:quotaList[i].isFacilities,
+                isOkHistoryResult:quotaList[i].isOkHistoryResult
               })
+            }
+            if(quotaList[i].isFacilities == '1'&& quotaList[i].isOkHistoryResult =='1'){
+              if(!show_history_ques_map.has(quotaList[i].code)){
+                show_history_ques_map.set(quotaList[i].code,'false');
+              }
             }
           }
           that.setData({
@@ -372,17 +454,85 @@ Page({
           })
         }
       },
-      fail: (res) => {
-
-      },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuotaId',
+    //   //  url: 'http://192.168.5.105:8088/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuotaId',
+    //   data: {
+    //     quotaId: quotaId,
+    //     pointId: pointTypeId,
+    //     projectId: projectId,
+    //     locationId: pointId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status == 'success') {
+    //       var quotaList = res.data.retObj;
+    //        //console.log("指标下的详情111111：", quotaList)
+    //       let arr = [];
+    //       let ayy = [];
+    //       for (let i = 0; i < quotaList.length; i++) {
+    //         if (quotaList[i].type === 2) {
+    //           arr.push(quotaList[i].content)
+    //         } else {
+    //           // 拼装数据
+    //           ayy.push({
+    //             code: quotaList[i].code,
+    //             content: quotaList[i].content,
+    //             url: quotaList[i].url,
+    //             fqtCode: quotaList[i].fqtCode,
+    //             fqtId: quotaList[i].fqtId,
+    //             grade: quotaList[i].grade,
+    //             id: quotaList[i].id,
+    //             isRecord: quotaList[i].isRecord,
+    //             projectId: quotaList[i].projectId,
+    //             quotaId: quotaList[i].quotaId,
+    //             status: quotaList[i].status,
+    //             finished: quotaList[i].finished,
+    //             isAmount: quotaList[i].isAmount,
+    //             resourceCount:quotaList[i].resourceCount,
+    //             isOk:quotaList[i].isOk,
+    //             unqualified:quotaList[i].unqualified,
+    //             isFacilities:quotaList[i].isFacilities,
+    //             isOkHistoryResult:quotaList[i].isOkHistoryResult
+    //           })
+    //         }
+    //         if(quotaList[i].isFacilities == '1'&& quotaList[i].isOkHistoryResult =='1'){
+    //           if(!show_history_ques_map.has(quotaList[i].code)){
+    //             show_history_ques_map.set(quotaList[i].code,'false');
+    //           }
+    //         }
+    //       }
+    //       that.setData({
+    //         listData: ayy,
+    //         quotaId: quotaId,
+    //         tips: arr
+    //       })
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取点位树失败',
+    //         icon: 'loading',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
   // 跳转上传页面
   goToUpload: function(e) {
-    //console.log(e)
     var that = this;
     var terminalUserId = app.terminalUserId;
     var bgColorUi = wx.getStorageSync('bgColorUi');
@@ -402,6 +552,18 @@ Page({
     var fontSize = that.data.fontSize;
     var bgColor = that.data.bgColor;
     var requestUrl = that.data.requestUrl; 
+    var resourceCount = parseInt(e.currentTarget.dataset.resourcecount);
+    if(resourceCount<1&&show_history_ques_map.has(code)){
+      if(show_history_ques_map.get(code)!='true'){
+        wx.showToast({
+          title: '请先点击旗帜图标,查看历史资源',
+          icon:'none',
+          duration: 1000,
+          mask: true
+        })
+        return
+      }
+    }
 
     //跳转上传页面
     router.navigateTo({
@@ -531,18 +693,17 @@ Page({
     if (typeof(userIndex)==='undefined') {
       var userIndex=0;
     }
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldQuestionClassify/getFieldQuestionClassifyListByLocationId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldQuestionClassify/getFieldQuestionClassifyListByLocationId',
+      {
         pointId: pointTypeId,
         projectId: projectId,
         locationId: locationId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         //console.log('指标列表数据', res.data.retObj)
         if (res.data.status == 'success') {
           var pointTypeId = that.data.pointTypeId
@@ -600,37 +761,110 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldQuestionClassify/getFieldQuestionClassifyListByLocationId',
+    //   data: {
+    //     pointId: pointTypeId,
+    //     projectId: projectId,
+    //     locationId: locationId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     //console.log('指标列表数据', res.data.retObj)
+    //     if (res.data.status == 'success') {
+    //       var pointTypeId = that.data.pointTypeId
+    //       if (userIndex === 0) {
+    //         var quotaList = res.data.retObj;
+    //         let arr = [];
+    //         let ayy = [];
+    //         if(typeof(quotaList) == "undefined"){
+    //           that.setData({
+    //             list: [],
+    //             quotaName: [],
+    //             listData: [],
+    //             tips: []
+    //           })
+    //           return;
+    //         }
+    //         for (let i = 0; i < quotaList.length; i++) {
+    //           if (i === 0) {
+    //             arr.push(quotaList[i].id),
+    //               ayy.push(quotaList[i].content)
+    //           }
+    //         }
+    //         // 数组转字符得到第一个指标的id
+    //         var arrtest = arr.join();
+    //         var ayytest = ayy.join();
+    //         that.setData({
+    //           list: res.data.retObj,
+    //           quotaName: ayytest
+    //         })
+    //         // 加载第一个指标下的问题
+    //         that.getProblemByfenlei(pointTypeId, arrtest, projectId, locationId);
+    //       } else {
+    //       var quotaList = res.data.retObj;
+    //         let user = [];
+    //         let usery = [];
+    //         for (let j = 0; j < quotaList.length; j++) {
+    //           if (j === userIndex) {
+    //             user.push(quotaList[j].id),
+    //               usery.push(quotaList[j].content)
+    //           }
+    //         }
+    //         var userIndexId = user.join();
+    //         var userY = usery.join();
+    //         that.setData({
+    //           list: res.data.retObj,
+    //           quotaName: userY
+    //         })
+    //         that.getProblemByfenlei(pointTypeId, userIndexId, projectId, locationId);
+    //       }
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取指标列表失败',
+    //         icon: 'loading',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   //  问题分类下的问题列表
   getProblemByfenlei: function(pointTypeId, questionClassifyId, projectId, locationId) {
     var that = this;
     var requestUrl = that.data.requestUrl; //服务器路径
-    wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuestionClassifyId',
-      // url: 'http://192.168.5.105:8088/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuestionClassifyId',
-      data: {
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuestionClassifyId',
+      {
         pointId: pointTypeId,
         questionClassifyId: questionClassifyId,
         projectId: projectId,
         locationId: locationId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj;
-           console.log("问题分类指标下的详情：", quotaList)
+           //console.log("问题分类指标下的详情：", quotaList)
           let arr = [];
           let ayy = [];
           for (let i = 0; i < quotaList.length; i++) {
@@ -657,8 +891,12 @@ Page({
                 unqualified:quotaList[i].unqualified,
                 isFacilities:quotaList[i].isFacilities,
                 isOkHistoryResult:quotaList[i].isOkHistoryResult
-
               })
+              if(quotaList[i].isFacilities == '1'&& quotaList[i].isOkHistoryResult =='1'){
+                if(!show_history_ques_map.has(quotaList[i].code)){
+                  show_history_ques_map.set(quotaList[i].code,'false');
+                }
+              }
             }
           }
           // console.log("啥意思啊：",ayy)
@@ -675,14 +913,85 @@ Page({
             mask: true
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
+      (err) =>{
 
       }
-    })
+    )
+    // wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuestionClassifyId',
+    //   // url: 'http://192.168.5.105:8088/wechat/api/fieldQuestion/getDetailQuestionListByPointIdAndQuestionClassifyId',
+    //   data: {
+    //     pointId: pointTypeId,
+    //     questionClassifyId: questionClassifyId,
+    //     projectId: projectId,
+    //     locationId: locationId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     if (res.data.status == 'success') {
+    //       var quotaList = res.data.retObj;
+    //        //console.log("问题分类指标下的详情：", quotaList)
+    //       let arr = [];
+    //       let ayy = [];
+    //       for (let i = 0; i < quotaList.length; i++) {
+    //         if (quotaList[i].type === 2) {
+    //           arr.push(quotaList[i].content)
+    //         } else {
+    //           // 拼装数据
+    //           ayy.push({
+    //             code: quotaList[i].code,
+    //             content: quotaList[i].content,
+    //             url: quotaList[i].url,
+    //             fqtCode: quotaList[i].fqtCode,
+    //             fqtId: quotaList[i].fqtId,
+    //             grade: quotaList[i].grade,
+    //             id: quotaList[i].id,
+    //             isRecord: quotaList[i].isRecord,
+    //             projectId: quotaList[i].projectId,
+    //             quotaId: quotaList[i].quotaId,
+    //             status: quotaList[i].status,
+    //             finished: quotaList[i].finished,
+    //             isAmount: quotaList[i].isAmount,
+    //             resourceCount:quotaList[i].resourceCount,
+    //             isOk:quotaList[i].isOk,
+    //             unqualified:quotaList[i].unqualified,
+    //             isFacilities:quotaList[i].isFacilities,
+    //             isOkHistoryResult:quotaList[i].isOkHistoryResult
+    //           })
+    //           if(quotaList[i].isFacilities == '1'&& quotaList[i].isOkHistoryResult =='1'){
+    //             if(!show_history_ques_map.has(quotaList[i].code)){
+    //               show_history_ques_map.set(quotaList[i].code,'false');
+    //             }
+    //           }
+    //         }
+    //       }
+    //       // console.log("啥意思啊：",ayy)
+    //       that.setData({
+    //         listData: ayy,
+    //         tips: arr
+    //       })
+
+    //     } else {
+    //       wx.showToast({
+    //         title: '获取点位树失败',
+    //         icon: 'loading',
+    //         duration: 1000,
+    //         mask: true
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+
+    //   }
+    // })
   },
 
   changeData: function(s) {
@@ -750,6 +1059,17 @@ Page({
   showHistroy:function(e){
     var that = this;
     var isOk = e.currentTarget.dataset.isok;
+    var quesCode = e.currentTarget.dataset.code;
+    if(!show_history_ques_map.has(quesCode)){
+      wx.showModal({
+        title: '提示',
+        content: '数据异常!',
+        showCancel:false
+      })
+      return;
+    }else{
+      show_history_ques_map.set(quesCode,'true')
+    }
     if(isOk!='1'){
       return
     }
@@ -757,18 +1077,17 @@ Page({
       title:'数据加载中'
     })
      var requestUrl = that.data.requestUrl; //服务器路径
-     wx.request({
-      // 必需
-      url: requestUrl + '/wechat/api/fieldQuestion/getHistoryAnswerResource',
-      data: {
+     //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldQuestion/getHistoryAnswerResource',
+      {
         projectId: that.data.projectId,
-        quotaCode: e.currentTarget.dataset.code,
+        quotaCode: quesCode,
         locationId:that.data.pointId
       },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
+      app.seesionId,
+      (res) =>{
         //console.log(res)
         if (res.data.status == 'success') {
           if(res.data.retObj){
@@ -788,14 +1107,51 @@ Page({
             showCancel:false
           })
         }
-      },
-      fail: (res) => {
 
       },
-      complete: (res) => {
-        wx.hideLoading()
+      (err) =>{
+
       }
-    })
+    )
+    //  wx.request({
+    //   // 必需
+    //   url: requestUrl + '/wechat/api/fieldQuestion/getHistoryAnswerResource',
+    //   data: {
+    //     projectId: that.data.projectId,
+    //     quotaCode: quesCode,
+    //     locationId:that.data.pointId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   success: (res) => {
+    //     //console.log(res)
+    //     if (res.data.status == 'success') {
+    //       if(res.data.retObj){
+    //         that.setData({
+    //           historyResList:res.data.retObj
+    //         })
+    //       }
+    //       if(that.data.historyResList.length>0){
+    //         that.setData({
+    //           modalNameR:'viewModal'
+    //         })
+    //       }
+    //     } else {
+    //       wx.showModal({
+    //         title: '提示',
+    //         content: res.data.message,
+    //         showCancel:false
+    //       })
+    //     }
+    //   },
+    //   fail: (res) => {
+
+    //   },
+    //   complete: (res) => {
+    //     wx.hideLoading()
+    //   }
+    // })
   },
   lookImg:function(res){
     wx.previewImage({
@@ -813,37 +1169,64 @@ Page({
     let projectId = this.data.projectId;
     var value = wx.getStorageSync(locationId)
     if (value) {
-      wx.request({
-        // 必需
-        url: this.data.requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
-        method:'POST',
-        dataType:'json',
-        data: {
-          "surveyorId": surveyorId,
-          "locationId": locationId,
-          "projectId": projectId,
-          "addressJsonStr": value,
-          "type":0
-        },
-        header: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        success: (res) => {
-          //console.log(res)
-          wx.showModal({
-            content: '您在此点位测评中，已行走'+res.data.retObj+'米。',
-            showCancel:false,
-            confirmText:'知道了',
-            confirmColor:'#1E90FF',
-          })
-          wx.setStorageSync(locationId,null)
-        },
-        fail: (res) => {
-        },
-        complete:()=>{
-          wx.hideLoading()
-        }
-      })
+      //调用全局 请求方法
+    app.wxRequest(
+      'POST',
+      this.data.requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
+      {
+        "surveyorId": surveyorId,
+        "locationId": locationId,
+        "projectId": projectId,
+        "addressJsonStr": value,
+        "type":0
+      },
+      app.seesionId,
+      (res) =>{
+        //console.log(res)
+        wx.showModal({
+          content: '您在此点位测评中，已行走'+res.data.retObj+'米。',
+          showCancel:false,
+          confirmText:'知道了',
+          confirmColor:'#1E90FF',
+        })
+        wx.setStorageSync(locationId,null)
+
+      },
+      (err) =>{
+
+      }
+    )
+      // wx.request({
+      //   // 必需
+      //   url: this.data.requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
+      //   method:'POST',
+      //   dataType:'json',
+      //   data: {
+      //     "surveyorId": surveyorId,
+      //     "locationId": locationId,
+      //     "projectId": projectId,
+      //     "addressJsonStr": value,
+      //     "type":0
+      //   },
+      //   header: {
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   },
+      //   success: (res) => {
+      //     //console.log(res)
+      //     wx.showModal({
+      //       content: '您在此点位测评中，已行走'+res.data.retObj+'米。',
+      //       showCancel:false,
+      //       confirmText:'知道了',
+      //       confirmColor:'#1E90FF',
+      //     })
+      //     wx.setStorageSync(locationId,null)
+      //   },
+      //   fail: (res) => {
+      //   },
+      //   complete:()=>{
+      //     wx.hideLoading()
+      //   }
+      // })
   }else{
     wx.hideLoading()
     wx.showModal({
