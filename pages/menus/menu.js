@@ -178,7 +178,7 @@ Page({
         break;
       case "统计排名":
         router.navigateTo({
-          url: "../../displayPackage/pages/paiMing/index/index"
+          url: "../../displayPackage/pages/paiMing/projectList/projectList?type=1"
         })
         break;
       case "材料审核":

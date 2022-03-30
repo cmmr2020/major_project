@@ -20,7 +20,7 @@
           <view class="kind-list_item-bd {{selected[index] ? 'kind-list_item-bd_show' : ''}}">
             <view class="tui-cells {{selected[index] ? 'tui-cells_show' : ''}}">
               <block wx:for-items="{{item.locationList}}" wx:for-item="page" wx:key="item">
-                <navigator url="../point_detail/point_detail?id={{page.id}}&name={{page.name}}&pointTypeId={{item.id}}&firstQuestion={{page.submitStatus}}&projectId={{projectId}}&isGrade={{isGrade}}&requestUrl={{requestUrl}}&bgColor={{bgColor}}&fontSize={{fontSize}}&timeInterval={{item.timeInterval}}&isRecord={{item.isRecord}}&submitStatus={{page.submitStatus}}" class="tui-cell tui-cell_access">
+                <navigator url="../point_detail/point_detail?id={{page.id}}&name={{page.name}}&pointTypeId={{item.id}}&firstQuestion={{page.submitStatus}}&projectId={{projectId}}&isGrade={{isGrade}}&requestUrl={{requestUrl}}&bgColor={{bgColor}}&fontSize={{fontSize}}&timeInterval={{item.timeInterval}}&isRecord={{item.isRecord}}&submitStatus={{page.submitStatus}}&isHaveDoorHead={{page.isHaveDoorHeadPhoto}}" class="tui-cell tui-cell_access">
                   <view class="tui-cell_bd" style="font-size:{{fontSize30}}rpx">　{{page.name}}</view>
 
                   <view wx:if="{{page.submitStatus==1}}" class="cuIcon-infofill  text-red" style="font-size:{{fontSize30}}rpx"></view>
@@ -33,7 +33,7 @@
                     </view>     
                   </view>
                   <view wx:if="{{page.submitStatus==2}}">
-                    <view class="cu-tag bg-{{bgColor}} light  round"  style="font-size:{{fontSize30}}rpx" catchtap="showModal" data-index="{{page.id}}" data-checkStatus="{{page.checkStatus}}">提交</view>
+                    <view class="cu-tag bg-{{bgColor}} light  round"  style="font-size:{{fontSize30}}rpx" catchtap="showModal" data-index="{{page.id}}" data-checkStatus="{{page.checkStatus}}" data-isHaveDoorHead="{{page.isHaveDoorHeadPhoto}}">提交</view>
                   </view>
                   <view class="tui-cell_ft tui-cell_ft_in-access"></view>
                 </navigator>

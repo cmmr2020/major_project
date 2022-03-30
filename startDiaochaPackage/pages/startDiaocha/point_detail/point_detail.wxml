@@ -42,6 +42,9 @@
 
 
 <view class="padding_user">
+<view><!-- cuIcon-roundcheckfill lg text-gray-->
+    <button class="cu-btn block bg-{{bgColor}} margin-tb-sm lg " bind:tap="goTo_door_head" style="font-size:{{fontSize}}rpx">拍摄门头照<text class="{{isHaveDoorHead=='0'?'cuIcon-roundcheck lg text-gray':'cuIcon-roundcheckfill lg text-gray'}}" style="color: blue;font-size: 30rpx;position: fixed;top: 20%;left:68%"></text><!--<text class="cuIcon-roundcheckfill lg text-gray" style="margin-left: 5%;color: blue;font-size: 30rpx;"></text> --></button>
+ </view>
     <button class="cu-btn block bg-{{bgColor}} margin-tb-sm lg " bind:tap="goToquota_list" style="font-size:{{fontSize}}rpx">测评</button>
   </view>
 <view class="grid1 col-5 padding-sm  ">

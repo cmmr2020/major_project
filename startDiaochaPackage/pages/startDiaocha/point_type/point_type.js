@@ -17,6 +17,7 @@ Page({
     fontSize30:'',
     bgColor:'', 
     modalName:'',
+    isDoorHeadPhoto:'',
   },
 
   onLoad: function(e) {
@@ -112,7 +113,7 @@ Page({
         wx.hideLoading();
         if (res.data.status ==="success") {
           var mapList = res.data.retObj;
-          // console.log("有没有点位：",mapList)
+           //console.log("有没有点位：",mapList)
            if (typeof(mapList) === "undefined" ) {
               wx.showToast({
                 title: '该调查员没有分配点位',
@@ -157,7 +158,8 @@ Page({
           }
           that.setData({
             list: res.data.retObj,
-            markersList: mapLists
+            markersList: mapLists,
+            isDoorHeadPhoto:mapList[0].isDoorHeadPhoto
           })
           wx.setStorageSync('markersList', mapLists);
           //console.log("点位", mapLists)
@@ -314,9 +316,21 @@ Page({
 
   showModal:function(e){
     var that = this;
+    console.log(e)
+    console.log(that.data.isDoorHeadPhoto)
     let locationId = e.currentTarget.dataset.index;
     let checkstatus =e.currentTarget.dataset.checkstatus
-    console.log(checkstatus)
+    if(that.data.isDoorHeadPhoto == 1){
+      if(e.currentTarget.dataset.ishavedoorhead != 1){
+        wx.showModal({
+          title: '提示',
+          content: '当前项目需要拍摄门头照,请先拍摄~',
+          success (res) {
+            return
+          }
+        })
+      }
+    }
       wx.showModal({
       title: '提示',
       content: '确定提交该点位下的资源吗？',

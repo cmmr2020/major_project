@@ -304,3 +304,17 @@ button::after {
   margin-bottom: 20rpx;
   margin-right: 20rpx;
 }
+
+.box {  
+  margin: 20rpx 0; 
+}
+
+.box view.cu-bar {
+  margin-top: 20rpx; 
+}
+.hide{
+  display: none;
+}
+.show{
+  display: block;
+}

@@ -1,0 +1,54 @@
+<!-- 拍摄照片 -->
+<view class="cu-bar  solid-bottom">
+  <view class="action">
+    <text class="cuIcon-title text-{{bgColor}}" style="font-size:{{fontSize}}rpx"></text>
+    <text style="font-size:{{fontSize}}rpx">拍摄门头照</text>
+  </view>
+</view>
+<view class="cu-bar bg-white" bindlongpress="showCopyTap">
+  <view class="action" style="font-size:{{fontSize}}rpx">
+    上传图片
+  </view>
+  <view class="action" style="font-size:{{fontSize}}rpx" >
+    <!-- {{reportlength}}/5 -->
+  </view>
+</view>
+
+<!-- 图片加描述 -->
+<view class="cu-card article no-card">
+  <view class="cu-item shadow">
+    <view class="content" wx:for="{{imgMapList}}" wx:key="index"  > 
+      <image  bindlongpress="showCopyTap" data-type="0" src='{{item.img_url}}' mode='aspectFill' bindtap="ViewImageForreport" data-index='{{index}}' data-url="{{item.img_url}}"></image>
+      <view class="cu-tag-user bg-red" catchtap="DelImg" data-index="{{index}}" data-id="{{item.id}}">
+        <text class="cuIcon-close"></text>
+      </view>
+      <view class="desc">
+          <view class="weui-cell input-user ">
+            <input class="text-content-user" type="text" 	confirm-type="done"  bindinput="saveDesc"  value="{{item.img_desc}}" data-index="{{index}}" placeholder="请输入对图片资源的描述"/>
+          </view>
+        <!-- <view> 
+           <view class="cu-tag bg-green light-user  round" style="font-size:{{fontSize28}}rpx;color:{{bgColorUi}}" bindtap="showModal" data-target="RadioModal" data-type="Img" data-index="{{index}}">快捷输入</view>
+           <view class="cu-tag bg-green light-user  round" style="font-size:{{fontSize28}}rpx;color:{{bgColorUi}}" bindtap="startInput1" data-index="{{index}}">手动输入</view>
+        </view> -->
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- <modal hidden="{{modalHiddenInput1}}" bindconfirm="sub1" bindcancel="cancel1" data-info='{{subinfo1}}'>
+  <view class="cu-form-group">
+    <textarea bindinput="text1Input" bindblur="text1blur" style="font-size:{{fontSize}}rpx;color: black;"  value="{{imgDescList[imageInputId]}}" placeholder="请输入对图片资源的描述"></textarea>
+  </view>
+</modal> -->
+
+<view class="cu-form-group">
+  <view class="grid col-4 grid-square flex-sub">
+    <view class="solids" bindtap="ChooseImage" wx:if="{{reportlength<20}}" data-target="Modal" data-type="report">
+      <text class="cuIcon-cameraadd"></text>
+    </view>
+  </view>
+</view>
+
+<view class="padding-xl_user">
+  <button class="cu-btn  block bg-{{bgColor}} margin-tb-sm lg" bindtap='submit' style="font-size:{{fontSize28}}rpx">提交</button>
+</view>

@@ -69,9 +69,8 @@
           "scene": null
         },
         {
-          "id": -1,
           "name": "测试页面2",
-          "pathName": "pages/startDiaocha/ceshi2/ceshi2",
+          "pathName": "displayPackage/pages/paiMing/deptDataInfo/deptDataInfo",
           "query": "",
           "scene": null
         },
@@ -168,6 +167,20 @@
           "pathName": "displayPackage/pages/fenXi/single_chart/single_chart",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "testTree",
+          "pathName": "pages/test/test",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "mytree",
+          "pathName": "pages/test/test",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
         }
       ]
     }

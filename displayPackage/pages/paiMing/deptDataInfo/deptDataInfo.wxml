@@ -1,0 +1,205 @@
+<view class="page-body">
+  <!-- 分责任单位统计报表  -->
+<view>
+  <view class="{{showDeptReport==true?'show':'hide'}} ">
+    <view class="cu-dialog" style="width: 100%;padding: 1%;">
+      <view class="cu-bar bg-white justify-end" style="background-color: white;color: #337fe5;font-size: 0.5em;font-weight: bolder;font-family: monospace;">
+        <view class="content">{{model_title_dept}}</view>
+        <!-- <view class="action" bindtap="closeModel">
+          <text class="cuIcon-close text-red"></text>
+        </view> -->
+      </view>
+      <view class="cu-list grid col-6" 
+        style="background-color: 	#DCDCDC;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 10%;">
+          <text style="font-size: 30rpx;color: #666;" >序号</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 30%;">
+          <text style="font-size: 30rpx;color: #666;" >责任单位</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >点位数</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >指标数量</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >合格指标数量</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 18%;">
+          <text style="font-size: 30rpx;color: #666;" >符合率</text>
+        </view>
+      </view>
+      <view class="cu-list grid col-6" wx:for="{{dept_report_list}}" wx:key="item" wx:if="{{index>0}}"
+        style="background-color: white;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 10%;">
+          <text style="font-size: 30rpx;color: rgb(129, 113, 113);">{{index}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 30%;" bindtap="alertDeptInfo" data-id="{{item.id}}" data-name="{{item.name}}">
+          <text style="font-size: 30rpx;color: #666;text-decoration: underline;" >{{item.name}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >{{item.locationNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.allNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.standardNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 18%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.passRate}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+    <!-- 单个责任单位下所有点位测评数据弹出层 -->
+    <view class="cu-modal {{showDeptLocationInfo==true?'show':'hide'}} ">
+    <view class="cu-dialog" style="margin-bottom: 10%;">
+      <view class="cu-bar bg-white justify-end" style="background-color: white;color: #337fe5;">
+        <view class="content">{{model_title_dept_location}}</view>
+        <view class="action" bindtap="closeDept">
+          <text class="cuIcon-close text-red"></text>
+        </view>
+      </view>
+      <view class="cu-list grid col-3" 
+        style="background-color: #DCDCDC;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #f1dede; width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">序号</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede; width: 60%;">
+          <text style="color:#666; font-size: 30rpx;">点位名称</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede; width: 30%;">
+          <text style="color:#666; font-size: 30rpx;">符合率</text>
+        </view>
+      </view>
+      <view class="cu-list grid col-3" wx:for="{{dept_location_report_list}}" wx:key="item"
+        style="background-color: white;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #f1dede; width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.sequence}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede; width: 60%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.name}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede; width: 30%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.passRate}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="flex flex-direction {{showDeptLocationInfo==true?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
+        aria-disabled="false" bindtap="closeDept">关闭</button>
+  </view>
+</view>  
+
+
+  <!-- 分点位类型统计报表 cu-modal -->
+  <view>
+  <view class=" {{showPointReport==true?'show':'hide'}} ">
+    <view class="cu-dialog" style="width: 100%;padding: 1%;">
+      <view class="cu-bar bg-white justify-end" style="background-color: white;color: #337fe5;font-size: 0.5em;font-weight: bolder;font-family: monospace;">
+        <view class="content">{{model_title_point}}</view>
+        <!-- <view class="action" bindtap="closeModel">
+          <text class="cuIcon-close text-red"></text>
+        </view> -->
+      </view>
+      <view class="cu-list grid col-6" 
+        style="background-color: 	#DCDCDC;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 10%;">
+          <text style="font-size: 30rpx;color: #666;" >序号</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 30%;">
+          <text style="font-size: 30rpx;color: #666;" >点位类型</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >点位数</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >指标总数</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >合格指标数</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 18%;">
+          <text style="font-size: 30rpx;color: #666;" >符合率</text>
+        </view>
+      </view>
+      <view class="cu-list grid col-6" wx:for="{{point_report_list}}" wx:key="item" wx:if="{{index>0}}"
+        style="background-color: white;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 10%;">
+          <text style="font-size: 30rpx;color: rgb(129, 113, 113);">{{index}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 30%;" bindtap="alertPointInfo" data-id="{{item.id}}" data-name="{{item.name}}">
+          <text style="font-size: 30rpx;color: #666;text-decoration: underline;" >{{item.name}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >{{item.locationNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.allNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.standardNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 18%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.passRate}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+    <!-- 单个点位类型下所有指标测评数据弹出层  -->
+    <view class="cu-modal {{showPointQuotaInfo==true?'show':'hide'}}">
+    <view class="cu-dialog" style="margin-bottom: 10%;">
+      <view class="cu-bar bg-white justify-end" style="background-color: white;color: #337fe5;">
+        <view class="content">{{model_title_point_quota}}</view>
+        <view class="action" bindtap="closePoint">
+          <text class="cuIcon-close text-red"></text>
+        </view>
+      </view>
+      <view class="cu-list grid col-5" 
+        style="background-color: #DCDCDC;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">序号</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 60%;">
+          <text style="color:#666; font-size: 30rpx;">指标</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">点位数</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">合格指标数</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">不合格指标数</text>
+        </view>
+      </view>
+      <view class="cu-list grid col-5" wx:for="{{point_quota_report_list}}" wx:key="item"
+        style="background-color: white;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #f1dede; width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">{{index+1}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 60%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.content}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.locationNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.standardNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 10%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.unStandardNum}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="flex flex-direction {{showPointQuotaInfo==true?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
+        aria-disabled="false" bindtap="closePoint">关闭</button>
+  </view>
+</view> 
+
+</view>

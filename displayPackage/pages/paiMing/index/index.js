@@ -1,162 +1,159 @@
 // const util = require('../../utils/util.js')
 const app = getApp();
+var requestUrl=app.globalData.requestUrl
 Page({
-
   data: {
-    requestUrl: '', //服务器路径
-    projectId: '',
-    surveyorId: '', //调查员id
-    open: false,
-    selected: [false, false, false], // 这里表示列表项是否展开,默认初始时此数组的元素全为fasle,表示都没展开
-    active: null, // 当前展开的项的index值
-    list: [{
-      name:'中国电信文昌西街营业厅(电信)',
-      fs:'100.00',
-      locationList:[
-        {
-        zb:"28",
-        hg:'28',
-        bhg:'0'
-        }
-      ]
-    },
-    {
-      name:'中国电信白水东街营业厅(电信)',
-      fs:'100.00',
-      locationList:[
-        {
-        zb:"28",
-        hg:'28',
-        bhg:'0'
-        }
-      ]
-    },
-    {
-      name:'凤城开发区营业厅(电信)',
-      fs:'100.00',
-      locationList:[
-        {
-        zb:"28",
-        hg:'28',
-        bhg:'0'
-        }
-      ]
-    },
-    {
-      name:'开发区营业厅(兰花路)(联通)',
-      fs:'100.00',
-      locationList:[
-        {
-        zb:"28",
-        hg:'28',
-        bhg:'0'
-        }
-      ]
-    },
-    {
-      name:'中国电信红星东街营业厅(电信)',
-      fs:'100.00',
-      locationList:[
-        {
-        zb:"30",
-        hg:'30',
-        bhg:'0'
-        }
-      ]
-    },
-    {
-      name:'晋城市“三馆”大厦',
-      fs:'100.00',
-      locationList:[
-        {
-        zb:"45",
-        hg:'45',
-        bhg:'0'
-        }
-      ]
-    },
-
-    ],
-    // 指标经纬度集合
-    markersList: [],
-    fontSize:'',
-    bgColor:''
+    projectId : '',
+    projectName : '',
+    dept_list: [],
+    point_list:[],
+    quota_tree_list:[],
+    quota_type_list:[],
+    //部门多选框选中ids
+    dept_select_ids:'',
+    //部门多选款事件变化临时选中ids
+    dept_temp_ids:[],
+    deptTip_msg: '',
+    quota_temp_ids:[],
+    quotaTip_msg: '',
+    point_select_ids:'',
+    point_temp_ids:[],
+    pointTip_msg: '',
+    quotaType_select_ids:'',
+    quotaType_temp_ids:[],
+    quotaTypeTip_msg: '',
+    deptAllselect:false,
+    dept_select_flag:false,
   },
-
   onLoad: function (options) {
-
+    this.data.projectId = options.projectId;
+    this.data.projectName = options.projectName
+    this.initSearchParam(options.projectId);
   },
-
-  onShow: function () {
-    var that = this;
-    var terminalUserId = app.terminalUserId;
-    var projectId = wx.getStorageSync('projectId');
-    var fontSize = wx.getStorageSync('fontSize');
-   var bgColor = wx.getStorageSync('bgColor');
-    var requestUrl = app.globalData.requestUrl; //服务器路径
-    // console.log("是否打分：", isGrade)
-    that.setData({
-      requestUrl: requestUrl,
-      projectId: projectId,
-      surveyorId: terminalUserId,
-      fontSize:fontSize,
-      bgColor:bgColor,
-      fontSize28:parseInt(fontSize)-4
-    })
-    // that.getLocationList(terminalUserId, projectId);
-  },
- 
-
-
-  kindToggle: function (e) {
-    //页面传递过来的点击id
-    let id = e.currentTarget.dataset.index;
-
-    //当前展开的id
-    let active = this.data.active;
-    //展开项给selected数组动态赋值
-    var selectId = 'selected[' + id + ']'
-    //不是展开项给selected数组动态赋值
-    var selectActive = 'selected[' + active + ']'
-    //获取页面id赋值
-    var Id = '[' + id + ']'
+  showModal(e) {
     this.setData({
-      [selectId]: !this.data.selected[Id],
-      active: id
-    });
-
-    // 如果点击的不是当前展开的项，则关闭当前展开的项
-    // 这里就实现了点击一项，隐藏另一项
-    if (active !== null && active !== id) {
-      this.setData({
-        [selectActive]: false
-      });
-    }
-    if (active == id) {
-      this.setData({
-        [selectId]: false,
-        active: null
-      });
-    }
-
+      modalName: e.currentTarget.dataset.target
+    })
   },
-  // show(e) {
-  //     let index = e.currentTarget.dataset.index;
-  //     let active = this.data.active;
-
-  //     this.setData({
-  //       [`selected[${index}]`]: !this.data.selected[`${index}`],
-  //       active: index
-  //     });
-
-  //     // 如果点击的不是当前展开的项，则关闭当前展开的项
-  //     // 这里就实现了点击一项，隐藏另一项
-  //     if (active !== null && active !== index) {
-  //       this.setData({ [`selected[${active}]`]: false });
-  //     }
-  // }
-
-
-
+  show_temp_dept(e){
+    let that = this;
+    that.setData({
+      dept_temp_ids : e.detail.value
+    })
+  },
+  show_temp_point(e){
+    let that = this;
+    that.setData({
+      point_temp_ids : e.detail.value
+    })
+  },
+  show_temp_quotaType(e){
+    let that = this;
+    that.setData({
+      quotaType_temp_ids : e.detail.value
+    })
+  },
+  select_dept(e){
+    let that = this;
+    let idsArr = that.data.dept_temp_ids;
+     that.setData({
+       dept_select_ids : idsArr,
+       modalName: '',
+       deptTip_msg:idsArr.length>0?'您已选择'+idsArr.length+'个部门':''
+    })
+  },
+  select_point(e){
+    let that = this;
+    let idsArr = that.data.point_temp_ids;
+     that.setData({
+       point_select_ids : idsArr,
+       modalName: '',
+       pointTip_msg:idsArr.length>0?'您已选择'+idsArr.length+'种点位类型':''
+    })
+  },
+  select_quotaType(e){
+    let that = this;
+    let idsArr = that.data.quotaType_temp_ids;
+     that.setData({
+       quotaType_select_ids : idsArr,
+       modalName: '',
+       quotaType_msg:idsArr.length>0?'您已选择'+idsArr.length+'种指标类型':''
+    })
+  },
+  dept_select_all(e){
+    let that = this;
+    this.setData({
+      deptAllselect : true
+    })
+  },
+  dept_clean_all(){
+    let that = this;
+    this.setData({
+      deptAllselect : false
+    })
+  },
+  initSearchParam:function(projectId){
+    let that = this;
+    app.wxRequest('GET',
+    requestUrl + '/private/largeScreenDisplay/renderSearchParamForWechat',
+    {
+      projectId: projectId
+    },
+    app.seesionId,
+    (res) =>{
+      if (res.data) {
+        that.setData({
+          dept_list : res.data.DepartmentList,
+          point_list: res.data.PointList,
+          quota_tree_list: res.data.QuotaVoTree,
+          quota_type_list: res.data.quotaTypeList
+        })
+      }else{
+        wx.showToast({
+          title: '暂无数据',
+          icon: 'none', // "success", "loading", "none"
+          duration: 1500,
+          mask: false,
+        })
+      }
+    },
+    (err) =>{
+      wx.showToast({
+        title: '网络错误',
+        icon: 'none', // "success", "loading", "none"
+        duration: 1500,
+        mask: false,
+      })
+    }
+    );
+  },
+  jump: function(option){
+    //console.log(option)
+    let that = this;
+    let type = option.currentTarget.dataset.type
+    if(type == 'dept'){
+      wx.navigateTo({
+        url: '../deptDataInfo/deptDataInfo?reportType=0&projectId='+that.data.projectId+"&projectName="+that.data.projectName+"&deptIds="+that.getStrs(that.data.dept_select_ids)+"&pointIds="+that.getStrs(that.data.point_select_ids)+"&quotaTypeIds="+that.getStrs(that.data.quotaType_select_ids)
+      })
+    }else if(type == 'quota'){
+      wx.navigateTo({
+        url: '../quotaDataInfo/quotaDataInfo?reportType=1&projectId='+that.data.projectId+"&projectName="+that.data.projectName+"&deptIds="+that.getStrs(that.data.dept_select_ids)+"&pointIds="+that.getStrs(that.data.point_select_ids)+"&quotaTypeIds="+that.getStrs(that.data.quotaType_select_ids)
+      })
+    }else{
+      wx.navigateTo({
+        url: '../deptDataInfo/deptDataInfo?reportType=2&projectId='+that.data.projectId+"&projectName="+that.data.projectName+"&deptIds="+that.getStrs(that.data.dept_select_ids)+"&pointIds="+that.getStrs(that.data.point_select_ids)+"&quotaTypeIds="+that.getStrs(that.data.quotaType_select_ids)
+      })
+    }  
+  },
+  getStrs(arr){
+    if(arr.length<1){
+      return '';
+    }
+    var resultStrs = '';
+    for(let i=0; i<arr.length; i++){
+      resultStrs += arr[i] + ',';
+    }
+    return resultStrs.substring(0,resultStrs.length-1);
+  }
   
 });

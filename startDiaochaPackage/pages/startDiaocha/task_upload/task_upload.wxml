@@ -81,7 +81,7 @@
 <view class="cu-card article no-card">
   <view class="cu-item shadow">
     <view class="content" wx:for="{{imgList}}" wx:key="index"  > 
-      <image  bindlongpress="showCopyTap" data-type="0" src='{{imgList[index]}}' mode='aspectFill' bindtap="ViewImageForreport" data-index='{{index}}' data-url="{{imgList[index]}}"></image>
+      <image data-type="0" src='{{imgList[index]}}' mode='aspectFill' bindtap="ViewImageForreport" data-index='{{index}}' data-url="{{imgList[index]}}"></image>
       <view class="cu-tag-user bg-red" catchtap="DelImg" data-index="{{index}}" data-type="reportImg">
         <text class="cuIcon-close"></text>
       </view>
@@ -262,8 +262,8 @@
   <text class="cuIcon-title text-{{bgColor}} text-user"></text>
   <view class="title-user" style="font-size:{{fontSize}}rpx">问题处数</view>
   <input placeholder="请输入数字"  disabled="{{disabled}}" style="font-size:{{fontSize28}}rpx" value='{{amountValue}}' type="number" bindinput='textAmountScore'></input>
-  <button class="cu-btn round" bindtap='queNumAdd'>+</button>
-  <button class="cu-btn round" style="margin-left: 30rpx; font-size: 40rpx;" bindtap='queNumCut'>-</button>
+  <button class="cu-btn round" style="font-size: 50rpx;" bindtap='queNumCut'>-</button>
+  <button class="cu-btn round" style="margin-left: 30rpx; font-size: 40rpx; text-align: center;" bindtap='queNumAdd'>+</button>
   <!-- <text class="cuIcon-add lg text-gray" bindtap='queNumAdd'></text>
   <text class="cuIcon-move lg text-gray" style="margin-left: 25rpx;" bindtap='queNumCut'></text> -->
 </view>

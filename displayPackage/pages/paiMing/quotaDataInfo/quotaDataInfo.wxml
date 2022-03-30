@@ -1,0 +1,1 @@
+<web-view src="{{requestUrl+'/display/report.html?type='+type+'&projectId='+projectId+'&departmentIds='+departmentIds+'&quotaIds='+quotaIds+'&pointIds='+pointIds+'&pName='+pName+'&quotaType='+quotaType}}"></web-view>

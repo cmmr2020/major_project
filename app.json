@@ -4,7 +4,7 @@
     "pages/menus/menu",
     "pages/login/login",
     "pages/setting/setting",
-    "pages/functionPage/functionPage"   
+    "pages/functionPage/functionPage"
   ],
   "subpackages": [
     {
@@ -67,7 +67,8 @@
         "pages/startDiaocha/no_investigate/no_investigate",
         "pages/startDiaocha/task_upload/task_upload",
         "pages/startDiaocha/map/map",
-        "pages/startDiaocha/question_tips/question_tips"
+        "pages/startDiaocha/question_tips/question_tips",
+        "pages/startDiaocha/door_head_photo/door_head_photo"
       ]
     },
     {
@@ -85,7 +86,10 @@
         "pages/fenXi/allInfo/allInfo",
         "pages/fenXi/single_chart/single_chart",
         "pages/fenXi/map/map",
-        "pages/paiMing/index/index"
+        "pages/paiMing/index/index",
+        "pages/paiMing/projectList/projectList",
+        "pages/paiMing/deptDataInfo/deptDataInfo",
+        "pages/paiMing/quotaDataInfo/quotaDataInfo"
       ]
     },
     {

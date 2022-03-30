@@ -24,12 +24,14 @@ Page({
     isRecord:'',//是否记录行走经纬度 0 不记录 1 记录
     timeInterval:'', //记录行走经纬度时时间间隔 单位毫秒
     submitStatus:'',//点位测评状态  0 未上传  1上传中  2测评完毕  待提交
+    isHaveDoorHead:0, //是否含有门头照 0否 1是
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    console.log(options)
     var that = this;
     var projectId = options.projectId;
     var isGrade = options.isGrade;
@@ -53,6 +55,7 @@ Page({
       pointTypeId: pointTypeId,
       fontSize:fontSize,
       bgColor:bgColor,
+      isHaveDoorHead:options.isHaveDoorHead,
       fontSize35:parseInt(fontSize)+3,
       fontSize30:parseInt(fontSize)-2,
       fontSize28:parseInt(fontSize)-4
@@ -79,7 +82,7 @@ Page({
 
         } else {
           wx.showToast({
-            title: '获取点位树失败',
+            title: '获取点位信息失败',
             icon: 'none',
             duration: 1000,
             mask: true
@@ -124,7 +127,15 @@ Page({
     //   }
     // })
   },
-
+  goTo_door_head(){
+    var that = this;
+    var pointName = that.data.pointName;
+    var pointId = that.data.pointId;
+    var projectId = that.data.projectId;
+    router.navigateTo({
+      url: "../door_head_photo/door_head_photo?locationName="+pointName+"&locationId="+pointId+"&projectId="+projectId
+    })
+  },
   goToquota_list: function() {
     var that = this;
     var pointTypeId = that.data.pointTypeId;
