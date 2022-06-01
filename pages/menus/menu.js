@@ -31,44 +31,102 @@ Page({
         fail: function () { }
       }
     },
+    onLoad: function(option){
+      //console.log(option)
+      var that = this;
+      var fontSize = wx.getStorageSync('fontSize');
+      var bgColor = wx.getStorageSync('bgColor');
+      that.setData({
+        fontSize:fontSize,
+        bgColor:bgColor
+      })
+      var list = JSON.parse(option.data);
+      if(option.fromType == 'appPage'){
+        let terminalUserName = '';
+        if( option.terminalUserName){
+          terminalUserName = option.terminalUserName;
+          if(terminalUserName.indexOf('#') != -1){
+            terminalUserName = terminalUserName.split('#')[1];
+          }
+        }
+        that.setData({
+          surveyList: list,
+          departmentName: option.departmentName,
+          terminalUserName: terminalUserName
+        })
+      }else{
+        let terminalUserName = '';
+        if(option.terminalUserName){
+          terminalUserName = option.terminalUserName;
+          if(terminalUserName.indexOf('#') != -1){
+            terminalUserName = terminalUserName.split('#')[1];
+          }
+        }
+        that.setData({
+          surveyList: list,
+          departmentName: option.departmentName,
+          terminalUserName: terminalUserName
+        })
+      }
+      qqmapsdk = new QQMapWX({
+        key: that.data.key
+      });
+      //获取当前位置 测试阶段先关闭了
+      that.currentLocation();
+    },
   /**
    * 生命周期函数--监听页面加载
    */
   onShow: function(option) {
-    var that = this;
-    var fontSize = wx.getStorageSync('fontSize');
-    var bgColor = wx.getStorageSync('bgColor');
-    that.setData({
-      fontSize:fontSize,
-      bgColor:bgColor
-    })
-    const eventChannel = that.getOpenerEventChannel()
-    // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
-    // login页面传递过来的菜单列表
-    eventChannel.on('loginPage', function(data) {
-      // console.log("loginPage传递过来的数据", data.data)
-      that.setData({
-        surveyList: data.data,
-        departmentName: data.departmentName,
-        terminalUserName: data.terminalUserName
-      })
-      // console.log("loginPage绑定菜单", that.data.surveyList)
-    })
-    // index.js页面传递过来的菜单列表
-    eventChannel.on('appPage', function(data) {
-      // console.log("appPage传递过来的数据", data)
-      that.setData({
-        surveyList: data.data,
-        departmentName: data.departmentName,
-        terminalUserName: data.terminalUserName
-      })
-      // console.log("appPage绑定菜单", that.data.surveyList)
-    })
-    qqmapsdk = new QQMapWX({
-      key: that.data.key
-    });
-    //获取当前位置 测试阶段先关闭了
-    that.currentLocation();
+    // console.log(option)
+    // var that = this;
+    // var fontSize = wx.getStorageSync('fontSize');
+    // var bgColor = wx.getStorageSync('bgColor');
+    // that.setData({
+    //   fontSize:fontSize,
+    //   bgColor:bgColor
+    // })
+    // const eventChannel = that.getOpenerEventChannel()
+    // // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
+    // // login页面传递过来的菜单列表
+    // eventChannel.on('loginPage', function(data) {
+    //   //console.log("loginPage传递过来的数据", data.data)
+    //   let terminalUserName = '';
+    //   if( data.terminalUserName){
+    //     terminalUserName = data.terminalUserName;
+    //     if(terminalUserName.indexOf('#') != -1){
+    //       terminalUserName = terminalUserName.split('#')[1];
+    //     }
+    //   }
+    //   that.setData({
+    //     surveyList: data.data,
+    //     departmentName: data.departmentName,
+    //     terminalUserName: terminalUserName
+    //   })
+    //   // console.log("loginPage绑定菜单", that.data.surveyList)
+    // })
+    // // index.js页面传递过来的菜单列表
+    // eventChannel.on('appPage', function(data) {
+    //   //console.log("appPage传递过来的数据", data)
+    //   let terminalUserName = '';
+    //   if( data.terminalUserName){
+    //     terminalUserName = data.terminalUserName;
+    //     if(terminalUserName.indexOf('#') != -1){
+    //       terminalUserName = terminalUserName.split('#')[1];
+    //     }
+    //   }
+    //   that.setData({
+    //     surveyList: data.data,
+    //     departmentName: data.departmentName,
+    //     terminalUserName: terminalUserName
+    //   })
+    //   // console.log("appPage绑定菜单", that.data.surveyList)
+    // })
+    // qqmapsdk = new QQMapWX({
+    //   key: that.data.key
+    // });
+    // //获取当前位置 测试阶段先关闭了
+    // that.currentLocation();
   },
   currentLocation() {
     //当前位置
@@ -114,7 +172,7 @@ Page({
     var latitude = that.data.latitude;
     var address = that.data.address;
     var terminalUserId = app.terminalUserId;
-    // console.log("这是调查员id",terminalUserId)
+    //console.log("这是调查员id",terminalUserId)
     // console.log("这是地址",address)
     if (terminalUserId != '') {
       wx.request({
@@ -204,14 +262,8 @@ Page({
       case "数据分析":
        router.navigateTo({
          url: "../../displayPackage/pages/fenXi/projectList/projectList?type=0"
-         // url: "../fenXi/index/index"
         })
         break;
-       //  case "设置":
-       // router.navigateTo({
-       //   url: "../setting/setting"
-       //  })
-       //  break;
       default:
         // console.log("default");
     }

@@ -3,6 +3,6 @@
   "navigationBarBackgroundColor": "#fff",
   "navigationBarTextStyle": "black",
    "usingComponents": {
-    "tui-numberbox": "../../../components/numberbox/numberbox"
+    "tui-numberbox": "/components/numberbox/numberbox"
   }
 }

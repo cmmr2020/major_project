@@ -2,15 +2,21 @@
   <view class="form-user">
     <view class="cu-form-group margin-top">
       <view class="title">
+        <text class="cuIcon-homefill text-{{bgColor}} "></text>
+      </view>
+      <input class="tui-input" name="gov_code" placeholder="请输入政府区分码(非必填)" maxlength="50" type="text" style="font-size:{{fontSize}}rpx"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">
         <text class="cuIcon-mobile text-{{bgColor}} "></text>
       </view>
-      <input class="tui-input" name="name" placeholder="请输入调查员账号" maxlength="50" type="text" style="font-size:{{fontSize}}rpx"></input>
+      <input class="tui-input" name="name" placeholder="请输入调查员账号" maxlength="50" type="text" style="font-size:{{fontSize}}rpx" confirm-type="done"></input>
     </view>
     <view class="cu-form-group">
       <view class="title">
         <text class="cuIcon-unlock text-{{bgColor}} "></text>
       </view>
-      <input password class="tui-input" name="pwd" placeholder="请输入密码" maxlength="50" type="number" style="font-size:{{fontSize}}rpx" />
+      <input password class="tui-input" name="pwd" placeholder="请输入密码" maxlength="50" type="text" style="font-size:{{fontSize}}rpx" confirm-type="done" />
     </view>
   </view>
   <view class="tui-btn-box">

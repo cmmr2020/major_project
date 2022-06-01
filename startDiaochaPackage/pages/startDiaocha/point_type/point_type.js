@@ -17,7 +17,8 @@ Page({
     fontSize30:'',
     bgColor:'', 
     modalName:'',
-    isDoorHeadPhoto:'',
+    isDoorHeadPhoto:'',//是否需要拍摄门头照 0否 1是
+    isFieldArchive:'0',//是否是实地指标档案化项目 0 否 1是（默认0）
   },
 
   onLoad: function(e) {
@@ -31,6 +32,7 @@ Page({
     var requestUrl = e.requestUrl;
     var bgColor = e.bgColor;
     var fontSize = e.fontSize;
+    var isFieldArchive = e.isFieldArchive;
     that.setData({
       isGrade: isGrade,
       projectId: projectId,
@@ -38,7 +40,8 @@ Page({
       requestUrl: requestUrl,
       bgColor: bgColor,
       fontSize: fontSize,
-      fontSize30: parseInt(fontSize) - 2
+      fontSize30: parseInt(fontSize) - 2,
+      isFieldArchive:isFieldArchive
     })
     that.getLocationList(surveyorId, projectId, requestUrl);
   },
@@ -113,6 +116,7 @@ Page({
         wx.hideLoading();
         if (res.data.status ==="success") {
           var mapList = res.data.retObj;
+          console.log(mapList)
            //console.log("有没有点位：",mapList)
            if (typeof(mapList) === "undefined" ) {
               wx.showToast({
@@ -316,8 +320,8 @@ Page({
 
   showModal:function(e){
     var that = this;
-    console.log(e)
-    console.log(that.data.isDoorHeadPhoto)
+    // console.log(e)
+    // console.log(that.data.isDoorHeadPhoto)
     let locationId = e.currentTarget.dataset.index;
     let checkstatus =e.currentTarget.dataset.checkstatus
     if(that.data.isDoorHeadPhoto == 1){
@@ -325,10 +329,9 @@ Page({
         wx.showModal({
           title: '提示',
           content: '当前项目需要拍摄门头照,请先拍摄~',
-          success (res) {
-            return
-          }
+          showCancel:false
         })
+        return
       }
     }
       wx.showModal({

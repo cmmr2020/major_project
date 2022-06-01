@@ -47,7 +47,7 @@ App({
    },
    dataType: 'json',
    success: function (res) { 
-     console.log(res)
+     //console.log(res)
      //超时  重新登录
     if(res.header["sessionstatus"] == "timeout"){
       //var that = this
@@ -65,7 +65,7 @@ App({
          },
          dataType: 'json',
          success: function (res) {
-           console.log(res)
+           //console.log(res)
           if (res.data.status == 'success'){
             var seesionId =res.header["Set-Cookie"]; 
             app.seesionId = seesionId
@@ -92,18 +92,98 @@ App({
           }
       })
     }else{
+      wx.hideLoading()
       callback(res);
     }
    },
    fail: function (err) {
+    wx.hideLoading()
     console.log(err)
     errFun(err);
    },
    complete:(res) => {
-    wx.hideLoading()
+    
   }
   })
  },
+   /**
+ * 封装wx.uploadFile请求
+ * method： 请求方式
+ * url: 请求地址
+ * data： 要传递的参数
+ * callback： 请求成功回调函数
+ * errFun： 请求失败回调函数
+ **/
+wxUploadFile(url,filePath,name, data,seesionid, callback, errFun) {
+  wx.showLoading({
+    title:'数据加载中'
+  });
+    //上传举报图片
+    wx.uploadFile({
+      url: url,
+      filePath: filePath,
+      name: name,
+      formData: data,
+      header: {
+        "cookie":seesionid
+       },
+      success(res) {
+       //超时  重新登录
+      if(res.header["sessionstatus"] == "timeout"){
+          //var that = this
+          const app = getApp();//that.getApp()
+          //console.log(app)
+          wx.request({
+            url : app.globalData.requestUrl+'/wehcat/api/memberMange/silenceuserLogin',
+            method : "POST",
+            data: {
+              terminalUserId:app.terminalUserId,
+              openid:app.openid
+            },
+            header: {
+              'content-type': 'application/x-www-form-urlencoded',
+            },
+            dataType: 'json',
+            success: function (res) {
+              console.log(res)
+              if (res.data.status == 'success'){
+                var seesionId =res.header["Set-Cookie"]; 
+                app.seesionId = seesionId
+                //console.log(app.seesionId)
+                app.wxRequest(method, url, data,seesionId, callback, errFun)
+              }else{
+                if(res.data.path == "jumpToLogin"){
+                  wx.showToast({
+                    title: res.data.message,
+                    icon: 'none',
+                    duration: 2000,
+                    mask: true
+                  })
+                  setTimeout(() => {
+                    router.navigateTo({
+                      url: "/pages/functionPage/functionPage"
+                    }) 
+                  }, 1000)
+                }
+              }
+            },
+              fail: function (res) {
+                console.log(res)   
+              }
+          })
+        }else{
+          callback(res);
+        }
+      },
+      //请求失败
+      fail: function(err) {},
+      complete: () => {}
+
+    })
+ },
+
+
+
     globalData: {
       ColorList: [{
         title: '嫣红',
@@ -186,6 +266,6 @@ App({
     //requestUrl: 'https://wmccpr.diaochaonline.com'//线上
     //requestUrl:'https://cmmrpr.diaochaonline.com'//13o
     //requestUrl:'http://221.216.95.200:8286'//35
-    //requestUrl:'http://192.168.20.78:8190'//本地
+    //requestUrl:'http://192.168.31.252:8190'//本地
   }
 })

@@ -49,7 +49,11 @@ Page({
     let checkRes = form.validation(formData, rules);
     if (!checkRes) {
       // console.log("跳转")
+      var gov_code = e.detail.value.gov_code;
       var name = e.detail.value.name;
+      if(gov_code){
+        name = gov_code + '#' + name
+      }
       var password = md5(e.detail.value.pwd);
       var app = getApp();
       var openid = app.openid;
@@ -77,17 +81,22 @@ Page({
           var terminalUserName = res.data.retObj.terminalUserName;
           var departmentName = res.data.retObj.departmentName
           app.terminalUserId = res.data.retObj.terminalUserId;
-          wx.navigateTo({
-            url: '../menus/menu',
-            success: function(res) {
-              // 通过eventChannel向被打开页面传送数据
-              res.eventChannel.emit('loginPage', {
-                data: list,
-                terminalUserName: terminalUserName,
-                departmentName: departmentName
-              })
-            }
+          //解决 当用户在一次使用小程序中，多次切换不同角色账号时，造成小程序值栈存满，页面无法跳转的问题
+          //关闭所有页面，打开到应用内的某个页面
+          wx.reLaunch({
+            url: '../menus/menu?data='+JSON.stringify(list)+'&terminalUserName='+terminalUserName+'&departmentName='+departmentName+'&fromType=loginPage'
           })
+          // wx.navigateTo({
+          //   url: '../menus/menu',
+          //   success: function(res) {
+          //     // 通过eventChannel向被打开页面传送数据
+          //     res.eventChannel.emit('loginPage', {
+          //       data: list,
+          //       terminalUserName: terminalUserName,
+          //       departmentName: departmentName
+          //     })
+          //   }
+          // })
         } else {
           wx.showToast({
             title: res.data.message,

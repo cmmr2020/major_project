@@ -22,7 +22,7 @@ onShareAppMessage: function (res) {
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    // this.userLogin();
+     //this.userLogin();
   },
   /**
    * 生命周期函数--监听页面显示
@@ -48,7 +48,7 @@ onShareAppMessage: function (res) {
             "",
             (res) =>{
               if (res.data.status == 'success') {
-                console.log("获取的用户信息：", res)
+                //console.log("获取的用户信息：", res)
                app.seesionId =res.header["Set-Cookie"]; 
                app.openid = res.data.retObj.openId;
                // console.log("这是初始化appid：", app.openid)
@@ -99,19 +99,23 @@ onShareAppMessage: function (res) {
                var terminalUserName = res.data.retObj.terminalUserName;
                var departmentName = res.data.retObj.departmentName
                that.loadModal(); //加载动画
+               //解决 当用户在一次使用小程序中，多次切换不同角色账号时，造成小程序值栈存满，页面无法跳转的问题
+               //关闭所有页面，打开到应用内的某个页面
                setTimeout(function() {
-
-                 wx.navigateTo({
-                   url: '../menus/menu',
-                   success: function(res) {
-                     // 通过eventChannel向被打开页面传送数据
-                     res.eventChannel.emit('appPage', {
-                       data: list,
-                       terminalUserName: terminalUserName,
-                       departmentName: departmentName
-                     })
-                   }
-                 })
+                wx.reLaunch({
+                  url: '../menus/menu?data='+JSON.stringify(list)+'&terminalUserName='+terminalUserName+'&departmentName='+departmentName+'&fromType=appPage'
+                })
+                //  wx.navigateTo({
+                //    url: '../menus/menu',
+                //    success: function(res) {
+                //      // 通过eventChannel向被打开页面传送数据
+                //      res.eventChannel.emit('appPage', {
+                //        data: list,
+                //        terminalUserName: terminalUserName,
+                //        departmentName: departmentName
+                //      })
+                //    }
+                //  })
                }, 3000)
 
              } else {

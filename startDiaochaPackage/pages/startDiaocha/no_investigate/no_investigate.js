@@ -289,7 +289,6 @@ Page({
     if (reportVideo.length > 0) {
       //举报视频
       that.reportVideo11();
-
     }
 
 
@@ -319,11 +318,11 @@ Page({
     var fontSize = that.data.fontSize;
     var i = 0;
     //上传举报图片
-    wx.uploadFile({
-      url: requestUrl + '/wechat/api/fieldLocation/setUnSurvey',
-      filePath: reportImg[i],
-      name: 'reportImg' + i + terminalUserId,
-      formData: {
+    app.wxUploadFile(
+      requestUrl + '/wechat/api/fieldLocation/setUnSurvey',
+      reportImg[i],
+      'reportImg' + i + terminalUserId,
+      {
         'type': 0,
         'projectId': projectId,
         'surveyorId': terminalUserId,
@@ -334,34 +333,57 @@ Page({
         'description': desc,
         'key': 'reportImg' + i + terminalUserId,
       },
-      success(res) {
-        console.log("传递id：",projectId)
+      app.seesionId,
+      (res) =>{
+        //console.log("传递id：",projectId)
         wx.hideLoading();
         wx.redirectTo({
            url: "../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
             "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
             + "&fontSize=" + fontSize,
         })
-        // wx.navigateTo({
-        //   url: "../point_type/point_type",
-        //   success: function (res) {
-        //     // 通过eventChannel向被打开页面传送数据
-        //     res.eventChannel.emit('projectList', {
-        //       isGrade: isGrade,
-        //       projectId: projectId,
-        //       requestUrl: requestUrl,
-        //       terminalUserId: terminalUserId,
-        //       bgColor: bgColor,
-        //       fontSize: fontSize
-        //     })
-        //   }
-        // })
       },
-      //请求失败
-      fail: function(err) {},
-      complete: () => {}
+      (err) =>{
+        wx.showModal({
+          title: '提示',
+          content: '系统错误!',
+          // success (res) {
+          //   if (res.confirm) {
+          //     console.log('用户点击确定')
+          //   }
+          // }
+        })
+      }
+    )
+    // wx.uploadFile({
+    //   url: requestUrl + '/wechat/api/fieldLocation/setUnSurvey',
+    //   filePath: reportImg[i],
+    //   name: 'reportImg' + i + terminalUserId,
+    //   formData: {
+    //     'type': 0,
+    //     'projectId': projectId,
+    //     'surveyorId': terminalUserId,
+    //     'locationId': locationId,
+    //     'longitude': longitude,
+    //     'latitude': latitude,
+    //     'address': address,
+    //     'description': desc,
+    //     'key': 'reportImg' + i + terminalUserId,
+    //   },
+    //   success(res) {
+    //     console.log("传递id：",projectId)
+    //     wx.hideLoading();
+    //     wx.redirectTo({
+    //        url: "../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
+    //         "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
+    //         + "&fontSize=" + fontSize,
+    //     })
+    //   },
+    //   //请求失败
+    //   fail: function(err) {},
+    //   complete: () => {}
 
-    })
+    // })
 
   },
   //举报视频集合
@@ -387,11 +409,11 @@ Page({
     var bgColor = that.data.bgColor;
     var fontSize = that.data.fontSize;
     var i = 0;
-    wx.uploadFile({
-      url: requestUrl + '/wechat/api/fieldLocation/setUnSurvey',
-      filePath: reportVideo[i].src,
-      name: 'reportVideo' + i + terminalUserId,
-      formData: {
+    app.wxUploadFile(
+      requestUrl + '/wechat/api/fieldLocation/setUnSurvey',
+      reportVideo[i].src,
+      'reportVideo' + i + terminalUserId,
+      {
         'type': 2,
         'projectId': projectId,
         'surveyorId': terminalUserId,
@@ -402,19 +424,51 @@ Page({
         'description': desc,
         'key': 'reportVideo' + i + terminalUserId
       },
-      success(res) {
+      app.seesionId,
+      (res) =>{
         wx.hideLoading();
-        // wx.redirectTo({
-        //   url: '../point_type/point_type?projectId=' + projectId　 + "&isGrade=" + isGrade
-        // })
-
-
       },
-      //请求失败
-      fail: function(err) {},
-      complete: () => {}
+      (err) =>{
+        wx.showModal({
+          title: '提示',
+          content: '系统错误!',
+          // success (res) {
+          //   if (res.confirm) {
+          //     console.log('用户点击确定')
+          //   }
+          // }
+        })
+      }
 
-    })
+    )
+    // wx.uploadFile({
+    //   url: requestUrl + '/wechat/api/fieldLocation/setUnSurvey',
+    //   filePath: reportVideo[i].src,
+    //   name: 'reportVideo' + i + terminalUserId,
+    //   formData: {
+    //     'type': 2,
+    //     'projectId': projectId,
+    //     'surveyorId': terminalUserId,
+    //     'locationId': locationId,
+    //     'longitude': longitude,
+    //     'latitude': latitude,
+    //     'address': address,
+    //     'description': desc,
+    //     'key': 'reportVideo' + i + terminalUserId
+    //   },
+    //   success(res) {
+    //     wx.hideLoading();
+    //     // wx.redirectTo({
+    //     //   url: '../point_type/point_type?projectId=' + projectId　 + "&isGrade=" + isGrade
+    //     // })
+
+
+    //   },
+    //   //请求失败
+    //   fail: function(err) {},
+    //   complete: () => {}
+
+    // })
 
 
   },

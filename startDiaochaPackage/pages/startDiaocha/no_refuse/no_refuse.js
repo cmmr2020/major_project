@@ -321,11 +321,11 @@ Page({
     var fontSize = that.data.fontSize;
     var i = 0;
     //上传举报图片
-    wx.uploadFile({
-      url: requestUrl + '/wechat/api/fieldLocation/refuseAccess',
-      filePath: reportImg[i],
-      name: 'reportImg' + i + terminalUserId,
-      formData: {
+    app.wxUploadFile(
+      requestUrl + '/wechat/api/fieldLocation/refuseAccess',
+      reportImg[i],
+      'reportImg' + i + terminalUserId,
+      {
         'type': 0,
         'projectId': projectId,
         'surveyorId': terminalUserId,
@@ -336,7 +336,8 @@ Page({
         'description': desc,
         'key': 'reportImg' + i + terminalUserId,
       },
-      success(res) {
+      app.seesionId,
+      (res) =>{
         wx.hideLoading();
         wx.redirectTo({
           url: "../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
@@ -344,11 +345,38 @@ Page({
             + "&fontSize=" + fontSize,
         })
       },
-      //请求失败
-      fail: function(err) {},
-      complete: () => {}
+      (err) =>{
 
-    })
+      }
+    );
+    // wx.uploadFile({
+    //   url: requestUrl + '/wechat/api/fieldLocation/refuseAccess',
+    //   filePath: reportImg[i],
+    //   name: 'reportImg' + i + terminalUserId,
+    //   formData: {
+    //     'type': 0,
+    //     'projectId': projectId,
+    //     'surveyorId': terminalUserId,
+    //     'locationId': locationId,
+    //     'longitude': longitude,
+    //     'latitude': latitude,
+    //     'address': address,
+    //     'description': desc,
+    //     'key': 'reportImg' + i + terminalUserId,
+    //   },
+    //   success(res) {
+    //     wx.hideLoading();
+    //     wx.redirectTo({
+    //       url: "../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
+    //         "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
+    //         + "&fontSize=" + fontSize,
+    //     })
+    //   },
+    //   //请求失败
+    //   fail: function(err) {},
+    //   complete: () => {}
+
+    // })
 
   },
   //举报视频集合
@@ -375,11 +403,11 @@ Page({
     var bgColor = that.data.bgColor;
     var fontSize = that.data.fontSize;
     var i = 0;
-    wx.uploadFile({
-      url: requestUrl + '/wechat/api/fieldLocation/refuseAccess',
-      filePath: reportVideo[i].src,
-      name: 'reportVideo' + i + terminalUserId,
-      formData: {
+    app.wxUploadFile(
+      requestUrl + '/wechat/api/fieldLocation/refuseAccess',
+      reportVideo[i].src,
+      'reportVideo' + i + terminalUserId,
+      {
         'type': 2,
         'projectId': projectId,
         'surveyorId': terminalUserId,
@@ -390,18 +418,45 @@ Page({
         'description': desc,
         'key': 'reportVideo' + i + terminalUserId
       },
-      success(res) {
+      app.seesionId,
+      (res) =>{
         wx.redirectTo({
           url: "../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
             "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
             + "&fontSize=" + fontSize,
         })
       },
-      //请求失败
-      fail: function(err) {},
-      complete: () => {}
+      (err) =>{
 
-    })
+      }
+    )
+    // wx.uploadFile({
+    //   url: requestUrl + '/wechat/api/fieldLocation/refuseAccess',
+    //   filePath: reportVideo[i].src,
+    //   name: 'reportVideo' + i + terminalUserId,
+    //   formData: {
+    //     'type': 2,
+    //     'projectId': projectId,
+    //     'surveyorId': terminalUserId,
+    //     'locationId': locationId,
+    //     'longitude': longitude,
+    //     'latitude': latitude,
+    //     'address': address,
+    //     'description': desc,
+    //     'key': 'reportVideo' + i + terminalUserId
+    //   },
+    //   success(res) {
+    //     wx.redirectTo({
+    //       url: "../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
+    //         "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
+    //         + "&fontSize=" + fontSize,
+    //     })
+    //   },
+    //   //请求失败
+    //   fail: function(err) {},
+    //   complete: () => {}
+
+    // })
 
 
   },

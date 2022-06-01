@@ -176,7 +176,7 @@
       <text class="cuIcon-video"></text>
     </view>
 
-    <view class="solids" bindtap="startRecord" wx:if="{{reportlength<20}}" >
+    <view class="solids" bindtap="checkScope" wx:if="{{reportlength<20}}" >
       <text class="cuIcon-voice"></text>
     </view>
   </view>

@@ -135,7 +135,7 @@ Page({
         pageType:data.pageType,
         isPhoto:app.data.isPhoto
       })
-      console.log(app.data.isPhoto)
+      //console.log(app.data.isPhoto)
         if (data.isGrade == 0) {
         that.setData({
           isGrade: false
@@ -211,7 +211,7 @@ Page({
             var images = res.data.retObj.resourceMap.images;
             var videos = res.data.retObj.resourceMap.videos;
             var audios = res.data.retObj.resourceMap.audios;
-            console.log("资源列表：", images)
+            //console.log("资源列表：", images)
             if (typeof(images) === "undefined" || typeof(videos) === "undefined" || typeof(audios) === "undefined") {
               return;
             }
@@ -296,11 +296,11 @@ Page({
   },
 
   downlodaResource: async function(images, videos, audios) {
-    var that = this;
     wx.showLoading({
-      title: '数据加载中',
-      mask: true
-    })
+      title:'资源加载中',
+      mask:true
+    });
+    var that = this;
     //如果录音有值显示录音
     if (audios.length != 0) {
       that.setData({
@@ -389,7 +389,6 @@ Page({
       await that.downlodaAudio(mapAudio[index]).then((res) => {})
     }
     wx.hideLoading();
-
   },
   /**
    ***********************************下载图片资源**************************************
@@ -542,34 +541,87 @@ Page({
     })
   },
 
+  goSetting(){
+    wx.openSetting({
+      success (res) {
+        console.log(res.authSetting)
+        // res.authSetting = {
+        //   "scope.userInfo": true,
+        //   "scope.userLocation": true
+        // }
+      }
+    })
+},
+checkScope(){
+  var that = this;
+    // 可以通过 wx.getSetting 先查询一下用户是否授权了 "scope.record" 这个 scope
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.record']) {
+          wx.authorize({
+            scope: 'scope.record',
+            success () {
+              // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+              that.startRecord()
+            },
+            //用户拒绝过弹窗后,短期不会弹窗授权,引导用户手动开启
+            fail(e){
+              wx.showModal({
+                title: '提示',
+                content: '因需要使用录音功能,请点击确定,设置开启麦克风权限 ！',
+                success (res) {
+                  if (res.confirm) {
+                    that.goSetting()
+                  } else if (res.cancel) {
+                    wx.showModal({
+                      title: '提示',
+                      content: '您未授权开启麦克风权限，将无法使用录音功能！',
+                      showCancel:false
+                    })
+                  }
+                }
+              })
+            }
+          })
+        }else{
+          //已授权  直接开启录音
+          that.startRecord()
+        }
+      }
+    })
+  },
   // 开始录音
   startRecord: function() {
     var that = this;
-    that.setData({
-      modalHidden: false,
-      idModelShow: 0,
-      fuzhi: 0
-    })
-
-    const options = {
-      duration: 60000, //指定录音的时长，单位 ms
-      sampleRate: 16000, //采样率
-      numberOfChannels: 1, //录音通道数
-      encodeBitRate: 96000, //编码码率
-      format: 'mp3', //音频格式，有效值 aac/mp3
-      frameSize: 50, //指定帧大小，单位 KB
-    }
-    //开始录音
-    recorderManager.start(options);
-    recorderManager.onStart(() => {
-      // console.log('recorder start')
-    });
-
-    that.startTimer();
+      that.setData({
+        modalHidden: false,
+        idModelShow: 0,
+        fuzhi: 0
+      })
+      const options = {
+        duration: 60000, //指定录音的时长，单位 ms
+        sampleRate: 16000, //采样率
+        numberOfChannels: 1, //录音通道数
+        encodeBitRate: 96000, //编码码率
+        format: 'mp3', //音频格式，有效值 aac/mp3
+        frameSize: 50, //指定帧大小，单位 KB
+      }
+      //开始录音
+      recorderManager.start(options);
+      recorderManager.onStart(() => {
+        // console.log('recorder start')
+      });
+      recorderManager.onError(() => {
+        wx.showModal({
+          title: '提示',
+          content: '监测到录音功能异常,请您确认微信App是否开启麦克风权限！(非此小程序)',
+          showCancel:false
+        })
+      })
+  
+      that.startTimer();
   },
-
   // 停止录音
-
   stopRecord: function() {
     var that = this;
     var audioSrc = that.data.audioSrc;

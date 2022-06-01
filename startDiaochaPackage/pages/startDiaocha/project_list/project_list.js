@@ -42,7 +42,7 @@ Page({
       },
       app.seesionId,
       (res) =>{
-          // console.log("项目数据", res.data.retObj)
+        //console.log("项目数据", res.data.retObj)
         var arr = [];
         if (res.data.status == 'success') {
           var projectList = res.data.retObj;
@@ -72,7 +72,8 @@ Page({
               status: projectList[i].status,
               updateBy: projectList[i].updateBy,
               updateTime: projectList[i].updateTime,
-              version: projectList[i].version
+              version: projectList[i].version,
+              isFieldArchive:projectList[i].isFieldArchive
             })
           }
 
@@ -165,17 +166,18 @@ Page({
   },
   //点击
     go:function(e){
-      //console.log(e)
+    //console.log(e)
     var that = this;
     var projectId = e.currentTarget.dataset.id;
     var terminalUserId = that.data.terminalUserId; 
     var isGrade = e.currentTarget.dataset.isgrade;
+    var isFieldArchive = e.currentTarget.dataset.isfieldarchive;
     app.data.isPhoto = e.currentTarget.dataset.isphoto;
      //console.log(app.data.isPhoto)
-    that.validTime(projectId,terminalUserId,isGrade);
+    that.validTime(projectId,terminalUserId,isGrade,isFieldArchive);
   },
 
-  validTime:function(projectId,terminalUserId,isGrade){
+  validTime:function(projectId,terminalUserId,isGrade,isFieldArchive){
     var that = this;
     var requestUrl = that.data.requestUrl;
     var bgColor = that.data.bgColor;
@@ -196,7 +198,7 @@ Page({
             wx.navigateTo({
               url:"../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
                 "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
-                + "&fontSize=" + fontSize,
+                + "&fontSize=" + fontSize + "&isFieldArchive=" + isFieldArchive,
              success: function(res) {
               console.log("进去了吗")
                       // 通过eventChannel向被打开页面传送数据

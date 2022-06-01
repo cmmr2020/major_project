@@ -25,13 +25,14 @@ Page({
     timeInterval:'', //记录行走经纬度时时间间隔 单位毫秒
     submitStatus:'',//点位测评状态  0 未上传  1上传中  2测评完毕  待提交
     isHaveDoorHead:0, //是否含有门头照 0否 1是
+    isDoorHeadPhoto:'',//是否需要拍摄门头照 0否 1是
+    isFieldArchive:'0',//是否是实地指标档案化项目 0 否 1是（默认0） 1 不显示拒访和无法调查按钮
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    console.log(options)
     var that = this;
     var projectId = options.projectId;
     var isGrade = options.isGrade;
@@ -56,6 +57,8 @@ Page({
       fontSize:fontSize,
       bgColor:bgColor,
       isHaveDoorHead:options.isHaveDoorHead,
+      isDoorHeadPhoto:options.isDoorHeadPhoto,
+      isFieldArchive:options.isFieldArchive,
       fontSize35:parseInt(fontSize)+3,
       fontSize30:parseInt(fontSize)-2,
       fontSize28:parseInt(fontSize)-4

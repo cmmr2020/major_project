@@ -3,6 +3,9 @@
 <view class="cu-card article div-use">
   <view class="cu-item shadow">
     <view class="open-user" bindtap="goToPage">
+    <!--自定义头像-->
+      <!-- <view class="cu-avatar xl round margin-left" style="top: 40rpx;background-image:url(../../../../images/logo_user.jpg);"></view> -->
+
       <open-data type="userAvatarUrl" class=" userinfo bg-white userinfo-avatar icon" style="border-radius: 5000rpx"></open-data>
       <!--  <open-data type="userNickName" class="userinfo-nickname"></open-data> -->
       <!--   <view class="flex">

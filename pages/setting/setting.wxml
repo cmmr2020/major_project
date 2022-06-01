@@ -1,5 +1,4 @@
 <view class="container-user">
-
 <view class="cu-bar bg-white solid-bottom" >
   <view class="action" style="font-size:{{fontSize}}rpx">
     <text class="cuIcon-title text-{{bgColor}}" ></text>文字大小

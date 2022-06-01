@@ -18,7 +18,7 @@ Page({
     imgMapList:[],
     locationId:'',
     projectId:'',
-    terminalUserId:app.terminalUserId
+    terminalUserId:''
   },
 
   ChooseImage(e) {
@@ -183,10 +183,11 @@ Page({
     wx.showToast({
       title: '提交成功',
       icon: 'none',
-      duration: 1500,
+      duration: 3000,
       mask: true,
       success : function(){
         wx.hideLoading();
+        wx.navigateBack();
       }
     })
     
@@ -286,10 +287,12 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(options)
+    //console.log(options)
+    //console.log(app.terminalUserId)
     this.setData({
       locationId : options.locationId,
-      projectId : options.projectId
+      projectId : options.projectId,
+      terminalUserId : app.terminalUserId
     })
     wx.setNavigationBarTitle({
       title: options.locationName,
@@ -298,6 +301,7 @@ Page({
   },
   initDoorHeadPage(){
     let that = this
+    //console.log(that.data.terminalUserId)
     //调用全局 请求方法
     app.wxRequest(
       'GET',
@@ -309,7 +313,7 @@ Page({
       },
       app.seesionId,
       (res) =>{
-        //console.log(res)
+        console.log(res)
         if (res.data.status == 'success') {
           let resList = res.data.retObj
           for(let i=0; i<resList.length; i++){
@@ -349,7 +353,7 @@ Page({
   onUnload: function() {
     let that = this
     var pages = getCurrentPages(); //当前页面栈
-    console.log(that.data.realDoorHeadLength)
+    //console.log(that.data.realDoorHeadLength)
     if (pages.length > 1) {
       var beforePage = pages[pages.length - 2]; //获取上一个页面实例对象
        beforePage.setData({       //如果需要传参，可直接修改A页面的数据，若不需要，则可省去这一步

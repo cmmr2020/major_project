@@ -10,7 +10,7 @@
 </view>
     </view>
     <view class="padding bg-white">
-     <view class="padding margin" wx:for="{{elements}}" wx:key="index" bind:tap="go" data-id="{{item.id}}" data-isgrade="{{item.isGrade}}" data-isPhoto="{{item.isPhoto}}">
+     <view class="padding margin" wx:for="{{elements}}" wx:key="index" bind:tap="go" data-id="{{item.id}}" data-isgrade="{{item.isGrade}}" data-isPhoto="{{item.isPhoto}}" data-isFieldArchive="{{item.isFieldArchive}}">
       <view class="shadow-blur bg-{{item.color}} ABox" style="font-size:{{fontSize}}rpx">{{item.name}}</view>
       </view> 
       <view class='cu-tabbar-height'></view>
