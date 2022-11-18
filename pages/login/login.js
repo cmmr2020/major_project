@@ -99,7 +99,7 @@ Page({
           // })
         } else {
           wx.showToast({
-            title: res.data.message,
+            title: '登录失败！请检查您输入的信息是否有误。',
             icon: 'none',
             duration: 2000,
             mask: true

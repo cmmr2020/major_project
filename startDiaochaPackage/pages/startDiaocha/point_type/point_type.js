@@ -1,7 +1,6 @@
 // 点位类型页面
 const app = getApp();
 Page({
-
   data: {
     requestUrl: '', //服务器路径
     projectId: '',
@@ -44,40 +43,43 @@ Page({
       isFieldArchive:isFieldArchive
     })
     that.getLocationList(surveyorId, projectId, requestUrl);
+    if(!app.projectWaterMark_map.has(projectId)){
+      that.getProjectWaterMark(projectId,requestUrl);
+    }
   },
   onShow : function(){
     //记录用户测评路线功能  获取所需权限
     //点位列表页面加载完毕 是否获取后台定位权限
-    var that =  this;
-    wx.getSetting({
-      success (res) {
-        //没有的话  引导用户开启后台定位权限
-        if(!res.authSetting['scope.userLocationBackground']){
-          wx.showModal({
-            title: '提示',
-            content: '因需要记录行动轨迹,请点击确定,设置定位权限，选择 “使用小程序期间和离开小程序之后” ！',
-            success (res) {
-              if (res.confirm) {
-                that.goSetting()
-              } else if (res.cancel) {
-                wx.showModal({
-                  title: '提示',
-                  content: '您未授权后台获取位置信息，此点位将无法记录您的行走路线！',
-                  showCancel:false
-                })
-              }
-            }
-          })
-          // that.setData({
-          //   modalName:'bottomModal'
-          // })
-        }else{
-          that.setData({
-            modalName:null
-          })
-        }
-      }
-    })
+    // var that =  this;
+    // wx.getSetting({
+    //   success (res) {
+    //     //没有的话  引导用户开启后台定位权限
+    //     if(!res.authSetting['scope.userLocationBackground']){
+    //       wx.showModal({
+    //         title: '提示',
+    //         content: '因需要记录行动轨迹,请点击确定,设置定位权限，选择 “使用小程序期间和离开小程序之后” ！',
+    //         success (res) {
+    //           if (res.confirm) {
+    //             that.goSetting()
+    //           } else if (res.cancel) {
+    //             wx.showModal({
+    //               title: '提示',
+    //               content: '您未授权后台获取位置信息，此点位将无法记录您的行走路线！',
+    //               showCancel:false
+    //             })
+    //           }
+    //         }
+    //       })
+    //       // that.setData({
+    //       //   modalName:'bottomModal'
+    //       // })
+    //     }else{
+    //       that.setData({
+    //         modalName:null
+    //       })
+    //     }
+    //   }
+    // })
   },
   hideModal(e) {
     this.setData({
@@ -94,6 +96,55 @@ Page({
               // }
             }
           })
+  },
+  getProjectWaterMark:function(projectId,requestUrl) {
+    var that = this;
+    wx.showLoading({
+      title: '数据加载中',
+      mask: true
+    })
+    // var requestUrl = that.data.requestUrl; //服务器路径
+    //console.log("requestUrl:",requestUrl);
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldProject/getProjectWaterMarkById',
+      {
+        projectId: projectId
+      },
+      app.seesionId,
+      (res) =>{
+        wx.hideLoading();
+        if (res.data.status ==="success") {
+          var waterMark = res.data.retObj
+          var waterMarkObj = {};
+          // console.log(waterMark)
+          //若没有实体  则设置成水印未开启
+          if(typeof(waterMark) == 'undefined'){
+            waterMarkObj.isWatermark = 0
+          }else{
+            //如果有实体则 设置实体
+            waterMarkObj = waterMark
+          }
+          app.projectWaterMark_map.set(projectId,waterMarkObj)
+          // console.log(waterMarkObj)
+          // console.log(app.projectWaterMark_map.get(projectId))
+        } else {
+          wx.showModal({
+              title: '提示',
+              content: "获取项目水印设置信息失败",
+              showCancel:false,
+              confirmColor:"#0081ff",
+              success (res) {
+              }
+            })
+        }
+
+      },
+      (err) =>{
+
+      }
+    )
   },
   getLocationList:function(terminalUserId, projectId,requestUrl) {
     var that = this;
@@ -116,7 +167,7 @@ Page({
         wx.hideLoading();
         if (res.data.status ==="success") {
           var mapList = res.data.retObj;
-          console.log(mapList)
+          //console.log(mapList)
            //console.log("有没有点位：",mapList)
            if (typeof(mapList) === "undefined" ) {
               wx.showToast({
@@ -372,54 +423,29 @@ Page({
       app.seesionId,
       (res) =>{
         if (res.data.status == 'success') {
-          var value = wx.getStorageSync(locationId)
-          if (value) {
-            //调用全局 请求方法
-            app.wxRequest(
-              'POST',
-              requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
-              {
-                "surveyorId": surveyorId,
-                "locationId": locationId,
-                "projectId": projectId,
-                "addressJsonStr": value,
-                "type":0
-              },
-              app.seesionId,
-              (res) =>{
-                //清空缓存的该点位行走路线经纬度
-                wx.removeStorageSync(locationId)
-              },
-              (err) =>{
+          var value = '1';//wx.getStorageSync(locationId)
+          // if (value) {
+          //   //调用全局 请求方法
+          //   app.wxRequest(
+          //     'POST',
+          //     requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
+          //     {
+          //       "surveyorId": surveyorId,
+          //       "locationId": locationId,
+          //       "projectId": projectId,
+          //       "addressJsonStr": value,
+          //       "type":0
+          //     },
+          //     app.seesionId,
+          //     (res) =>{
+          //       //清空缓存的该点位行走路线经纬度
+          //       wx.removeStorageSync(locationId)
+          //     },
+          //     (err) =>{
 
-              }
-            )
-            // wx.request({
-            //   // 必需
-            //   url: requestUrl + '/wechat/api/fieldLocation/saveOrUpdateFieldTaskWalkLocus',
-            //   method:'POST',
-            //   dataType:'json',
-            //   data: {
-            //     "surveyorId": surveyorId,
-            //     "locationId": locationId,
-            //     "projectId": projectId,
-            //     "addressJsonStr": value,
-            //     "type":0
-            //   },
-            //   header: {
-            //     'Content-Type': 'application/x-www-form-urlencoded'
-            //   },
-            //   success: (res) => {
-
-            //   },
-            //   fail: (res) => {
-            //   },
-            //   complete: (res) => {
-            //     //清空缓存的该点位行走路线经纬度
-            //      wx.removeStorageSync(locationId)
-            //   }
-            // })
-          }
+          //     }
+          //   )
+          // }
         }
         that.getLocationList(surveyorId, projectId,requestUrl);
       },
@@ -479,7 +505,7 @@ Page({
     // })
   },
   changeData: function() {
-    console.log("接收id：", this.data.surveyorId)
+    //console.log("接收id：", this.data.surveyorId)
     var options = {
       projectId: this.data.projectId,
       isGrade: this.data.isGrade,

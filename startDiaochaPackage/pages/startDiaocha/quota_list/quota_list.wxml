@@ -22,9 +22,9 @@
     <button class="cu-btn round lg1 bg-{{bgColor}} cuIcon-back_android " bindtap="showModal" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;left: 3%;overflow: auto;">切换指标</button>
   </view>
 
-  <view  class="margin-tb-sm-user text-center {{showQueryDistance===1?'':'hidenModel'}}" style="z-index: 2;position: relative">
+  <!-- <view  class="margin-tb-sm-user text-center {{showQueryDistance===1?'':'hidenModel'}}" style="z-index: 2;position: relative">
     <button class="cu-btn round lg1 bg-{{bgColor}}" bindtap="queryDistance" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;right:3% ;overflow: auto;">查询行走距离</button>
-  </view>
+  </view> -->
 
   <view class="table">
     <view class="tr bg-w">
@@ -93,9 +93,9 @@
     <button class="cu-btn round lg1 bg-{{bgColor}} cuIcon-back_android " bindtap="showModal" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;left: 3%;overflow: auto;">切换指标</button>
   </view>
 
-  <view  class="margin-tb-sm-user text-center {{showQueryDistance===1?'':'hidenModel'}}" style="z-index: 2;position: relative">
+  <!-- <view  class="margin-tb-sm-user text-center {{showQueryDistance===1?'':'hidenModel'}}" style="z-index: 2;position: relative">
     <button class="cu-btn round lg1 bg-{{bgColor}}" bindtap="queryDistance" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;right:3% ;overflow: auto;">查询行走距离</button>
-  </view>
+  </view> -->
 
   <view class="table">
     <view class="tr bg-w">

@@ -10,6 +10,7 @@ Page({
   data: {
     requestUrl: '', //服务器路径
     pointName: '',
+    locationName:'',
     pointId: '',
     pointTypeId: '',
     list: {},
@@ -43,7 +44,7 @@ Page({
     wx.setStorageSync("firstQuestion", firstQuestion);
     var fontSize = options.fontSize;
     var bgColor = options.bgColor;
-    var name = options.name;
+    var name = options.locationName;
     that.data.isRecord = options.isRecord==='null'?app.data.isRecord:options.isRecord;
     that.data.timeInterval = options.timeInterval==='null'?app.data.timeInterval:options.timeInterval;
     that.data.submitStatus = options.submitStatus;
@@ -52,6 +53,7 @@ Page({
       isGrade: isGrade,
       projectId: projectId,
       pointName: name,
+      locationName : options.pointName,
       pointId: pointId,
       pointTypeId: pointTypeId,
       fontSize:fontSize,
@@ -135,8 +137,9 @@ Page({
     var pointName = that.data.pointName;
     var pointId = that.data.pointId;
     var projectId = that.data.projectId;
+    var pointTypeName = that.data.locationName;
     router.navigateTo({
-      url: "../door_head_photo/door_head_photo?locationName="+pointName+"&locationId="+pointId+"&projectId="+projectId
+      url: "../door_head_photo/door_head_photo?locationName="+pointName+"&locationId="+pointId+"&projectId="+projectId+"&pointTypeName="+pointTypeName
     })
   },
   goToquota_list: function() {
@@ -165,6 +168,7 @@ Page({
                   isRecord:that.data.isRecord,
                   timeInterval:that.data.timeInterval,
                   submitStatus:that.data.submitStatus,
+                  pointTypeName:that.data.locationName
                 })
               }
     })

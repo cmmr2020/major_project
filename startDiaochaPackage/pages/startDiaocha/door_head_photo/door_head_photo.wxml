@@ -1,3 +1,5 @@
+<!--添加照片水印 画布-->
+<canvas style="position:fixed;top: 0;left: -100%" type="2d" id="Canvas" ></canvas>
 <!-- 拍摄照片 -->
 <view class="cu-bar  solid-bottom">
   <view class="action">
@@ -18,7 +20,7 @@
 <view class="cu-card article no-card">
   <view class="cu-item shadow">
     <view class="content" wx:for="{{imgMapList}}" wx:key="index"  > 
-      <image  bindlongpress="showCopyTap" data-type="0" src='{{item.img_url}}' mode='aspectFill' bindtap="ViewImageForreport" data-index='{{index}}' data-url="{{item.img_url}}"></image>
+      <image data-type="0" src='{{item.img_url}}' mode='aspectFill' bindtap="ViewImageForreport" data-index='{{index}}' data-url="{{item.img_url}}"></image>
       <view class="cu-tag-user bg-red" catchtap="DelImg" data-index="{{index}}" data-id="{{item.id}}">
         <text class="cuIcon-close"></text>
       </view>
@@ -52,3 +54,4 @@
 <view class="padding-xl_user">
   <button class="cu-btn  block bg-{{bgColor}} margin-tb-sm lg" bindtap='submit' style="font-size:{{fontSize28}}rpx">提交</button>
 </view>
+

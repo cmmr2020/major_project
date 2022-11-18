@@ -1,4 +1,5 @@
-
+<!--添加照片水印 画布-->
+<canvas style="position:fixed;top: 0;left: -1000%" type="2d" id="mycanvas"></canvas>
   <view class="cu-modal {{modalName=='DialogModal2'?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white justify-end">
@@ -257,39 +258,38 @@
 
 
 <!-- 记录问题处数 0 不需要 1 需要 -->
-
-<view wx:if="{{isAmount==1}}" class="cu-form-group margin-top">
-  <text class="cuIcon-title text-{{bgColor}} text-user"></text>
-  <view class="title-user" style="font-size:{{fontSize}}rpx">问题处数</view>
-  <input placeholder="请输入数字"  disabled="{{disabled}}" style="font-size:{{fontSize28}}rpx" value='{{amountValue}}' type="number" bindinput='textAmountScore'></input>
-  <button class="cu-btn round" style="font-size: 50rpx;" bindtap='queNumCut'>-</button>
-  <button class="cu-btn round" style="margin-left: 30rpx; font-size: 40rpx; text-align: center;" bindtap='queNumAdd'>+</button>
-  <!-- <text class="cuIcon-add lg text-gray" bindtap='queNumAdd'></text>
-  <text class="cuIcon-move lg text-gray" style="margin-left: 25rpx;" bindtap='queNumCut'></text> -->
-</view>
+<view style="display: {{isOptionOn == 1?'':'none'}};">
+  <view wx:if="{{isAmount==1}}" class="cu-form-group margin-top">
+    <text class="cuIcon-title text-{{bgColor}} text-user"></text>
+    <view class="title-user" style="font-size:{{fontSize}}rpx">问题处数</view>
+    <input placeholder="请输入数字"  disabled="{{disabled}}" style="font-size:{{fontSize28}}rpx" value='{{amountValue}}' type="number" bindinput='textAmountScore'></input>
+    <button class="cu-btn round" style="font-size: 50rpx;" bindtap='queNumCut'>-</button>
+    <button class="cu-btn round" style="margin-left: 30rpx; font-size: 40rpx; text-align: center;" bindtap='queNumAdd'>+</button>
+    <!-- <text class="cuIcon-add lg text-gray" bindtap='queNumAdd'></text>
+    <text class="cuIcon-move lg text-gray" style="margin-left: 25rpx;" bindtap='queNumCut'></text> -->
+  </view>
 <!-- 打分 -->
-
-<view wx:if="{{isGrade}}" class="cu-form-group margin-top">
-  <text class="cuIcon-title text-{{bgColor}} text-user"></text>
-  <view class="title" style="font-size:{{fontSize}}rpx">评分</view>
-  <input placeholder="最高可扣{{maxScore}}分,达标默认不扣分" style="font-size:{{fontSize28}}rpx" disabled='{{judge}}' value='{{ScoreValue}}' type="number" bindinput='textScore'></input>
+  <view wx:if="{{isGrade}}" class="cu-form-group margin-top" >
+    <text class="cuIcon-title text-{{bgColor}} text-user"></text>
+    <view class="title" style="font-size:{{fontSize}}rpx">评分</view>
+    <input placeholder="最高可扣{{maxScore}}分,达标默认不扣分" style="font-size:{{fontSize28}}rpx" disabled='{{judge}}' value='{{ScoreValue}}' type="number" bindinput='textScore'></input>
+  </view>
 </view>
 
 <!-- 测评结果 -->
-<view class="cu-bar solid-bottom">
+<view class="cu-bar solid-bottom" style="display: {{isOptionOn == 1?'':'none'}};">
   <view class="action">
     <text class="cuIcon-title text-{{bgColor}}" style="font-size:{{fontSize}}rpx"></text> 
     <text style="font-size:{{fontSize}}rpx">检查结果</text>
   </view>
 
 </view>
-<view class="radioChange_user">
+<view class="radioChange_user" style="display: {{isOptionOn == 1?'':'none'}};">
   <radio-group id="result" bindchange="radioChange" data-id="{{item.id}}">
     <label class="radio" wx:for="{{items}}" wx:key="index">
       <radio class="{{bgColor}} margin-left-sm" value="{{item.id}}" checked="{{item.id==checkedid? true : false}}"/><text style="font-size:{{fontSize28}}rpx">{{item.content}}</text>
     </label>
   </radio-group>
-
 </view>
 
 

@@ -12,16 +12,44 @@ App({
     isPhoto:1, //当前项目达标指标是否必须拍照 0否  1是   默认 1
     isStars:0, //当前政府是否开启地图星级模式 0否  1是   默认 0
   },
+  projectWaterMark_map: new Map(),
+  project_isOptionOn_map: new Map(),
+  project_isSelectPhoto_map: new Map()
+  ,
   onLaunch: function() {
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs);
     //设置文本初始值大小  32
-     wx.setStorageSync('fontSize', 34);
+    wx.setStorageSync('fontSize', 34);
      //设置主题初始颜色  blue #0081ff
-     wx.setStorageSync('bgColor','blue')
-     wx.setStorageSync('bgColorUi','#0081ff')
+    wx.setStorageSync('bgColor','blue')
+    wx.setStorageSync('bgColorUi','#0081ff')
+    const waterMark_path = this.globalData.waterMark_file_base_path
+    //声明文件系统
+    const fs = wx.getFileSystemManager();
+    fs.access({// 判断文件/目录是否存在
+      path: waterMark_path,
+      success(res) {
+        // 文件存在
+        //console.log(res)
+      },
+      fail(res) {
+        // 文件不存在或其他错误
+        if(res.errMsg.indexOf('fail no such file or directory') != -1){
+          fs.mkdir({
+            dirPath: waterMark_path,
+            success(res) {
+              console.log(res)
+            },
+            fail(res) {
+              console.error(res)
+            }
+          })
+        }
+      }
+    })
   },
 
    /**
@@ -181,9 +209,23 @@ wxUploadFile(url,filePath,name, data,seesionid, callback, errFun) {
 
     })
  },
-
-
-
+ removeLocalFile(basepath) {
+  // 注意，文件存储空间为10M
+  // 为了保持空间够用，删除了根目录下的文件
+  const fsm = wx.getFileSystemManager();
+  try {
+    const ls = fsm.readdirSync(basepath);
+    ls.forEach(d => {
+      let path = `${basepath}/${d}`;
+      let stats = fsm.statSync(path);
+      if (stats.isFile()) {
+        fsm.unlinkSync(path);
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+},
     globalData: {
       ColorList: [{
         title: '嫣红',
@@ -261,11 +303,12 @@ wxUploadFile(url,filePath,name, data,seesionid, callback, errFun) {
         color: '#ffffff'
       },
     ],
+    waterMark_file_base_path:wx.env.USER_DATA_PATH + '/WaterMarktemp/',
     userInfo: null,
     requestUrl: 'https://wxp.diaochaonline.com'//35
     //requestUrl: 'https://wmccpr.diaochaonline.com'//线上
     //requestUrl:'https://cmmrpr.diaochaonline.com'//13o
     //requestUrl:'http://221.216.95.200:8286'//35
-    //requestUrl:'http://192.168.31.252:8190'//本地
+    //requestUrl:'http://192.168.20.50:8190'//本地
   }
 })

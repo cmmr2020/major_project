@@ -51,7 +51,7 @@ onShareAppMessage: function (res) {
                 //console.log("获取的用户信息：", res)
                app.seesionId =res.header["Set-Cookie"]; 
                app.openid = res.data.retObj.openId;
-               // console.log("这是初始化appid：", app.openid)
+                //console.log("这是初始化appid：", app.openid)
                // app.existence = res.data.retObj.existence;
                // // console.log("是否有菜单",app.existence)
                // // 调查员id
@@ -129,7 +129,7 @@ onShareAppMessage: function (res) {
              }
             },
             (err) =>{
-
+              console.log(err)
             }
             )
           //发起网络请求

@@ -4,7 +4,7 @@
       <view class="title">
         <text class="cuIcon-homefill text-{{bgColor}} "></text>
       </view>
-      <input class="tui-input" name="gov_code" placeholder="请输入政府区分码(非必填)" maxlength="50" type="text" style="font-size:{{fontSize}}rpx"></input>
+      <input class="tui-input" name="gov_code" placeholder="请输入政府区分码" maxlength="50" type="text" style="font-size:{{fontSize}}rpx"></input>
     </view>
     <view class="cu-form-group">
       <view class="title">

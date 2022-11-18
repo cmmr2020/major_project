@@ -4,8 +4,10 @@
     "pages/menus/menu",
     "pages/login/login",
     "pages/setting/setting",
-    "pages/functionPage/functionPage"
+    "pages/functionPage/functionPage",
+    "pages/test/test"
   ],
+  "requiredPrivateInfos" : [ "getLocation" ],
   "subpackages": [
     {
       "root": "startFuchaPackage",

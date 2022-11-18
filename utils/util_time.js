@@ -11,7 +11,8 @@ function formatTime(time, format) {
 
 module.exports = {
   formatTime: formatTime,
-  getNowTime:getNowTime
+  getNowTime:getNowTime,
+  getNowTime2:getNowTime2
 }
 
 function getNowTime(){
@@ -42,3 +43,20 @@ var now = new Date();
   return formatDate;
 
 } 
+
+function getNowTime2(){
+  var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    if (month < 10) {
+      month = '0' + month;
+    };
+    if (day < 10) {
+      day = '0' + day;
+    };
+   
+    var formatDate =  year + '-' + month + '-' + day;
+    return formatDate;
+  
+  } 

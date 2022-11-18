@@ -20,6 +20,7 @@ Page({
     listData: [],
     // 点位
     pointName: "",
+    pointTypeName:'',
     // 四级指标
     quotaName: "",
     // 提示id
@@ -70,6 +71,7 @@ Page({
       locationId = data.pointId
       that.setData({
         pointName: data.pointName,
+        pointTypeName:data.pointTypeName,
         pointTypeId: data.pointTypeId,
         pointId: data.pointId,
         projectId:data.projectId,
@@ -96,128 +98,52 @@ Page({
       }else{
         that.getQuotaList(data.pointTypeId,data.pointId,data.projectId);
       }
-      that.checkIsRecord();
     })
      if(variable===0){
-        that.getproblemList(that.data.pointTypeId,that.data.projectId, that.data.pointId);
+         that.getproblemList(that.data.pointTypeId,that.data.projectId, that.data.pointId);
       }else{
-        that.getQuotaList(that.data.pointTypeId,that.data.pointId,that.data.projectId);
+         that.getQuotaList(that.data.pointTypeId,that.data.pointId,that.data.projectId);
       }
+      this.myLoad();
   },
-  checkIsRecord:function(){
-    //console.log(app.data.locationUpdateFlag)
-    //console.log(this.data)
-    if(app.data.locationUpdateFlag===true){
-      //console.log('定位已开,return')
-      return
-    }
-    let that = this
-    //console.log(that)
-    let locationId = that.data.pointId;
-    if(that.data.isRecord==="1"){
-      that.setData({
-        showQueryDistance:1
-      })
-      //console.log(that.data)
-      if(that.data.submitStatus==="1"){
-        wx.getSetting({
-          success (res) {
-            if(!res.authSetting['scope.userLocationBackground']){
-              wx.showModal({
-                title: '提示',
-                content: '您未授权后台获取位置信息，此点位将无法记录您的行走路线！',
-                showCancel:false
-              })
-            }
-          }
-        })
-        //获取缓存信息
-        const res = wx.getStorageInfoSync()
-        //如果缓存中的key数量小于话  允许保存到缓存中 缓存中除此功能已有9个key分别为 "logs"  "fontSize" "bgColor" "bgColorUi" "markersList" "firstQuestion" 
-        //缓存key最多十个 记录测评路线最多保存 3个点位  缓存keys 长度控制到 9 
-        //console.log(res.keys.length)
-        if(res.keys.length<=10 || res.keys.indexOf(locationId)!=-1){
-          if(res.currentSize<1024*10){
-          //开启小程序进入前后台时均接收位置消息
-            wx.startLocationUpdateBackground({
-              success(res){
-                app.data.locationUpdateFlag=true
-                const _locationChangeFn = function(res) {
-                  var myTime = (Date.now()/1000).toFixed();
-                 //console.log(myTime)
-                  that.setData({
-                    // longitude:res.longitude.toFixed(4),
-                    // latitude:res.latitude.toFixed(4)
-                    longitude:res.longitude,
-                    latitude:res.latitude,
-                    tStamp:myTime
-                  })
-      
-                  }
-                  wx.onLocationChange(_locationChangeFn)
-                  console.log('开启并且 频率为:'+that.data.timeInterval)
-                  var id =setInterval(handleLocationUpdate,parseInt(that.data.timeInterval),that.data)
-                  //console.log(id)
-                  that.setData({
-                    taskId:id
-                  })
-              },
-              fail(res){
-                // console.log('失败')
-                //console.log(res)
+  myLoad: function(e) {
+    let that = this;
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      that.data.requestUrl + '/wechat/api/fieldLocation/checkLocationCompletion',
+      {
+        terminalUserId: app.terminalUserId,
+        locationId: that.data.pointId,
+        projectId: that.data.projectId
+      },
+      app.seesionId,
+      (res) =>{
+        //console.log('查询结果', res.data.retObj)
+        if (res.data.status == 'success') {
+          if(res.data.retObj === 1){
+            wx.showModal({
+              title: '提示',
+              content: '您已完成当前点位下的所有问题,请返回点位列表提交。',
+              showCancel:false,
+              confirmText:'知道了',
+              success (res) {
+                // if (res.confirm) {
+                //   console.log('用户点击确定')
+                // } else if (res.cancel) {
+                //   console.log('用户点击取消')
+                // }
               }
             })
-          }     
-        }else{
-          wx.showModal({
-            title: '提示',
-            content: '缓存已满,当前点位无法记录行走轨迹,请知晓!',
-            success (res) {
-              LogManager.warn('测评轨迹记录功能缓存已满,已存缓存Key信息:'+res.keys)
-            }
-          })
-        }
-        const handleLocationUpdate = function(param){
-          //  console.log('进入更新坐标方法')
-          //  console.log(param)
-          // console.log(param.latitude)
-  
-          const res = wx.getStorageInfoSync()
-          //console.log(res.currentSize)
-          //缓存已满  不再更新
-          if(res.currentSize>=1024*10){
-            //关闭定位消息   关闭定时任务
-            wx.stopLocationUpdate({
-              success:function(res){
-                clearInterval(that.data.taskId)
-              },
-              fail : function(res){
-                LogManager.warn('内存已满,关闭定位消息失败:'+res)
-              }
-            })
-            return;
           }
-          var newArr = new Array();
-          var value = wx.getStorageSync(locationId)
-          if (value) {
-          // Do something with return value
-              //console.log('2成功')
-              //console.log(value)
-              var obj =JSON.parse(value);
-              var addr = {'lng':""+param.longitude+"",'lat':""+param.latitude+"",'time':""+param.tStamp+""};
-              wx.setStorageSync(locationId, JSON.stringify(obj.concat(addr)))
-          }else{
-            var addr = {'lng':""+param.longitude+"",'lat':""+param.latitude+"",'time':""+param.tStamp+""};
-            newArr.push(addr);
-            wx.setStorageSync(locationId, JSON.stringify(newArr))
-          }
+        } else {
+
         }
+      },
+      (err) =>{
 
       }
-    }
-  },
-  onLoad: function(e) {
-    //console.log('onLoad')
+    )
   },
   // 获取指标列表
   getQuotaList(pointTypeId, locationId, projectId) {
@@ -406,6 +332,9 @@ Page({
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj;
            //console.log("指标下的详情111111：", quotaList)
+          if(typeof(quotaList) == 'undefined'){
+            return
+          }
           let arr = [];
           let ayy = [];
           for (let i = 0; i < quotaList.length; i++) {
@@ -553,17 +482,18 @@ Page({
     var bgColor = that.data.bgColor;
     var requestUrl = that.data.requestUrl; 
     var resourceCount = parseInt(e.currentTarget.dataset.resourcecount);
-    if(resourceCount<1&&show_history_ques_map.has(code)){
-      if(show_history_ques_map.get(code)!='true'){
-        wx.showToast({
-          title: '请先点击旗帜图标,查看历史资源',
-          icon:'none',
-          duration: 1000,
-          mask: true
-        })
-        return
-      }
-    }
+    //暂时取消验证,不需查看历史资源 允许实地调查 2022/09/09
+    // if(resourceCount<1&&show_history_ques_map.has(code)){
+    //   if(show_history_ques_map.get(code)!='true'){
+    //     wx.showToast({
+    //       title: '请先点击旗帜图标,查看历史资源',
+    //       icon:'none',
+    //       duration: 1000,
+    //       mask: true
+    //     })
+    //     return
+    //   }
+    // }
 
     //跳转上传页面
     router.navigateTo({
@@ -587,7 +517,8 @@ Page({
                   bgColor:bgColor,
                   bgColorUi:bgColorUi,
                   requestUrl:requestUrl,
-                  pageType:pageType
+                  pageType:pageType,
+                  pointTypeName:that.data.pointTypeName
                 })
               }
     })
@@ -864,7 +795,7 @@ Page({
       (res) =>{
         if (res.data.status == 'success') {
           var quotaList = res.data.retObj;
-           //console.log("问题分类指标下的详情：", quotaList)
+          // console.log("问题分类指标下的详情：", quotaList)
           let arr = [];
           let ayy = [];
           for (let i = 0; i < quotaList.length; i++) {
@@ -1000,7 +931,7 @@ Page({
       pointName: this.data.pointName,
       pointId: this.data.pointId
     }
-    this.onLoad(e); //最好是只写需要刷新的区域的代码，onload也可，效率低，有点low
+    this.myLoad(e); //最好是只写需要刷新的区域的代码，onload也可，效率低，有点low
   },
 
   changeParentData: function() {
@@ -1046,9 +977,9 @@ Page({
           beforePage.data.submitStatus= that.data.submitStatus
           beforePage.data.isRecord= that.data.isRecord
           beforePage.data.timeInterval= that.data.timeInterval
-          console.log('关闭接收定位信息'+beforePage.data.submitStatus)
+          // console.log('关闭接收定位信息'+beforePage.data.submitStatus)
         }
-        console.log('关闭接收定位信息'+app.data.locationUpdateFlag)
+        // console.log('关闭接收定位信息'+app.data.locationUpdateFlag)
       },
       fail : function(res){
 

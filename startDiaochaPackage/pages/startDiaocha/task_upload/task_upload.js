@@ -43,6 +43,7 @@ Page({
     quotaId: '', // 指标id
     pointTypeId: '', //点位类型id
     pointName: '', //点位名称
+    pointTypeName:'',//点位类型名称
     terminalUserId: '', //调查员id
     projectId: '', //项目id
     code: '', //问题编码
@@ -105,14 +106,216 @@ Page({
     subinfo2:'',
     subinfo3:'',
     isPhoto:'',
+    imgsrc: '', //水印用
+    canvas: null,//水印用
+    canvasWidth:0,//组件宽
+    canvasHeight:0,//组件高
+    ctx: null,//水印用
+    projectWaterMark: {},//水印属性同实体
+    isWaterMark:null,//是否添加水印
+    logo_img_objec:null,//水印图片对象
+    logo_img_info:null,//水印图片对象信息
+    isOptionOn: 1,//是否隐藏答案选择框   0不显示  1显示
+    selectPhoto_type_arr:[] //选取照片类型 ['camera','album'] 相机/相册
   },
+  // 在页面初次渲染完成生命周期获取操作canvas的上下文对象
+  onReady() {
+    var that = this;
+    //console.log(that.data.isWaterMark)
+    if(that.data.isWaterMark == 1){
+      const query = wx.createSelectorQuery().in(this)
+      query.select('#mycanvas')
+        .fields({ node: true, size: true })
+        .exec((res) => {
+          if(!res[0].node){
+            query.select('#mycanvas')
+            .fields({ node: true, size: true })
+            .exec((res2) => {
+              res = res2;
+            })
+          }
+          const canvas = res[0].node
+          const ctx = canvas.getContext('2d')
+          this.setData({ canvas, ctx })
+          if(that.data.projectWaterMark.isLogo == 1){// 将图片绘制到canvas上
+            wx.downloadFile({
+              url: 'https://' + that.data.projectWaterMark.watermarkLogoUrl,
+              success(res) {
+                // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
+                if (res.statusCode === 200) {
+                  // 创建Logo图片对象
+                  const image2 = that.data.canvas.createImage();
+                  image2.src = res.tempFilePath;
+                  image2.onload = () => {
+                    that.data.logo_img_objec = image2;
+                  }
+                  wx.getImageInfo({ src: res.tempFilePath}).then((res) => {
+                    that.data.logo_img_info = res;
+                  })
+                }
+              }
+            })
+          }
+        })
+    }
+  },
+    // 添加水印方法 (传入图片地址)
+    addWatermark(tempFilePath,address) {
+      var that = this;
+      var watermark = that.data.projectWaterMark;
+      return new Promise( async (resolve, reject) => {
+          // 获取图片信息
+          const imgInfo = await wx.getImageInfo({ src: tempFilePath })
+          that.setData({
+            canvasHeight : imgInfo.height,
+            canvasWidth : imgInfo.width
+          })
+          // 1 竖拍  0横拍  用于设置水印文字大小
+          var img_orientation = imgInfo.width/imgInfo.height > 1 ? 0 : 1
+          const point_name = that.data.pointName;
+          const pointType_name = that.data.pointTypeName;
+          const time = watermark.timeFormat.length > 15? util.getNowTime() : util.getNowTime2();
+          const address = that.data.address;
+          const desc = watermark.watermarkText;
+          const font_color = watermark.fontColor
+          var logoImg = watermark.watermarkLogoUrl;
+          if(!font_color){
+            font_color = 'bule'
+          }
+          // console.log(pointType_name)
+          // console.log(point_name)
+          // console.log(util.getNowTime())
+          // console.log(util.getNowTime2())
+          // console.log(address)
+          // console.log(desc)
+          // console.log(logoImg)
+          var textList = [];
+          if(watermark.isPointTypeName == 1){
+            textList.push('点位类型：' + pointType_name)
+            textList.push('点位名称：' + point_name)
+          }
+          if(watermark.isTime == 1){
+            textList.push('时       间：' + time)
+          }
+          if(watermark.isAddress == 1){
+            textList.push('地      点：' + address)
+          }
+          if(watermark.isTxt == 1){
+            textList.push('描      述：' + desc)
+          }
+          // 设置canvas宽高
+          that.data.canvas.width = imgInfo.width
+          that.data.canvas.height = imgInfo.height
+          // 创建一个图片对象
+          const image = that.data.canvas.createImage();
+          image.src = tempFilePath;
+          image.onload = () => {
+            that.data.ctx.drawImage(image, 0, 0, imgInfo.width, imgInfo.height)
+            if(watermark.isLogo == 1){
+              let imgW = imgInfo.width * 0.1 //图片在画布上的宽度
+              let imgH = imgInfo.height * 0.1 //图片在画布上的高度
+              let imgX = imgInfo.width - imgW; //图片在画布上的y轴坐标
+              let imgY = imgInfo.height - imgH //图片在画布上的y轴坐标
+              let visibleW = that.data.logo_img_info.width//截取的图片的宽度
+              let visibleH = that.data.logo_img_info.height//截取的图片的高度
+              let visibleX = null // 所截取的图片的x轴坐标
+              let visibleY = null // 所截取的图片的y轴坐标
+              let imgBili = imgW / imgH
+              let visibleBili = visibleW / visibleH;
+              if(imgBili < visibleBili){
+                let newW = (imgH / visibleH) * visibleW
+                const bili = newW / visibleW
+                visibleX = Math.abs(imgW - newW) / 2 / bili
+                visibleY = 0
+                visibleW = imgW * visibleH / imgH;
+              }else{
+                visibleX = 0
+                let newH = (imgW * visibleH) / visibleW
+                const bili = newH / visibleH
+                visibleY = Math.abs(imgH - newH) /2 / bili
+                visibleH = visibleW * imgH / imgW
+              }
+              that.data.ctx.drawImage(that.data.logo_img_objec,visibleX,visibleY,visibleW,visibleH, imgX, imgY, imgW, imgH)
 
+              //drawImage(imageResource, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+              //that.data.ctx.drawImage(that.data.logo_img_objec,1000,1000,1000,1000, 0, 0, imgInfo.width, imgInfo.height)
+              //that.data.ctx.drawImage(that.data.logo_img_objec, 0, 0, imgInfo.width*0.3, imgInfo.height*0.3)
+            }
+            // 设置文字字号及字体 // 0 横拍  1竖拍  用于设置水印文字大小
+            var line_spacing; //行间距  图片 高的乘数  
+            if(img_orientation == 0){
+              line_spacing = 0.08
+              that.data.ctx.font = imgInfo.width*0.04 +'px sans-serif'
+            }else{
+              line_spacing = 0.04
+              that.data.ctx.font = imgInfo.width*0.04 +'px sans-serif'
+            }
+            // 设置画笔颜色
+            that.data.ctx.fillStyle = font_color;
+            //设置透明度
+            that.data.ctx.globalAlpha = watermark.alpha/10
+            // 填入文字  文本,绘制文本的左上角 x 坐标位置,绘制文本的左上角 y 坐标位置,需要绘制的最大宽度，可选
+            //从下到上 每次高度 减少 imgInfo.height * 0.08(减少值)
+            var count = 0
+            for(var i = textList.length; i>=1 ; i--){
+              that.data.ctx.fillText(textList[i-1], imgInfo.width*0.01, imgInfo.height*(0.99 - count*line_spacing),imgInfo.width*0.9)
+              count++
+            }
+            // this.data.ctx.fillText('3.品名: 巨无霸汉堡巨无霸汉堡巨无霸汉堡巨无霸汉堡巨无霸汉堡', imgInfo.width*0.05, imgInfo.height*0.9,imgInfo.width*0.9)
+            // this.data.ctx.fillText('2.单价: 20元', imgInfo.width*0.05, imgInfo.height*0.82,imgInfo.width*0.9)
+            // this.data.ctx.fillText('1.品名: 巨无霸汉堡巨无霸汉堡巨无霸汉堡巨无霸汉堡巨无霸汉堡', imgInfo.width*0.05, imgInfo.height*0.74,imgInfo.width*0.9)
+            //console.log(that.data.ctx.drawImage)
+            // 将canvas转为为图片
+            // wx.canvasToTempFilePath({
+            //   canvas: that.data.canvas,
+            //   //canvasId:'mycanvas',
+            //   width:imgInfo.width,
+            //   height:imgInfo.height,
+            //   destWidth:imgInfo.width * app.data.pixelRatio,
+            //   destHeight:imgInfo.height * app.data.pixelRatio,
+            //   fileType:'jpg',
+            //   quality:1,
+            //   success: (res) => {
+            //     wx.getImageInfo({ src: res.tempFilePath }).then((res) => {
+            //       console.log('加完水印的')
+            //       console.log(res)
+            //      })
+            //     resolve(res.tempFilePath)
+            //     //return res.tempFilePath
+            //     //this.setData({ imgsrc: res.tempFilePath})
+            //     wx.hideLoading();
+            //   },
+            // })
+            var str = that.data.canvas.toDataURL('jpg',1);
+            str = str.slice(str.indexOf(',')+1).trim()
+            /*code是指图片base64格式数据*/
+            //声明文件系统
+            const fs = wx.getFileSystemManager();
+            //随机定义路径名称
+            var times = new Date().getTime();
+            var codeimg = app.globalData.waterMark_file_base_path + times + '.png';
+            //将base64图片写入
+            fs.writeFile({
+              filePath: codeimg,
+              data: str,
+              encoding: 'base64', 
+              success: (res) => {
+                //写入成功了的话，新的图片路径就能用了
+                if(res.errMsg == 'writeFile:ok'){
+                  resolve(codeimg)
+                }
+              }
+            });
+          }
+      })
+    },
   onLoad: function(options) {
     var that = this;
     const eventChannel = that.getOpenerEventChannel()
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
     // quotaList页面传递过来的参数
     eventChannel.on('quotaList', function(data) {
+      //console.log(data)
       that.setData({
         terminalUserId: data.terminalUserId,
         isGrade: data.isGrade,
@@ -124,6 +327,7 @@ Page({
         pointId:data.pointId,
         pointTypeId: data.pointTypeId,
         pointName:data.pointName,
+        pointTypeName:data.pointTypeName,
         quotaId:data.quotaId,
         projectId:data.projectId,
         fontSize:data.fontSize,
@@ -133,9 +337,14 @@ Page({
         bgColorUi:data.bgColorUi,
         requestUrl:data.requestUrl,
         pageType:data.pageType,
-        isPhoto:app.data.isPhoto
+        isPhoto:app.data.isPhoto,
+        projectWaterMark:app.projectWaterMark_map.get(data.projectId),
+        isWaterMark:app.projectWaterMark_map.get(data.projectId).isWatermark,
+        isOptionOn:app.project_isOptionOn_map.get(data.projectId),
+        //选取照片类型 ['camera','album'] 相机/相册
+        ////是否允许选取相册图片 0 不允许 1 允许
+        selectPhoto_type_arr:app.project_isSelectPhoto_map.get(data.projectId) == 0? ['camera'] : ['camera','album']
       })
-      //console.log(app.data.isPhoto)
         if (data.isGrade == 0) {
         that.setData({
           isGrade: false
@@ -145,7 +354,6 @@ Page({
           isGrade: true
         })
       }
-
       qqmapsdk = new QQMapWX({
       key: that.data.key
     });
@@ -317,7 +525,7 @@ Page({
 
     var mapImage = []; //图片下载
     for (var i = 0; i < images.length; i++) {
-      mapImage.push(images[i].url)
+      mapImage.push(images[i].url.replaceAll('http:','https:'))
       if (images[i].description != '') {
         imgDesc.push(images[i].description + ",");
       } else {
@@ -332,7 +540,7 @@ Page({
 
     var mapVoid = []; //视频下载
     for (var i = 0; i < videos.length; i++) {
-      mapVoid.push(videos[i].url)
+      mapVoid.push(videos[i].url.replaceAll('http:','https:'))
       if (videos[i].description != '') {
         videoDesc.push(videos[i].description + ",")
       } else {
@@ -347,7 +555,7 @@ Page({
 
     var mapAudio = []; //音频下载
     for (var i = 0; i < audios.length; i++) {
-      mapAudio.push(audios[i].url)
+      mapAudio.push(audios[i].url.replaceAll('http:','https:'))
       if (audios[i].description != '') {
         audioDesc.push(audios[i].description + ",")
       } else {
@@ -507,7 +715,7 @@ Page({
       },
       fail: (res) => {
         this.setData({
-          address: "获取位置信息失败"
+          address: "获取位置信息失败（可继续调查）"
         })
       }
     })
@@ -1281,14 +1489,16 @@ checkScope(){
     })
   },
 
-  ChooseImage(e) {
+  async ChooseImage(e) {
     var that = this;
+    //console.log(that.data.isWaterMark)
+   // console.log(that.data.projectWaterMark)
     var imagAddressList = that.data.imagAddressList;
     // console.log("之前的定位：",that.data.address);
     wx.chooseImage({
       count: 9, //默认9
       sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-      sourceType: ['camera'], //album从相册选择 camera//相机
+      sourceType: that.data.selectPhoto_type_arr, //album从相册选择 camera//相机
       success: (res) => {
         that.currentLocation();
         var address = that.data.address;
@@ -1300,23 +1510,61 @@ checkScope(){
           longitude: longitude
         });
         var img = res.tempFilePaths; //数组
-        if (that.data.imgList.length != 0) {
-          that.setData({
-            imgList: that.data.imgList.concat(img),
-            modalName: '',
-            reportlength: that.data.reportlength + 1,
-            imagAddressList: imagAddressList
+        if(that.data.isWaterMark == '1'){
+          this.addWatermarkByArr(img,address).then((res) => {
+            img = res
+            if (that.data.imgList.length != 0) {
+              that.setData({
+                imgList: that.data.imgList.concat(img),
+                modalName: '',
+                reportlength: that.data.reportlength + 1,
+                imagAddressList: imagAddressList
+              })
+              console.log(that.data.imgList)
+            } else {
+              that.setData({
+                imgList: img,
+                modalName: '',
+                reportlength: that.data.reportlength + 1,
+                imagAddressList: imagAddressList
+              })
+              console.log(that.data.imgList)
+            }
           })
-        } else {
-          that.setData({
-            imgList: img,
-            modalName: '',
-            reportlength: that.data.reportlength + 1,
-            imagAddressList: imagAddressList
-          })
+        }else{
+          if (that.data.imgList.length != 0) {
+            that.setData({
+              imgList: that.data.imgList.concat(img),
+              modalName: '',
+              reportlength: that.data.reportlength + 1,
+              imagAddressList: imagAddressList
+            })
+          } else {
+            that.setData({
+              imgList: img,
+              modalName: '',
+              reportlength: that.data.reportlength + 1,
+              imagAddressList: imagAddressList
+            })
+          }
         }
+
       }
     });
+  },
+  addWatermarkByArr(imgArr,address){
+    return new Promise( async (resolve, reject) => {
+      wx.showLoading({
+        title:'添加水印中'
+      });
+      for(let i=0; i<imgArr.length; i++){
+        await this.addWatermark(imgArr[i],address).then((res) => {
+          imgArr[i] = res
+        })
+      }
+      resolve(imgArr);
+      wx.hideLoading();
+    })
   },
   chooseVideo() {
     let vm = this;
@@ -1430,6 +1678,19 @@ checkScope(){
   //提交按钮
   submit: async function() {
     var that = this;
+    //若没有开启答案选择,  自动填充答案  达标
+    if(that.data.isOptionOn == 0){
+      that.setData({
+        optionId: that.data.dabiaoOption,
+        judge: true,
+        ScoreValue: '',
+        Nowdata: util.getNowTime(),
+        isDaBiao: 0,
+        isHeGe: 0,
+        amountValue: 0,
+        disabled:true
+      })
+    }
     //举报图片集合
     var reportImg = that.data.imgList;
     //举报视频集合
@@ -1451,7 +1712,7 @@ checkScope(){
     }
     var isHeGe = that.data.isHeGe;
 
-    if (audioSrc.length === 0) {
+    if (audioSrc.length === 0 && that.data.isOptionOn == 1) {
       if (((reportImg.length + reportVideo.length) < 1 && that.data.isPhoto ==1) ||((reportImg.length + reportVideo.length) < 1&&isHeGe==1)) {
         wx.showToast({
           title: '请拍摄举报图片/视频',
@@ -1463,7 +1724,7 @@ checkScope(){
       }
     }
 
-    if (optionId == null || optionId == '') {
+    if ((optionId == null || optionId == '') && that.data.isOptionOn == 1) {
       wx.showToast({
         title: '检查结果不能为空',
         icon: 'none',
@@ -1926,7 +2187,7 @@ checkScope(){
       answerTime: answerTime,
       amount:amountValue
     };
-    // console.log("要上传的答案集合：", fieldAnswer)
+    //console.log("要上传的答案集合：", fieldAnswer)
     var firstQuestion = wx.getStorageSync("firstQuestion");
     // console.log("上传问题得firstQuestion", firstQuestion)
     if (firstQuestion == 0) {
@@ -1959,6 +2220,8 @@ checkScope(){
               app.data.locationIsHaveAnswer[pointId] = 1;
             }
           }
+          //释放资源  删除添加水印的临时文件
+          app.removeLocalFile(app.globalData.waterMark_file_base_path)
           wx.navigateBack({
             delta: 1,
             success:function(){
@@ -1967,7 +2230,7 @@ checkScope(){
                 //console.log(pages)
                 var beforePage = pages[pages.length - 1]; //获取上一个页面实例对象
                 beforePage.data.submitStatus="1"
-                beforePage.checkIsRecord();
+                // beforePage.checkIsRecord();
               }
             }
           })
@@ -2102,7 +2365,6 @@ checkScope(){
    // console.log(this.data.tempImgSrc)
   }, 
   copyMethod:function(res){
-    console.log(app.data.tmpImgUrl)
     var that =this;
     var tempImg = that.data.tempImgSrc;
     var bResType = tempImg.type;

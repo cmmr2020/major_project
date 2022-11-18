@@ -73,7 +73,9 @@ Page({
               updateBy: projectList[i].updateBy,
               updateTime: projectList[i].updateTime,
               version: projectList[i].version,
-              isFieldArchive:projectList[i].isFieldArchive
+              isFieldArchive:projectList[i].isFieldArchive,
+              isOptionOn:projectList[i].isOptionOn, //是否隐藏答案选择框   0不显示  1显示
+              isSelectPhoto:projectList[i].isSelectPhoto //是否允许选取相册图片 0 不允许 1 允许
             })
           }
 
@@ -172,12 +174,14 @@ Page({
     var terminalUserId = that.data.terminalUserId; 
     var isGrade = e.currentTarget.dataset.isgrade;
     var isFieldArchive = e.currentTarget.dataset.isfieldarchive;
+    var isOptionOn = e.currentTarget.dataset.isoptionon;
+    var isSelectPhoto = e.currentTarget.dataset.isselectphoto;
     app.data.isPhoto = e.currentTarget.dataset.isphoto;
      //console.log(app.data.isPhoto)
-    that.validTime(projectId,terminalUserId,isGrade,isFieldArchive);
+    that.validTime(projectId,terminalUserId,isGrade,isFieldArchive,isOptionOn,isSelectPhoto);
   },
 
-  validTime:function(projectId,terminalUserId,isGrade,isFieldArchive){
+  validTime:function(projectId,terminalUserId,isGrade,isFieldArchive,isOptionOn,isSelectPhoto){
     var that = this;
     var requestUrl = that.data.requestUrl;
     var bgColor = that.data.bgColor;
@@ -195,12 +199,16 @@ Page({
           var message =  res.data.message.substring(0,3);
           // console.log("来了",message)
           if (message==="001"|| message==="002"|| message==="004" || message==="006") {
+            ////是否隐藏答案选择框   0不显示  1显示  //默认显示 1
+            app.project_isOptionOn_map.set(projectId,isOptionOn == '0'? 0 : 1)
+            //是否允许选取相册图片 0 不允许 1 允许 //默认不允许 0
+            app.project_isSelectPhoto_map.set(projectId,isSelectPhoto == '1'? 1 : 0)
             wx.navigateTo({
               url:"../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
                 "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
                 + "&fontSize=" + fontSize + "&isFieldArchive=" + isFieldArchive,
              success: function(res) {
-              console.log("进去了吗")
+              //console.log("进去了吗")
                       // 通过eventChannel向被打开页面传送数据
                       // res.eventChannel.emit('projectList', {
                       //   isGrade: isGrade,

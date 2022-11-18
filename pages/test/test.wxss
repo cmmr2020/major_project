@@ -1,0 +1,8 @@
+/* pages/test/test.wxss */
+.canvas{  
+  border: 2rpx solid pink;
+  background: pink;
+  width: 100%;
+  height: 100%;
+  /*position:fixed;left:100%; 想隐藏画布单又想执行画布方法，用这个css；用display会不执行画布*/
+}
