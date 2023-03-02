@@ -139,11 +139,15 @@ Page({
       wx.navigateTo({
         url: '../quotaDataInfo/quotaDataInfo?reportType=1&projectId='+that.data.projectId+"&projectName="+that.data.projectName+"&deptIds="+that.getStrs(that.data.dept_select_ids)+"&pointIds="+that.getStrs(that.data.point_select_ids)+"&quotaTypeIds="+that.getStrs(that.data.quotaType_select_ids)
       })
-    }else{
+    }else if(type == 'location'){
       wx.navigateTo({
         url: '../deptDataInfo/deptDataInfo?reportType=2&projectId='+that.data.projectId+"&projectName="+that.data.projectName+"&deptIds="+that.getStrs(that.data.dept_select_ids)+"&pointIds="+that.getStrs(that.data.point_select_ids)+"&quotaTypeIds="+that.getStrs(that.data.quotaType_select_ids)
       })
-    }  
+    }else if(type == 'abarbeitung'){
+      wx.navigateTo({
+        url: '../deptDataInfo/deptDataInfo?reportType=3&projectId='+that.data.projectId+"&projectName="+that.data.projectName+"&deptIds="+that.getStrs(that.data.dept_select_ids)
+      })
+    }   
   },
   getStrs(arr){
     if(arr.length<1){

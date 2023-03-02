@@ -29,6 +29,9 @@ Page({
       id: 9,
       name: '待整改'
     }, {
+      id: 5,
+      name: '长期整改'
+    }, {
       id: 3,
       name: '已整改'
     }, {
@@ -66,11 +69,19 @@ Page({
     })
     //加载轮播图
     that.getSwiperList();
-    //默认第一次加载任务列表
-    that.getTaskList(that.data.TabCur);
-
   },
-
+  //刷新页面
+  onShow: function() { 
+    console.log('页面显示')
+    var that = this;
+    that.setData({
+      taskList: [],
+      maxPageNum: 0, //总页数
+      isNull: ''
+    })
+    //加载任务列表
+    that.getTaskList(that.data.TabCur);
+  },
   bindchange(e) {
     this.setData({
       swiperIndex: e.detail.current
@@ -80,11 +91,8 @@ Page({
   // 跳转轮播图详情
   toswiper: function() {
     var swiperIndex = this.data.swiperIndex;
-    router.navigateTo({
-      url: "../dept_swiper/dept_swiper?id=" + swiperIndex
-    })
-    //    wx.navigateTo({
-    //   url:"../dept_swiper/dept_swiper?id="+swiperIndex
+    // router.navigateTo({
+    //   url: "../dept_swiper/dept_swiper?id=" + swiperIndex
     // })
   },
   /**
@@ -176,6 +184,7 @@ Page({
       app.seesionId,
       (res) =>{
         var list = res.data.retObj.list;
+        console.log(list)
         if (list != 0) {
           that.setData({
             //1、that.data.taskList  获取当前页面存的taskList数组
@@ -185,7 +194,7 @@ Page({
             maxPageNum: res.data.retObj.pageCount, //总页数
             isNull: ''
           })
-          // console.log("看看这个任务列表：", that.data.taskList)
+          //console.log("看看这个任务列表：", that.data.taskList)
         } else {
           that.setData({
             isNull: 'true',

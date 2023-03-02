@@ -1414,13 +1414,13 @@ Page({
       (res) =>{
         if (res.data.status == 'success') {
           router.navigateBack({
-            delta:1
+            delta:1,
             //url: "../dept_index/dept_index?projectId=" + projectId
           })
           // wx.navigateTo({
           //   url: "../dept_index/dept_index?projectId=" + projectId
           // })
-          console.log("好了，这下上传成功了。")
+          //console.log("好了，这下上传成功了。")
         }
       },
       (err) =>{

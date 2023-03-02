@@ -22,9 +22,9 @@ Page({
     that.setData({
       requestUrl: requestUrl,
       terminalUserId:terminalUserId,
-       fontSize:fontSize,
-       bgColorUi:bgColorUi, 
-       bgColor:bgColor
+      fontSize:fontSize,
+      bgColorUi:bgColorUi, 
+      bgColor:bgColor
     })
     // console.log(terminalUserId)
     that.getProjectList(terminalUserId);
@@ -75,7 +75,8 @@ Page({
               version: projectList[i].version,
               isFieldArchive:projectList[i].isFieldArchive,
               isOptionOn:projectList[i].isOptionOn, //是否隐藏答案选择框   0不显示  1显示
-              isSelectPhoto:projectList[i].isSelectPhoto //是否允许选取相册图片 0 不允许 1 允许
+              isSelectPhoto:projectList[i].isSelectPhoto, //是否允许选取相册图片 0 不允许 1 允许
+              isOperationTips:projectList[i].isOperationTips//是否为实地2.0
             })
           }
 
@@ -176,12 +177,13 @@ Page({
     var isFieldArchive = e.currentTarget.dataset.isfieldarchive;
     var isOptionOn = e.currentTarget.dataset.isoptionon;
     var isSelectPhoto = e.currentTarget.dataset.isselectphoto;
+    var isOperationTips = e.currentTarget.dataset.isoperationtips; //是否为实地2.0
     app.data.isPhoto = e.currentTarget.dataset.isphoto;
      //console.log(app.data.isPhoto)
-    that.validTime(projectId,terminalUserId,isGrade,isFieldArchive,isOptionOn,isSelectPhoto);
+    that.validTime(projectId,terminalUserId,isGrade,isFieldArchive,isOptionOn,isSelectPhoto,isOperationTips);
   },
 
-  validTime:function(projectId,terminalUserId,isGrade,isFieldArchive,isOptionOn,isSelectPhoto){
+  validTime:function(projectId,terminalUserId,isGrade,isFieldArchive,isOptionOn,isSelectPhoto,isOperationTips){
     var that = this;
     var requestUrl = that.data.requestUrl;
     var bgColor = that.data.bgColor;
@@ -203,24 +205,23 @@ Page({
             app.project_isOptionOn_map.set(projectId,isOptionOn == '0'? 0 : 1)
             //是否允许选取相册图片 0 不允许 1 允许 //默认不允许 0
             app.project_isSelectPhoto_map.set(projectId,isSelectPhoto == '1'? 1 : 0)
-            wx.navigateTo({
-              url:"../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
-                "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
-                + "&fontSize=" + fontSize + "&isFieldArchive=" + isFieldArchive,
-             success: function(res) {
-              //console.log("进去了吗")
-                      // 通过eventChannel向被打开页面传送数据
-                      // res.eventChannel.emit('projectList', {
-                      //   isGrade: isGrade,
-                      //   projectId: projectId,
-                      //   requestUrl: requestUrl,
-                      //   terminalUserId:terminalUserId,
-                      //   bgColor:bgColor,
-                      //   fontSize:fontSize
-                      // })
-                    }
-            })
-
+            if(isOperationTips == 1){//如果为实地2.0 跳转到专属页面
+              if(typeof(app.projectWaterMark_map.get(projectId)) == 'undefined'){
+               that.getProjectWaterMark(projectId,requestUrl,terminalUserId,bgColor,fontSize)
+              }else{
+                wx.navigateTo({
+                  url:"../field_operation_tips/field_operation_tips?projectId=" + projectId +
+                    "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
+                    + "&fontSize=" + fontSize
+                })
+              }
+            }else{
+              wx.navigateTo({
+                url:"../point_type/point_type?isGrade=" + isGrade + "&projectId=" + projectId +
+                  "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
+                  + "&fontSize=" + fontSize + "&isFieldArchive=" + isFieldArchive
+              })
+            }
           }else{
            wx.showModal({
               title: '提示',
@@ -305,8 +306,60 @@ Page({
     //   }
     // })
   },
+  getProjectWaterMark:function(projectId,requestUrl,terminalUserId,bgColor,fontSize) {
+    var that = this;
+    // wx.showLoading({
+    //   title: '数据加载中',
+    //   mask: true
+    // })
+    // var requestUrl = that.data.requestUrl; //服务器路径
+    //console.log("requestUrl:",requestUrl);
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldProject/getProjectWaterMarkById',
+      {
+        projectId: projectId
+      },
+      app.seesionId,
+      (res) =>{
+        wx.hideLoading();
+        if (res.data.status ==="success") {
+          var waterMark = res.data.retObj
+          var waterMarkObj = {};
+          // console.log(waterMark)
+          //若没有实体  则设置成水印未开启
+          if(typeof(waterMark) == 'undefined'){
+            waterMarkObj.isWatermark = 0
+          }else{
+            //如果有实体则 设置实体
+            waterMarkObj = waterMark
+          }
+          app.projectWaterMark_map.set(projectId,waterMarkObj)
+          wx.navigateTo({
+            url:"../field_operation_tips/field_operation_tips?projectId=" + projectId +
+              "&requestUrl=" + requestUrl + "&terminalUserId=" + terminalUserId + "&bgColor=" + bgColor
+              + "&fontSize=" + fontSize
+          })
+          // console.log(waterMarkObj)
+          // console.log(app.projectWaterMark_map.get(projectId))
+        } else {
+          wx.showModal({
+              title: '提示',
+              content: "获取项目水印设置信息失败",
+              showCancel:false,
+              confirmColor:"#0081ff",
+              success (res) {
+              }
+            })
+        }
 
+      },
+      (err) =>{
 
+      }
+    )
+  },
   changeData: function() {
     // var options = {'id':this.data.id}
     this.onLoad(); //最好是只写需要刷新的区域的代码，onload也可，效率低，有点low

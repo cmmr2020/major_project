@@ -11,4 +11,7 @@
     <view wx:elif="{{show_bar_index==4}}">
       <ec-canvas id="mychart-dom-multi-bar4" canvas-id="mychart-multi-bar4" ec-canvas force-use-old-canvas="true" ec="{{ ecBar4 }}"></ec-canvas>
     </view>
+    <view wx:elif="{{show_bar_index==5}}">
+      <ec-canvas id="mychart-dom-multi-bar5" canvas-id="mychart-multi-bar5" ec-canvas force-use-old-canvas="true" ec="{{ ecBar5 }}"></ec-canvas>
+    </view>
 </view>

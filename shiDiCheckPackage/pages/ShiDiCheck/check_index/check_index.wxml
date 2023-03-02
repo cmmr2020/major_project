@@ -114,6 +114,9 @@
             </view>
             <view class='condition2 '>
               <view class='cu-tag bg-grey light sm round' style="font-size:{{fontSize20}}rpx">{{i.answerTime}}
+                <view wx-if="{{i.longTask}}">
+                  <text class="text-green" style="font-size:{{fontSize28}}rpx">　长期整改</text>
+                </view>
               </view>
               <!--    <block > 
                 2019-10-14

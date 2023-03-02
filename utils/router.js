@@ -3,7 +3,7 @@ module.exports = {
 
   navigateTo(object) {
     if (getCurrentPages().length > 9) {
-      console.log("关闭所有页面")
+      //console.log("关闭所有页面")
       this.reLaunch(object)
       // this.reLaunch(object)
     } else {

@@ -32,7 +32,7 @@ Page({
       }
     },
     onLoad: function(option){
-      //console.log(option)
+      console.log(option)
       var that = this;
       var fontSize = wx.getStorageSync('fontSize');
       var bgColor = wx.getStorageSync('bgColor');
@@ -206,65 +206,81 @@ Page({
   junmp: function(even) {
     var that = this;
     that.setData({
-      menuName: even.currentTarget.dataset.type
+      menuName: even.currentTarget.dataset.type,
     })
     var menuName = that.data.menuName;
+    var code = even.currentTarget.dataset.code
     // console.log(menuName)
-    switch (menuName) {
+    switch (code) {
       // case "绑定账号":
       //   router.navigateTo({
       //     url: "../login/login"
       //   })
       //   break;
-      case "开始调查":
+      case "TC-002"://"开始调查":
         router.navigateTo({
           url: "../../startDiaochaPackage/pages/startDiaocha/project_list/project_list"
         })
         break;
-      case "开始整改":
+      case "TC-004"://"开始整改":
         router.navigateTo({
           url: "../../correctionPackage/pages/surveyDept/dept_project/dept_project"
         })
         break;
-      case "分配点位":
+      case "TC-0011"://"分配点位":
         that.checkUser(app.terminalUserId)
         break;
-      case "地图展示":
+        //创文办 统计
+      case "TC-009"://"地图展示":
         router.navigateTo({
           url:"../../displayPackage/pages/fenXi/projectList/projectList?type=1"
         })
         break;
-      case "统计排名":
+        //创文办 统计
+      case "TC-008"://"统计排名":
         router.navigateTo({
           url: "../../displayPackage/pages/paiMing/projectList/projectList?type=1"
         })
         break;
-      case "材料审核":
+      case "TC-007"://"材料审核":
         router.navigateTo({
           url: "../../datumCheckPackage/pages/DatumCheck/datum_check_project/datum_check_project"
         })
         break;
-      case "材料上报":
+      case "TC-006"://"材料上报":
         router.navigateTo({
           url: "../../datumUploadPackage/pages/DatumUpload/upload_project/upload_project"
         })
         break;
-      case "实地审核":
+      case "TC-005"://"实地审核":
         router.navigateTo({
           url: "../../shiDiCheckPackage/pages/ShiDiCheck/check_project/check_project"
         })
         break;
-      case "开始复查":
+      case "TC-003"://"开始复查":
        router.navigateTo({
           url: "../../startFuchaPackage/pages/fuCha/projectList/projectList"
         })
         break;
-      case "数据分析":
+        //创文办 统计
+      case "TC-0010"://"数据分析":
        router.navigateTo({
          url: "../../displayPackage/pages/fenXi/projectList/projectList?type=0"
         })
         break;
-      default:
+       //责任单位 统计
+      case "TC-0013"://"数据分析":
+        router.navigateTo({
+          url: "../../displayPackage/pages/dept_fenXi/projectList/projectList?type=0"
+         })
+         break;
+       //责任单位 统计
+      case "TC-0012"://"统计排名":
+        router.navigateTo({
+          url: "../../displayPackage/pages/dept_paiMing/projectList/projectList?type=1"
+        })
+        break;
+      //default:
         // console.log("default");
     }
   },

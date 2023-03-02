@@ -17,34 +17,49 @@
 
   <!-- 任务列表 -->
   <view class="cu-card article">
-    <navigator wx:if="{{TabCur==9}}" wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_detail/dept_task_detail?id={{item.id}}&projectId={{item.projectId}}'>
+    <navigator wx:if="{{TabCur==9 && item.longTask==0}}" wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_detail/dept_task_detail?id={{item.id}}&projectId={{item.projectId}}'>
       <view class="content">
         <image src="{{item.url==''? '../../../../images/null.png' : item.url}}"  mode="aspectFill"></image>
         <view class="desc">
           <view class="text-bold text-content1 box" style="font-size:{{fontSize30}}rpx">{{item.questionContent}}</view>
           <view class='text-content text-cut box' style="font-size:{{fontSize}}rpx">{{item.address}}</view>
-          <view wx:if="{{item.result==1 && item.longTask==0}}">
+          <view wx:if="{{item.result==1}}">
             <view class='cu-tag bg-grey light sm round' style="font-size:{{fontSize26}}rpx" >{{item.answerTime}}
             </view>
             <text class="text-blue" style="font-size:{{fontSize28}}rpx">　初次待整改</text>
           </view>
-          <view wx:elif="{{item.result==2 && item.longTask==0}}">
+          <view wx:elif="{{item.result==2}}">
             <view class='cu-tag bg-grey light sm round'>{{item.answerTime}}
             </view>
             <text class="text-red" style="font-size:{{fontSize28}}rpx">　多次待整改</text>
           </view>
-          <view wx:else>
+          <!-- <view wx:else>
             <view class='cu-tag bg-grey light sm round'>{{item.answerTime}}
             </view>
             <text class="text-green" style="font-size:{{fontSize28}}rpx">　长期整改</text>
-          </view>
-
+          </view> -->
         </view>
       </view>
     </navigator>
   </view>
   <view class="cu-card article">
-    <navigator open-type="redirect" wx:if="{{TabCur==3 || TabCur==0}}" wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_Already/dept_task_Already?id={{item.id}}&projectId={{item.projectId}}'>
+    <navigator  wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_detail/dept_task_detail?id={{item.id}}&projectId={{item.projectId}}' wx:if="{{TabCur==5 && item.result==2 && item.longTask==1}}">
+      <view class="content">
+        <image src="{{item.url==''? '../../../../images/null.png' : item.url}}"  mode="aspectFill"></image>
+        <view class="desc">
+          <view class="text-bold text-content1 box" style="font-size:{{fontSize30}}rpx">{{item.questionContent}}</view>
+          <view class='text-content text-cut box' style="font-size:{{fontSize}}rpx">{{item.address}}</view>
+          <view>
+            <view class='cu-tag bg-grey light sm round'>{{item.answerTime}}
+            </view>
+            <text class="text-green" style="font-size:{{fontSize28}}rpx">　长期整改</text>
+          </view>
+        </view>
+      </view>
+    </navigator>
+  </view>
+  <view class="cu-card article">
+    <navigator  wx:if="{{TabCur==3 || TabCur==0}}" wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_Already/dept_task_Already?id={{item.id}}&projectId={{item.projectId}}'>
       <view class="content">
         <image src="{{item.url==''? '../../../../images/null.png' : item.url}}" mode="aspectFill"></image>
         <view class="desc">

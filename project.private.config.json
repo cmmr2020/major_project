@@ -1,6 +1,7 @@
 {
   "setting": {
-    "urlCheck": false
+    "urlCheck": false,
+    "compileHotReLoad": false
   },
   "condition": {
     "miniprogram": {
@@ -31,8 +32,9 @@
         },
         {
           "name": "开始调查-上报",
-          "pathName": "pages/startDiaocha/task_upload/task_upload",
+          "pathName": "startDiaochaPackage/pages/startDiaocha/task_upload/task_upload",
           "query": "",
+          "launchMode": "default",
           "scene": null
         },
         {
@@ -163,10 +165,17 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "实地2.0上报",
+          "pathName": "startDiaochaPackage/pages/startDiaocha/field_operation_tips/field_operation_tips",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
   },
   "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
-  "libVersion": "2.20.3"
+  "libVersion": "2.30.0"
 }

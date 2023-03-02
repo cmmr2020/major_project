@@ -18,8 +18,16 @@ Page({
     showPointQuotaInfo:false,
     model_title_point:'',
     model_title_point_quota:'',
+    ZG_report_list:[],
+    showZGReport:false,
+    showDeptZGInfo:false,
+    model_title_point_ZGInfo:'',
+    point_ZGInfo_report_list:[],
+    showPointZGInfo:false,
+    model_title_ZG:'',
     projectId:'',
     quotaTypeIds:'',
+    departmentIds:'',
   },
 
   /**
@@ -33,9 +41,74 @@ Page({
     let that = this;
     that.setData({
       projectId : options.projectId,
-      quotaTypeIds:options.quotaTypeIds
+      quotaTypeIds:options.quotaTypeIds,
+      departmentIds:options.deptIds,
     })
-    that.initReportData(options);
+    //整改统计
+    if(options.reportType == 3){
+      that.initReportByZG(options);
+    }else{//实地统计
+      that.initReportData(options);
+    }
+  },
+  initReportByZG(option){
+    let that = this;
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getDepartmentStatisticsDataListForWechat',
+      {
+        projectId: option.projectId,
+        deptIds:option.deptIds
+      },
+      app.seesionId,
+      (res) =>{
+        if (res.data.status=='success') {
+          that.setData({
+            ZG_report_list:res.data.retObj,
+            showZGReport:true,
+            model_title_ZG:'责任部门实地整改情况统计表'
+          })
+          }
+         },
+       (err) =>{
+          wx.showToast({
+            title: '网络错误',
+            icon: 'none', // "success", "loading", "none"
+            duration: 1500,
+            mask: false,
+          })
+        }) 
+  },
+  alertDeptZGInfo(e){
+    let that = this;
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getDepartmentStatisticsDataListByLocationForWechat',
+      {
+        projectId: that.data.projectId,
+        deptId:e.currentTarget.dataset.id,
+      },
+      app.seesionId,
+      (res) =>{
+        if (res.data.status=='success') {
+          that.setData({
+            showDeptZGInfo:true,
+            model_title_point_ZGInfo:e.currentTarget.dataset.name + "点位整改情况统计表",
+            point_ZGInfo_report_list:res.data.retObj,
+            showPointZGInfo:true,
+          })
+          }
+         },
+       (err) =>{
+          wx.showToast({
+            title: '网络错误',
+            icon: 'none', // "success", "loading", "none"
+            duration: 1500,
+            mask: false,
+          })
+        }) 
   },
   initReportData(option){
     let that = this;
@@ -107,7 +180,7 @@ Page({
       {
         projectId: that.data.projectId,
         departmentId: e.currentTarget.dataset.id,
-        quotaType: that.data.quotaTypeIds
+        quotaType: that.data.quotaTypeIds,
       },
       app.seesionId,
       (res) =>{
@@ -151,7 +224,8 @@ Page({
       {
         projectId: that.data.projectId,
         pointId: e.currentTarget.dataset.id,
-        quotaType: that.data.quotaTypeIds
+        quotaType: that.data.quotaTypeIds,
+        deptIds:that.data.departmentIds
       },
       app.seesionId,
       (res) =>{
@@ -185,6 +259,13 @@ Page({
     let that = this;
     that.setData({
       showPointQuotaInfo:false
+    })
+  },
+  closeZG(){
+    let that = this;
+    that.setData({
+      showPointZGInfo:false,
+      showDeptZGInfo:false
     })
   },
   /**

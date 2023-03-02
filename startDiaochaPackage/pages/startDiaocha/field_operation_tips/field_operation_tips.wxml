@@ -1,0 +1,199 @@
+<!--添加照片水印 画布-->
+<canvas style="position:fixed;top: 0;left: -1000%" type="2d" id="mycanvas"></canvas>
+<!-- 资源描述模态框-->
+<modal hidden="{{isshow_modalInput}}" bindconfirm="sub_desc" bindcancel="cancel">
+<view class="cu-form-group">
+    <textarea fixed="true" bindinput="desc_input" style="font-size:{{fontSize}}rpx;color: black;"  value="{{current_res_desc}}" placeholder="请输入对资源的描述"></textarea>
+  </view>
+</modal>
+<!-- <scroll-view scroll-y enhanced id="myscroll"  class="DrawerPage {{modalName=='viewModal'?'show':''}}"> -->
+<scroll-view hidden="{{ishide_scroll}}"  scroll-y enhanced id="myscroll"  class="{{modalName=='viewModal'?'show':''}}">
+  <view class="cu-item">
+    <view class="cuIcon-top lg text-{{bgColor}} " style="font-size: 50rpx;position: fixed;right: 0rpx;bottom: 15rpx;" bindtap="goTop"></view>
+  </view>
+  <!-- 点位名称 -->
+  <view class="cu-bar  solid-bottom top">
+    <view class="action">
+      <text class="cuIcon-title text-{{bgColor}}" style="font-size:{{fontSize}}rpx"></text>
+      <text style="font-size:{{fontSize}}rpx">点位名称</text>
+    </view>
+    <view class="action">
+      <!-- green -->
+      <button class="cu-btn bg-{{bgColor}} shadow" style="font-size:{{fontSize28}}rpx" bindtap="showModal" data-target="viewModal">切换</button>
+    </view>
+  </view>
+  <view class="cu-form-group  bg-white" bindlongpress="showInfo" data-type="1">
+    <input class="weui-input" disabled="true" value="{{location_info.name}}" style="font-size:{{fontSize30}}rpx" />
+  </view>
+  <!-- 点位作废原因-->
+  <view wx:if="{{location_info.checkStatus == 4 && location_info.isRepeal == 1}}" class="cu-bar  solid-bottom">
+    <view class="action">
+      <text class="cuIcon-title text-{{bgColor}}" style="font-size:{{fontSize}}rpx"></text>
+      <text style="font-size:{{fontSize}}rpx">点位作废原因</text>
+    </view>
+  </view>
+  <view wx:if="{{location_info.checkStatus == 4 && location_info.isRepeal == 1}}" class="cu-form-group  bg-white">
+    <textarea class="weui-input" disabled="true" value="{{location_info.repealRemark}}" style="font-size:{{fontSize30}}rpx;pointer-events:none;" />
+  </view>
+  <!-- 地址定位 -->
+  <view class="cu-bar  solid-bottom">
+    <view class="action">
+      <text class="cuIcon-title text-{{bgColor}}" style="font-size:{{fontSize}}rpx"></text>
+      <text style="font-size:{{fontSize}}rpx">地址定位</text>
+    </view>
+    <view class="action">
+      <!-- green -->
+      <button class="cu-btn bg-{{bgColor}} shadow" style="font-size:{{fontSize28}}rpx" catchtap="currentLocation">刷新</button>
+    </view>
+  </view>
+  <view class="cu-form-group  bg-white" bindlongpress="showInfo" data-type="2">
+    <input class="weui-input" value="{{address}}" disabled="true" style="font-size:{{fontSize30}}rpx" />
+  </view>
+  <!--测评任务区开始-->
+  <view class="cu-card article" wx:for="{{location_operationTips_list}}" wx:key="location_operationTips_list" wx:for-item="item" wx:for-index="operationTipsIndex">
+    <view class="cu-item shadow">
+      <!-- 操作提示 -->
+      <view class="cu-bar  solid-bottom">
+        <view class="action">
+          <text class="cuIcon-news lg  text-{{bgColor}}" style="font-size:{{item.id}}rpx"></text>
+          <text style="font-size:{{fontSize}}rpx">操作提示 </text>
+        </view>
+        <view class="cu-capsule round" style="margin-right: 1%;">
+          <view class="cu-tag bg-{{bgColor}}">No.</view>
+          <view class="cu-tag line-{{bgColor}}">{{operationTipsIndex+1}}</view>
+        </view>
+      </view>
+      <view class="cu-bar  solid-bottom">
+        <text class="weui-input text-lg-user action" style="font-size:{{fontSize30}}rpx"> {{item.fieldOperationTips.content}}</text>
+      </view>
+      <!-- 数量要求 -->
+      <view class="cu-bar  solid-bottom">
+        <view class="action">
+          <text class="cuIcon-info lg  text-{{bgColor}}" style="font-size:{{fontSize}}rpx"></text>
+          <!--点位不合格  非作废时  显示的要求数量 /2 因为后台传来的数量包含了不合格资源数量  -->
+          <text style="font-size:{{fontSize}}rpx">数量要求：{{(location_info.checkStatus == 4 && location_info.isRepeal != 1)? item.fieldOperationTips.resourceNum/2 : item.fieldOperationTips.resourceNum}}</text>
+        </view>
+      </view>
+      <!-- 拍摄照片/视频 -->
+      <view class="cu-bar  solid-bottom">
+        <view class="action">
+          <text class="cuIcon-album lg text-{{bgColor}}" style="font-size:{{fontSize}}rpx"></text>
+          <text style="font-size:{{fontSize}}rpx">拍摄</text>
+        </view>
+      </view>
+      <!-- 图片加描述 -->
+      <view class="cu-card article no-card">
+        <view class="cu-item shadow">
+          <view wx:for="{{showMediaList}}" wx:key="showMediaList" wx:for-index="index" wx:for-item="value">
+            <view wx:if="{{value[0] == item.fieldOperationTips.id}}" class="cu-bar bg-white">
+              <!--bindlongpress="showCopyTap"-->
+              <view class="action" style="font-size:{{fontSize}}rpx">
+                上传图片或视频
+              </view>
+              <view class="action" style="font-size:{{fontSize}}rpx">
+                {{value[1].length}}/25
+              </view>
+            </view>
+            <view wx:key="showMedia" wx:for="{{value[1]}}" wx:for-index="index1" wx:for-item="value1">
+              <!-- 图片列表 -->
+              <view wx:if="{{value1.type == 0 && value[0] == item.fieldOperationTips.id}}" class="content">
+                <image style="height: auto; width: 40%;" data-type="0" src='{{value1.url}}' mode='aspectFill' bindtap="ViewImageForreport" data-index='{{index1}}' data-url="{{value1.url}}"></image>
+                <view wx:if="{{value1.resourceStatus == 0}}" style="position: absolute;">
+                  <view class="cu-tag bg-red">不合格</view>
+                </view>
+                <view wx:else class="cu-tag-user bg-red" catchtap="delResource" data-id="{{value1.id}}" data-operationTipsindex="{{operationTipsIndex}}" data-index="{{index1}}" data-tipid="{{value[0]}}">
+                  <text class="cuIcon-close"></text>
+                </view>
+                <view class="desc" style="flex-direction:column-reverse">
+                  <view class="cu-form-group {{value1.resourceStatus == 0? 'ban':''}}" style="border: 1px solid grey;">
+                    <textarea  confirm-type="done" bindtap="showDescModel" disabled = "true" data-info="{{value1.desc}}"  data-index="{{index1}}" data-tipid="{{value[0]}}" style="font-size:{{fontSize}}rpx;color: {{value1.resourceStatus == 0?'red':'black'}};" value="{{value1.resourceStatus == 0?'不合格原因：'+value1.resourceRemark:value1.desc}}" data-id="{{value1.id}}" placeholder="{{value1.resourceStatus == 0? '不合格资源，仅供参考，不可删除、修改。':'请输入对资源的描述'}}"></textarea>
+                  </view>
+                </view>
+              </view>
+              <!-- 视频列表 -->
+              <!-- 视频加描述 -->
+              <view wx:if="{{value1.type == 2 && value[0] == item.fieldOperationTips.id}}" class="content">
+                <video style="height: auto; width: 40%;" data-type="2" data-img="{{value1.poster}}" class="video-user" bindtap="ViewVideoForreport" data-url="{{value1.url}}" data-index="{{index1}}" id='reportVideo{{index}}' src="{{value1.url}}" poster="{{value1.poster}}" bindfullscreenchange="start"></video>
+                <view wx:if="{{value1.resourceStatus == 0}}" style="position: absolute;">
+                  <view class="cu-tag bg-red">不合格</view>
+                </view>
+                <view wx:else class="cu-tag-user bg-red" catchtap="delResource" data-operationTipsindex="{{operationTipsIndex}}"  data-id="{{value1.id}}" data-index="{{index1}}" data-tipid="{{value[0]}}">
+                  <text class="cuIcon-close"></text>
+                </view>
+                <view class="desc" style="flex-direction:column-reverse">
+                  <view class="cu-form-group {{value1.resourceStatus == 0? 'ban':''}}" style="border: 1px solid grey;">
+                    <textarea  confirm-type="done" bindtap="showDescModel" disabled = "true" data-info="{{value1.desc}}"  data-index="{{index1}}" data-tipid="{{value[0]}}" style="font-size:{{fontSize}}rpx;color: {{value1.resourceStatus == 0?'red':'black'}};" value="{{value1.resourceStatus == 0?'不合格原因：'+value1.resourceRemark:value1.desc}}" data-id="{{value1.id}}" placeholder="{{value1.resourceStatus == 0? '不合格资源，仅供参考，不可删除、修改。':'请输入对资源的描述'}}"></textarea>
+                    <!-- <textarea  confirm-type="done" bindblur="descInput" data-index="{{index1}}" data-tipid="{{value[0]}}" data-id="{{value1.id}}" style="font-size:{{fontSize}}rpx;color: {{value1.resourceStatus == 0?'red':'black'}};" value="{{value1.resourceStatus == 0?'不合格原因：'+value1.resourceRemark:value1.desc}}" placeholder="{{value1.resourceStatus == 0? '不合格资源，仅供参考，不可删除、修改。':'请输入对资源的描述'}}"></textarea> -->
+                  </view>
+                </view>
+              </view>
+              <!-- 视频加描述结束-->
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- 图片加结束 -->
+      <!--添加按钮-->
+      <view class="cu-form-group">
+        <view class="grid col-4 grid-square flex-sub">
+          <view class="solids" bindtap="ChooseImage" wx:if="{{operationTips_resource_num_list[operationTipsIndex] < 25}}" data-target="Modal" data-type="0" data-operationTipsindex="{{operationTipsIndex}}" data-locationid="{{location_info.id}}" data-tipId="{{item.fieldOperationTips.id}}" data-answerid="{{item.fieldOperationTipsAnswerVo.fieldOperationTipsAnswer.id}}">
+            <text class="cuIcon-cameraadd"></text>
+          </view>
+          <view class="solids" bindtap="chooseVideo" wx:if="{{operationTips_resource_num_list[operationTipsIndex] < 25}}" data-target="Modal" data-type="2" data-operationTipsindex="{{operationTipsIndex}}" data-locationid="{{location_info.id}}" data-tipId="{{item.fieldOperationTips.id}}" data-answerid="{{item.fieldOperationTipsAnswerVo.fieldOperationTipsAnswer.id}}">
+            <text class="cuIcon-video"></text>
+          </view>
+        </view>
+      </view>
+      <!--按钮结束-->
+
+      <!-- <view class="padding-xl_user bg-white">
+        <button class="cu-btn  block bg-{{bgColor}} margin-tb-sm lg" bindtap='submit' style="font-size:{{fontSize28}}rpx">保存</button>
+      </view> -->
+    </view>
+  </view>
+  <!--测评任务区结束-->
+  <view class="cu-modal {{modalName=='Modal'?'show':''}}">
+    <view class="cu-dialog">
+      <view class="cu-bar bg-white justify-end">
+        <!-- <view class="content">Modal标题</view> -->
+        <view class="action" bindtap="hideModal">
+          <text class="cuIcon-close text-red"></text>
+        </view>
+      </view>
+      <!-- <view class="padding-xl justify-end"> -->
+      <view class="padding flex flex-direction">
+        <button class="cu-btn bg-green lg" bindtap='ChooseImage'>上传照片 </button>
+        <button class="cu-btn bg-blue margin-tb-sm lg" bindtap='chooseVideo'>上传视频</button>
+      </view>
+      <!-- </view> -->
+    </view>
+  </view>
+  <!--点位提交-->
+  <view class="padding-xl_user bg-white">
+    <button  disabled="{{is_submiting == 1?true:false}}" class="cu-btn  block bg-{{bgColor}} margin-tb-sm lg" bindtap='submit' style="font-size:{{fontSize28}}rpx">
+      <text wx:if="{{is_submiting == 1}}" class="cuIcon-loading2 iconfont-spin"></text>
+      {{is_submiting == 1?'提交中':'提交'}}</button>
+  </view>
+</scroll-view>
+<!-- <view class="padding-xl_user">
+  <button class="cu-btn  block bg-blue margin-tb-sm lg" bindtap='goToQuota_list'>提交</button>
+</view>
+<!-- 抽屉开始 -->
+<view class="DrawerClose {{modalName=='viewModal'?'show':''}}" bindtap="hideModal">
+  <text class="cuIcon-pullright"></text>
+</view>
+<scroll-view scroll-y class="DrawerWindow {{modalName=='viewModal'?'show':''}}">
+  <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg">
+    <view class="cu-item arrow" wx:for="{{location_list}}" wx:key="index" wx:for-item="item">
+      <view class="content" bindtap="selectOperationTipsLocationInfoList" data-locationid="{{item.id}}">
+        <text wx:if="{{item.submitStatus == 2}}" class="cuIcon-roundcheckfill lg text-{{bgColor}}" style="font-size:{{fontSize30}}rpx"></text>
+        <text wx:if="{{item.submitStatus == 1}}" class="cuIcon-roundcheck lg text-{{bgColor}}" style="font-size:{{fontSize30}}rpx"></text>
+        <text wx:if="{{item.id == show_location_id}}" class="cuIcon-tag lg text-{{bgColor}}" style="font-size:{{fontSize30}}rpx"></text>
+        <text wx:if="{{item.checkStatus == 4 && !item.isRepeal}}" class="cuIcon-roundclosefill text-red" style="font-size:{{fontSize30}}rpx"></text>
+        <text wx:if="{{item.checkStatus == 4 && item.isRepeal == 1}}" class="cuIcon-warnfill lg text-red" style="font-size:{{fontSize30}}rpx"></text>
+        <text style="font-size:{{fontSize30}}rpx">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+</scroll-view>
+<!-- 抽屉结束 -->

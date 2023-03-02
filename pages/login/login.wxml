@@ -10,7 +10,7 @@
       <view class="title">
         <text class="cuIcon-mobile text-{{bgColor}} "></text>
       </view>
-      <input class="tui-input" name="name" placeholder="请输入调查员账号" maxlength="50" type="text" style="font-size:{{fontSize}}rpx" confirm-type="done"></input>
+      <input class="tui-input" name="name" placeholder="请输入账号" maxlength="50" type="text" style="font-size:{{fontSize}}rpx" confirm-type="done"></input>
     </view>
     <view class="cu-form-group">
       <view class="title">

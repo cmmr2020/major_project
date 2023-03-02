@@ -169,7 +169,7 @@ page {
 
 .user-view {
   position: absolute;
-  right: ;
+  /* right: ; */
   top: 0;
   border-bottom-left-radius: 6rpx;
   padding: 6rpx 12rpx;

@@ -48,7 +48,7 @@ onShareAppMessage: function (res) {
             "",
             (res) =>{
               if (res.data.status == 'success') {
-                //console.log("获取的用户信息：", res)
+                console.log("获取的用户信息：", res)
                app.seesionId =res.header["Set-Cookie"]; 
                app.openid = res.data.retObj.openId;
                 //console.log("这是初始化appid：", app.openid)
@@ -59,6 +59,8 @@ onShareAppMessage: function (res) {
                if(res.data.retObj.government){
                  app.data.isStars = res.data.retObj.government.stars
                }
+               app.data.departmentId = res.data.retObj.departmentId
+               app.data.departmentName = res.data.retObj.departmentName
                // console.log("调查员Id", app.terminalUserId)
                // console.log("菜单", res.data.retObj.qxMenus)
                // 跳转菜单页

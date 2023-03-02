@@ -70,7 +70,8 @@
         "pages/startDiaocha/task_upload/task_upload",
         "pages/startDiaocha/map/map",
         "pages/startDiaocha/question_tips/question_tips",
-        "pages/startDiaocha/door_head_photo/door_head_photo"
+        "pages/startDiaocha/door_head_photo/door_head_photo",
+        "pages/startDiaocha/field_operation_tips/field_operation_tips"
       ]
     },
     {
@@ -91,7 +92,23 @@
         "pages/paiMing/index/index",
         "pages/paiMing/projectList/projectList",
         "pages/paiMing/deptDataInfo/deptDataInfo",
-        "pages/paiMing/quotaDataInfo/quotaDataInfo"
+        "pages/paiMing/quotaDataInfo/quotaDataInfo",
+        "pages/dept_fenXi/index/index",
+        "pages/dept_fenXi/zr_df_z/zr_df_z",
+        "pages/dept_fenXi/zr_wt_z/zr_wt_z",
+        "pages/dept_fenXi/zr_df_p/zr_df_p",
+        "pages/dept_fenXi/dw_z/dw_z",
+        "pages/dept_fenXi/zr_df_p_p/zr_df_p_p",
+        "pages/dept_fenXi/projectList/projectList",
+        "pages/dept_fenXi/dw_p/dw_p",
+        "pages/dept_fenXi/dw_p_p/dw_p_p",
+        "pages/dept_fenXi/allInfo/allInfo",
+        "pages/dept_fenXi/single_chart/single_chart",
+        "pages/dept_fenXi/map/map",
+        "pages/dept_paiMing/index/index",
+        "pages/dept_paiMing/projectList/projectList",
+        "pages/dept_paiMing/deptDataInfo/deptDataInfo",
+        "pages/dept_paiMing/quotaDataInfo/quotaDataInfo"
       ]
     },
     {

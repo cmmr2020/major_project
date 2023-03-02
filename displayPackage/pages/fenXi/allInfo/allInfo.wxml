@@ -3,8 +3,86 @@
     <text>{{projectName}}</text>
   </view>
 </view> -->
-<!--统计展示-->
- <view class="grid col-2 padding-sm ">
+<!-- 轮播测试 统计展示 -->
+<swiper class="card-swiper {{DotStyle?'square-dot':'round-dot'}}" indicator-dots="true" circular="true" autoplay="true" interval="5000" duration="500" bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
+ <swiper-item>
+    <view class="padding-sm  {{isLoadStatistics==true?'show':'hide'}}" >
+    <view class="bg-gradual-blue padding radius text-center shadow-blur myZS_text_style">
+      <view class="margin-top-sm text-Abc my-text-style">实地测评点位完成率</view>
+      <view class="text-lg" style="margin-block-start: 15px;"></view>   
+        <view class="my-num-style" style="margin-block-start: 15px;">{{location_rate_num}}</view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc my-text-style">全部点位</view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc my-text-style">已测评</view>
+        </view>
+      </view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc my-num-style">{{location_total}}</view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc my-num-style">{{location_finisNum}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  </swiper-item>
+  <swiper-item>
+    <view class="padding-sm  {{isLoadStatistics==true?'show':'hide'}}">
+    <view class="bg-gradual-blue padding radius text-center shadow-blur myZS_text_style">
+      <view class="margin-top-sm text-Abc my-text-style">实地测评指标符合率</view>
+      <view class="text-lg" style="margin-block-start: 15px;"></view>   
+        <view class="my-num-style" style="margin-block-start: 15px;">{{quota_rate_num}}</view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc my-text-style">全部指标</view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc my-text-style">合格指标</view>
+        </view>
+      </view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc my-num-style">{{quota_total}}</view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc my-num-style">{{quota_ok_num}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  </swiper-item>
+  <swiper-item>
+    <view class="padding-sm  {{isLoadStatistics==true?'show':'hide'}}" >
+    <view class="bg-gradual-blue padding radius text-center shadow-blur myZS_text_style">
+      <view class="margin-top-sm text-Abc my-text-style">实地整改合格率</view>
+      <view class="text-lg" style="margin-block-start: 15px;"></view>   
+        <view class="my-num-style" style="margin-block-start: 15px;">{{task_rate_num}}</view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc my-text-style">全部问题</view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc my-text-style">整改合格</view>
+        </view>
+      </view>
+      <view style="width:100%;">
+        <view style="width:50%;display:inline-block">
+          <view class="margin-top-sm text-Abc my-num-style">{{task_total}}</view>
+        </view>
+        <view style="width:50%;;display:inline-block">
+          <view class="margin-top-sm text-Abc my-num-style">{{task_finisNum}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  </swiper-item>
+</swiper>
+<!--原版统计展示-->
+ <!-- <view class="grid col-2 padding-sm ">
   <view class="padding-sm  {{isLoadStatistics==true?'show':'hide'}}" >
     <view class="bg-gradual-blue padding radius text-center shadow-blur" style="height: 100%;">
       <view class="margin-top-sm text-Abc my-text-style">测评点位数</view>
@@ -51,7 +129,7 @@
       </view>
     </view>
   </view>
-</view>
+</view> -->
 <!--图表-->
 <view class="container1">
   <view class="{{IsShowInfo==true?'hide':'show'}}">
@@ -88,10 +166,9 @@
     </view>
   </view>
 </view>
-
   <!-- 轮播 -->
   <swiper class="card-swiper {{DotStyle?'square-dot':'round-dot'}}" indicator-dots="true" circular="true" autoplay="true" interval="5000" duration="500" bindchange="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
-  <swiper-item wx:for="{{swiperList}}" wx:key class="{{cardCur==index?'cur':''}}">
+  <swiper-item wx:for="{{swiperList}}" wx:key="index" class="{{cardCur==index?'cur':''}}">
     <view class="swiper-item"  bindtap="toswiper" data-location="{{item.location}}" data-addr="{{item.addr}}" data-desc="{{item.desc}}" data-src="{{item.url}}">
       <image src="{{item.url}}" mode="aspectFill" wx:if="{{item.type=='image'}}" ></image>
       <!-- <video src="{{item.url}}" autoplay loop muted show-play-btn="{{false}}" controls="{{false}}" objectFit="cover" wx:if="{{item.type=='video'}}"></video> -->
@@ -101,4 +178,7 @@
 <view class="cu-bar margin-top">
 </view>
 </view>
+  <view class="{{IsShowInfo==true?'hide':'show'}}">
+    <ec-canvas id="mychart-dom-multi-bar7"  canvas-id="mychart-multi-bar7" ec-canvas force-use-old-canvas="true" ec="{{ ecBar7 }}"></ec-canvas>
+  </view>
 

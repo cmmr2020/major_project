@@ -1,0 +1,79 @@
+page{
+  height: 100%;
+  background-color:#100C2A;
+  color: #B9B8CE;
+}
+.page-section-gap{
+  box-sizing: border-box;
+  /* padding: 0 5rpx; */
+  height: 100%;
+}
+
+.page-body-button {
+  margin-bottom: 30rpx;
+}
+
+.customCallout {
+  box-sizing: border-box;
+  background-color: #fff; 
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  width: 150px;
+  height: 40px;
+  display: inline-flex;
+  padding: 5px 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.content {
+  flex: 0 1 auto;
+  margin: 0 10px;
+  font-size: 14px;
+}
+.page-body {
+  /* padding: 20rpx 0; */
+  height: 100%;
+}
+
+.btn-area{
+  margin-top: 60rpx;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 30rpx;
+}
+
+.my-num-style{
+  font-size: 35rpx;
+  font-weight: bolder;
+}
+.show{
+  display: block;
+}
+.hide{
+  display: none;
+}
+image{
+  width: 30rpx;
+  height: 30rpx;
+}
+.mytxt{
+    width: 100%;
+    font-size: 25rpx;
+    margin-left: 3%;
+    line-height: 30rpx;
+    letter-spacing: 1rpx;
+    color: white;
+}

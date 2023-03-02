@@ -11,6 +11,8 @@ App({
     locationUpdateFlag:false,
     isPhoto:1, //当前项目达标指标是否必须拍照 0否  1是   默认 1
     isStars:0, //当前政府是否开启地图星级模式 0否  1是   默认 0
+    departmentId:'',//当前账号所属部门id
+    departmentName:'',//当前账号所属部门名称
   },
   projectWaterMark_map: new Map(),
   project_isOptionOn_map: new Map(),
@@ -309,6 +311,7 @@ wxUploadFile(url,filePath,name, data,seesionid, callback, errFun) {
     //requestUrl: 'https://wmccpr.diaochaonline.com'//线上
     //requestUrl:'https://cmmrpr.diaochaonline.com'//13o
     //requestUrl:'http://221.216.95.200:8286'//35
-    //requestUrl:'http://192.168.20.50:8190'//本地
+    //requestUrl:'http://192.168.20.59:8190'//本地
+    //requestUrl:'http://192.168.31.252:8190'//本地
   }
 })

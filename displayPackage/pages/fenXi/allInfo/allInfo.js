@@ -36,10 +36,17 @@ Page({
     data_char2:'',
     data_char3:'',
     data_char4:'',
+    data_char7:'',
     quota_total:'',
     quota_ok_num:'',
     quota_rate_num:'',
     point_total:'',
+    location_total:'',
+    location_finisNum:'',
+    location_rate_num:'',
+    task_total:'',
+    task_finisNum:'',
+    task_rate_num:'',
     swiperList: [],/*[{
       id: 0,
       type: 'image',
@@ -67,6 +74,9 @@ Page({
       lazyLoad: true,
     },
     ecBar5: {
+      lazyLoad: true,
+    },
+    ecBar7: {
       lazyLoad: true,
     },
   },
@@ -97,6 +107,7 @@ Page({
     that.inintchar4()
     that.inintchar5()
     that.inintPic()
+    that.inintchar7()
   },
   hideModal(e) {
     this.setData({
@@ -264,7 +275,12 @@ Page({
             loadFlag = true
           }
           that.setData({
-            point_total:res.data.retObj.locationNum,
+            location_total:res.data.retObj.locationNum,
+            location_finisNum:res.data.retObj.locationFinisNum,
+            location_rate_num:res.data.retObj.locationFinishRateStr,
+            task_total:res.data.retObj.taskTotal,
+            task_finisNum:res.data.retObj.taskFinishNum,
+            task_rate_num:res.data.retObj.taskFinishRateStr,
           })
         } else {
           wx.showToast({
@@ -342,9 +358,7 @@ Page({
         devicePixelRatio: dpr // new
       });
       barChart.showLoading(load_option)
-    });
-    
-    //调用全局 请求方法
+          //调用全局 请求方法
     app.wxRequest(
       'GET',
       requestUrl + '/private/largeScreenDisplay/getPointQuotaScoreMap',
@@ -364,6 +378,7 @@ Page({
                 height: height,
                 devicePixelRatio: dpr // new
               });
+              console.log(res.data.retObj)
             that.setOption1(barChart,res.data.retObj,limiNum)
             // canvas.setChart(barChart);
             // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
@@ -391,6 +406,8 @@ Page({
 
       }
     )
+    });
+    
       // wx.request({
       //   // 必需
       //   url: requestUrl + '/private/largeScreenDisplay/getPointQuotaScoreMap',
@@ -446,6 +463,10 @@ Page({
     var oknums = new Array();
     var unOkNums = new Array();
     var rates = new Array();
+    //console.log(data)
+    if(limiNum > data.length){
+      limiNum = data.length
+    }
     for (var i=0; i<limiNum; i++){
       dimensions.push(data[i].name);
       oknums.push(data[i].standardNum);
@@ -670,6 +691,353 @@ Page({
       url: '../single_chart/single_chart?data='+that.data_char1+"&char_index=1",
     })
   },
+  inintchar7:function(){
+    let that = this;
+    var barChart;
+    //因为插件bug this.ecComponent 多次实例化 实现加载动画 和 初始化数据, 无法通过实例化一次实现.
+    this.ecComponent = this.selectComponent('#mychart-dom-multi-bar7');
+    this.ecComponent.init((canvas, width, height, dpr) => {
+      // 获取组件的 canvas、width、height 后的回调函数
+      // 在这里初始化图表
+        barChart = echarts.init(canvas,  'dark', {
+        width: width,
+        height: height,
+        devicePixelRatio: dpr // new
+      });
+      barChart.showLoading(load_option)
+          //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/private/largeScreenDisplay/getProjectTaskFinshInfoMap',
+      {
+        projectId:projectId,
+      },
+      app.seesionId,
+      (res) =>{
+        barChart.hideLoading();
+          if (res.data.status === "success") {
+            this.ecComponent = this.selectComponent('#mychart-dom-multi-bar7');
+            this.ecComponent.init((canvas, width, height, dpr) => {
+              // 获取组件的 canvas、width、height 后的回调函数
+              // 在这里初始化图表
+              barChart = echarts.init(canvas,  'dark', {
+                width: width,
+                height: height,
+                devicePixelRatio: dpr // new
+              });
+              //console.log(res.data.retObj)
+            that.setOption7(barChart,res.data.retObj,limiNum)
+            // canvas.setChart(barChart);
+            // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+            that.ecBar7 = barChart;
+            // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+            return barChart;
+          });
+          } else {
+            wx.showToast({
+              title: '获取数据失败',
+              icon: 'none', // "success", "loading", "none"
+              duration: 1500,
+              mask: false,
+            })
+          }
+
+      },
+      (err) =>{
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none', // "success", "loading", "none"
+          duration: 1500,
+          mask: false,
+        })
+
+      }
+    )
+    });
+    
+      // wx.request({
+      //   // 必需
+      //   url: requestUrl + '/private/largeScreenDisplay/getPointQuotaScoreMap',
+      //   data: {
+      //     projectId:projectId,
+      //   },
+      //   header: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   success: (res) => {
+      //     barChart.hideLoading();
+      //     if (res.data.status === "success") {
+      //       this.ecComponent = this.selectComponent('#mychart-dom-multi-bar');
+      //       this.ecComponent.init((canvas, width, height, dpr) => {
+      //         // 获取组件的 canvas、width、height 后的回调函数
+      //         // 在这里初始化图表
+      //         barChart = echarts.init(canvas,  'dark', {
+      //           width: width,
+      //           height: height,
+      //           devicePixelRatio: dpr // new
+      //         });
+      //       that.setOption1(barChart,res.data.retObj,limiNum)
+      //       // canvas.setChart(barChart);
+      //       // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+      //       that.ecBar1 = barChart;
+      //       // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+      //       return barChart;
+      //     });
+      //     } else {
+      //       wx.showToast({
+      //         title: '获取数据失败',
+      //         icon: 'none', // "success", "loading", "none"
+      //         duration: 1500,
+      //         mask: false,
+      //       })
+      //     }
+  
+      //   },
+      //   fail: (res) => {
+      //     wx.showToast({
+      //       title: '网络错误',
+      //       icon: 'none', // "success", "loading", "none"
+      //       duration: 1500,
+      //       mask: false,
+      //     })
+      //   }
+      // })
+  },
+  setOption7:function (myChar,data,limiNum) {
+    var that = this
+    that.data_char7=JSON.stringify(data);
+    var dimensions = new Array();
+    var oknums = new Array();
+    var unOkNums = new Array();
+    var rates = new Array();
+    //console.log(data)
+    if(limiNum > data.length){
+      limiNum = data.length
+    }
+    for (var i=0; i<limiNum; i++){
+      dimensions.push(data[i].departmentName);
+      oknums.push(data[i].standardNum);
+      unOkNums.push((data[i].unCheckNum + data[i].longTaskNum + data[i].unRectifyNum));
+      rates.push(data[i].standardRate);
+    }
+    const option = {
+      //提示框组件
+      tooltip: {
+        show:true,
+        /**
+         * 触发类型
+         * ‘item’数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。
+         * ‘axis’坐标轴触发，主要在柱状图，折线图等会使用类目轴的图表中使用。
+         * ‘none’不触发
+         */
+        trigger: 'axis',
+        /**
+         * 这是坐标轴指示器的全局公用设置。
+         */
+        axisPointer: {
+          type: 'cross', //指示器类型 ‘line’ 直线指示器  ‘shadow’ 阴影指示器 cross十字准星  ‘none’无指示器
+          crossStyle: {
+            color: '#999'
+          }
+        },
+        triggerOn:"mousemove", //提示框触发的条件  mousemove 鼠标移动时触发  click 鼠标点击时触发   mousemove|click 同时鼠标移动和点击时触发
+        hideDelay:0, //浮层隐藏的延迟，单位为 ms
+        formatter:function (params) {
+          // do some thing
+          //console.log(params)
+          var resultStr = "";
+          params.forEach(function (item,i){
+                if (i == 0) {
+                  resultStr += item.axisValue + '\n' + item.marker + item.seriesName +'：';
+                  if(item.componentSubType=='line'){
+                    resultStr+=item.value+'%\n'
+                  }else{
+                    resultStr+=item.value+'\n'
+                  }
+                } else {
+                  resultStr += item.marker + item.seriesName +'：';
+                  if(item.componentSubType=='line'){
+                    resultStr+=item.value+'%\n'
+                  }else{
+                    resultStr+=item.value+'\n'
+                  }
+                }
+              }
+          )
+          return resultStr;
+        },
+        textStyle:{
+          fontStyle:'normal',
+          fontWeight:'bolder',
+          fontSize:'13'
+        }
+      },
+      textStyle:{
+        color:"#fff",
+        fontStyle:"normal",
+        fontSize:"12"
+      },
+      title:{
+        show:true,
+        text:'整改合格率最低的责任单位',
+        left:'center',
+      },
+      legend:{  //图例组件
+        type:'plain',
+        show:true,
+        top:'10%',
+        left:'right',
+        textStyle:{
+          color:"#fff",
+          fontStyle:"normal",
+          fontSize:"10"
+        }
+      },
+      grid: {
+        left: 20,
+        right: 20,
+        bottom: 15,
+        top: 90,
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category', //value 数值轴  category 类目轴  time 时间轴 log 对数轴
+          data: dimensions,//['城市社区','小学','主次干道','居住小区','社区综合'],
+          axisPointer: { //坐标轴指示器配置项
+            type: 'shadow'
+          },
+          splitLine: { //坐标轴在 grid 区域中的分隔线。
+            show: false
+          },
+          axisTick:{ //坐标轴刻度相关设置。
+            show:false,
+            alignWithLabel:true, //类目轴中在 boundaryGap 为 true 的时候有效，可以保证刻度线和标签对齐
+            interval:'auto', //坐标轴刻度的显示间隔，在类目轴中有效
+          },
+          axisLabel:{//坐标轴刻度标签的相关设置。
+            show:true,
+            interval:0,
+            inside:false,
+            rotate:316,
+            //showMaxLabel:true,
+            fontSize:10,
+            formatter:function (value) {
+              //console.log(value)
+              //console.log(value.length)
+              if (value.length>4){
+                return value.slice(0,4)+"..."
+              }
+              return value;
+            }
+          },
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',  //value 数值轴  category 类目轴  time 时间轴 log 对数轴
+          name: '任务数量', //坐标轴名称
+          nameGap:10,
+          nameTextStyle:{
+            fontStyle:'normal',
+            fontSize:10,
+          },
+          axisLabel: {  //坐标轴刻度标签的相关设置。
+            fontStyle:'normal',
+            fontSize:10,
+            formatter: '{value}'
+          },
+          splitLine: { //坐标轴在 grid 区域中的分隔线
+            show: false
+          },
+          splitNumber:4,
+          scale:true,
+          nameLocation:'end'  //坐标轴名称显示位置。
+        },
+        {
+          type: 'value',
+          name: '合格率',
+          nameGap:10,
+          nameTextStyle:{
+            fontStyle:'normal',
+            fontSize:10,
+          },
+          min: 0, //坐标轴刻度最小值。 可以设置成特殊值 'dataMin'，此时取数据在该轴上的最小值作为最小刻度。  不设置时会自动计算最小值保证坐标轴刻度的均匀分布
+          max: 100,//坐标轴刻度最大值。可以设置成特殊值 'dataMax'，此时取数据在该轴上的最大值作为最大刻度。  不设置时会自动计算最大值保证坐标轴刻度的均匀分布。
+          interval: 25, //是否是反向坐标轴。
+          axisLabel: { //坐标轴刻度标签的相关设置。
+            formatter: '{value} %',   //刻度标签的内容格式器，支持字符串模板和回调函数两种形式。
+            fontStyle:'normal',
+            fontSize:10,
+          },
+          splitLine: {  //坐标轴在 grid 区域中的分隔线。
+            show: false
+          },
+          nameLocation:'end'  //坐标轴名称显示位置。
+        },
+      ],
+      series: [
+        {
+          name: '整改达标',
+          type: 'bar',
+          itemStyle:{
+            normal:{color:"#55a0ed"},
+          },
+          label:{ //图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。
+            show:true,
+            textStyle:{
+              fontStyle:'normal',
+              //fontWeight:'bolder',
+              fontSize:'10'
+            }
+          },
+          data: oknums//[300, 270, 340, 344, 300, 320, 310]
+        },
+        {
+          name: '未整改',
+          type: 'bar',
+          stack: '总量',
+          itemStyle:{
+            normal:{color:"#bb3843"},
+          },
+          label:{
+            show:true,
+            textStyle:{
+              fontStyle:'normal',
+              color:'#fff',
+              //fontWeight:'bolder',
+              fontSize:'10'
+            }
+          },
+          data: unOkNums//[120, 102, 141, 174, 190, 250, 220]
+        },
+        {
+          name: '合格率',
+          type: 'line',
+          yAxisIndex: 1, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+          data: rates,//[25,35,45,55,65,75,85],
+          label:{  //图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。
+            show:true,
+            formatter:'{c}%',
+            textStyle:{
+              fontStyle:'normal',
+              color:'#fff',
+              //fontWeight:'bolder',
+              fontSize:'10'
+            }
+          }
+        }
+      ]
+    };
+    myChar.setOption(option);
+    myChar.on('click',that.openChart7)
+  },
+  openChart7:function(index){
+    var that = this;
+    wx.navigateTo({
+      url: '../single_chart/single_chart?data='+that.data_char7+"&char_index=5",
+    })
+  },
   inintchar2:function(){
     let that = this;
     var barChart;
@@ -684,8 +1052,7 @@ Page({
         devicePixelRatio: dpr // new
       });
       barChart.showLoading(load_option)
-    });
-    //调用全局 请求方法
+          //调用全局 请求方法
     app.wxRequest(
       'GET',
       requestUrl + '/private/largeScreenDisplay/getLowestPointMap',
@@ -732,6 +1099,8 @@ Page({
 
       }
     )
+    });
+
       // wx.request({
       //   // 必需
       //   url: requestUrl + '/private/largeScreenDisplay/getLowestPointMap',
@@ -850,7 +1219,6 @@ Page({
             alignWithLabel: true
           },
           axisLabel: {
-            show:false,
             show:true,
             interval:0,
             inside:false,
@@ -935,56 +1303,56 @@ Page({
         devicePixelRatio: dpr // new
       });
       barChart.showLoading(load_option)
+            //调用全局 请求方法
+            app.wxRequest(
+              'GET',
+              requestUrl + '/private/largeScreenDisplay/getDeptQuotaScoreMap',
+              {
+                projectId:projectId,
+                govId:govId,
+              },
+              app.seesionId,
+              (res) =>{
+                barChart.hideLoading();
+                if (res.data.status === "success") {
+                  this.ecComponent = this.selectComponent('#mychart-dom-multi-bar3');
+                  this.ecComponent.init((canvas, width, height, dpr) => {
+                    // 获取组件的 canvas、width、height 后的回调函数
+                    // 在这里初始化图表
+                    barChart = echarts.init(canvas,  'dark', {
+                      width: width,
+                      height: height,
+                      devicePixelRatio: dpr // new
+                    });
+                  that.setOption3(barChart,res.data.retObj,limiNum)
+                  // canvas.setChart(barChart);
+                  // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+                  that.ecBar3 = barChart;
+                  // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+                  return barChart;
+                });
+                } else {
+                  wx.showToast({
+                    title: '获取数据失败',
+                    icon: 'none', // "success", "loading", "none"
+                    duration: 1500,
+                    mask: false,
+                  })
+                }
+      
+              },
+              (err) =>{
+                wx.showToast({
+                  title: '网络错误',
+                  icon: 'none', // "success", "loading", "none"
+                  duration: 1500,
+                  mask: false,
+                })
+      
+              }
+            )
     });
     
-      //调用全局 请求方法
-      app.wxRequest(
-        'GET',
-        requestUrl + '/private/largeScreenDisplay/getDeptQuotaScoreMap',
-        {
-          projectId:projectId,
-          govId:govId,
-        },
-        app.seesionId,
-        (res) =>{
-          barChart.hideLoading();
-          if (res.data.status === "success") {
-            this.ecComponent = this.selectComponent('#mychart-dom-multi-bar3');
-            this.ecComponent.init((canvas, width, height, dpr) => {
-              // 获取组件的 canvas、width、height 后的回调函数
-              // 在这里初始化图表
-              barChart = echarts.init(canvas,  'dark', {
-                width: width,
-                height: height,
-                devicePixelRatio: dpr // new
-              });
-            that.setOption3(barChart,res.data.retObj,limiNum)
-            // canvas.setChart(barChart);
-            // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
-            that.ecBar3 = barChart;
-            // 注意这里一定要返回 chart 实例，否则会影响事件处理等
-            return barChart;
-          });
-          } else {
-            wx.showToast({
-              title: '获取数据失败',
-              icon: 'none', // "success", "loading", "none"
-              duration: 1500,
-              mask: false,
-            })
-          }
-
-        },
-        (err) =>{
-          wx.showToast({
-            title: '网络错误',
-            icon: 'none', // "success", "loading", "none"
-            duration: 1500,
-            mask: false,
-          })
-
-        }
-      )
       // wx.request({
       //   // 必需
       //   url: requestUrl + '/private/largeScreenDisplay/getDeptQuotaScoreMap',
@@ -1277,8 +1645,7 @@ Page({
         devicePixelRatio: dpr // new
       });
       barChart.showLoading(load_option)
-    });
-    //调用全局 请求方法
+          //调用全局 请求方法
     app.wxRequest(
       'GET',
       requestUrl + '/private/largeScreenDisplay/getLowestQuotaMap',
@@ -1325,6 +1692,8 @@ Page({
 
       }
     )
+    });
+
       // wx.request({
       //   // 必需
       //   url: requestUrl + '/private/largeScreenDisplay/getLowestQuotaMap',
@@ -1522,8 +1891,7 @@ Page({
         devicePixelRatio: dpr // new
       });
       barChart.showLoading(load_option)
-    });
-    //调用全局 请求方法
+          //调用全局 请求方法
     app.wxRequest(
       'GET',
       requestUrl + '/private/largeScreenDisplay/getlastDayQuotaScore',
@@ -1570,6 +1938,8 @@ Page({
 
       }
     )
+    });
+
       // wx.request({
       //   // 必需
       //   url: requestUrl + '/private/largeScreenDisplay/getlastDayQuotaScore',
@@ -1619,12 +1989,13 @@ Page({
       // })
   },
   setOption5:function (myChar,data,limiNum) {
-    var title=['指标合格数','指标不合格数'];
+    //console.log(data)
+    var title=['指标符合率','指标不符合率'];
     var data_obj = [{"value":data.okNum,"name":title[0]},{"value":data.unOkNum,"name":title[1]}];
     const option = {
       title:{
         show:true,
-        text:data.date+' 指标实时测评情况',
+        text:data.date+' 指标实时测评符合情况',
         left:'center',
       },
       grip:{//直角坐标系内绘图网格
@@ -1634,7 +2005,7 @@ Page({
         bottom: 0,
       },
       tooltip: { //提示框组件
-        formatter: '{a}'+'\n'+'{b} : {c} ({d}%)',
+        formatter: '{a}'+'\n'+'{b} : {d}% （{c}）',
         confine:true,
         triggerOn:"mousemove",
         hideDelay:0,
@@ -1667,7 +2038,7 @@ Page({
         {
           name:'指标测评情况',
           type: 'pie',
-          radius: '55%',
+          radius: '50%',
           center: ['50%', '50%'],
           data:data_obj,
           // data: [
@@ -1685,7 +2056,7 @@ Page({
             fontStyle:'normal',
             formatter:function(params){
               //console.log(params) params.data.name+"：\n\n"+
-              return params.data.value+"("+params.percent+"%)";
+              return params.percent+"%"+"（"+params.data.value+"）";
             },
             position:'outside',
             color:'#fff',
@@ -1722,7 +2093,7 @@ Page({
       app.seesionId,
       (res) =>{
         if (res.data.status === "success") {
-          //console.log(res.data.retObj)
+          console.log(res.data.retObj)
           var data =res.data.retObj;
           var list = [];
           for(let i=0; i<data.length; i++){

@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "ec-canvas": "../../../ec-canvas/ec-canvas"
+  },
+  "backgroundColor":"#100C2A",
+  "disableScroll":true,
+  "component":true
+}

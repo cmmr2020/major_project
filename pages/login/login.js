@@ -81,6 +81,8 @@ Page({
           var terminalUserName = res.data.retObj.terminalUserName;
           var departmentName = res.data.retObj.departmentName
           app.terminalUserId = res.data.retObj.terminalUserId;
+          app.data.departmentId = res.data.retObj.departmentId
+          app.data.departmentName = departmentName
           //解决 当用户在一次使用小程序中，多次切换不同角色账号时，造成小程序值栈存满，页面无法跳转的问题
           //关闭所有页面，打开到应用内的某个页面
           wx.reLaunch({

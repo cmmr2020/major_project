@@ -30,7 +30,7 @@
           <text style="font-size: 30rpx;color: #666;" >符合率</text>
         </view>
       </view>
-      <view class="cu-list grid col-6" wx:for="{{dept_report_list}}" wx:key="item" wx:if="{{index>0}}"
+      <view class="cu-list grid col-6" wx:for="{{dept_report_list}}" wx:key="item" wx:if="{{index > 0}}"
         style="background-color: white;margin-top: 0; border: 1px solid #e6e6e6;">
         <view class="cu-item td" style="border-right: 1px solid #ddd;width: 10%;">
           <text style="font-size: 30rpx;color: rgb(129, 113, 113);">{{index}}</text>
@@ -126,7 +126,7 @@
           <text style="font-size: 30rpx;color: #666;" >符合率</text>
         </view>
       </view>
-      <view class="cu-list grid col-6" wx:for="{{point_report_list}}" wx:key="item" wx:if="{{index>0}}"
+      <view class="cu-list grid col-6" wx:for="{{point_report_list}}" wx:key="item" wx:if="{{index > 0}}"
         style="background-color: white;margin-top: 0; border: 1px solid #e6e6e6;">
         <view class="cu-item td" style="border-right: 1px solid #ddd;width: 10%;">
           <text style="font-size: 30rpx;color: rgb(129, 113, 113);">{{index}}</text>
@@ -199,6 +199,113 @@
   <view class="flex flex-direction {{showPointQuotaInfo==true?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93%; text-align: center;width: 100%;">
       <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
         aria-disabled="false" bindtap="closePoint">关闭</button>
+  </view>
+</view> 
+
+  <!-- 分责任单位整改统计报表 cu-modal -->
+  <view>
+  <view class=" {{showZGReport==true?'show':'hide'}} ">
+    <view class="cu-dialog" style="width: 100%;padding: 1%;">
+      <view class="cu-bar bg-white justify-end" style="background-color: white;color: #337fe5;font-size: 0.5em;font-weight: bolder;font-family: monospace;">
+        <view class="content">{{model_title_ZG}}</view>
+        <!-- <view class="action" bindtap="closeModel">
+          <text class="cuIcon-close text-red"></text>
+        </view> -->
+      </view>
+      <view class="cu-list grid col-6" 
+        style="background-color: 	#DCDCDC;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 10%;">
+          <text style="font-size: 30rpx;color: #666;" >序号</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 30%;">
+          <text style="font-size: 30rpx;color: #666;" >责任单位</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >全部问题</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >未整改</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >整改达标</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 18%;">
+          <text style="font-size: 30rpx;color: #666;" >合格率</text>
+        </view>
+      </view>
+      <view class="cu-list grid col-6" wx:for="{{ZG_report_list}}" wx:key="item"
+        style="background-color: white;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 10%;">
+          <text style="font-size: 30rpx;color: rgb(129, 113, 113);">{{index + 1}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 30%;" bindtap="alertDeptZGInfo" data-id="{{item.departmentId}}" data-name="{{item.departmentName}}">
+          <text style="font-size: 30rpx;color: #666;text-decoration: underline;" >{{item.departmentName}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;" >{{item.allNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.unRectifyNum + item.unCheckNum + item.longTaskNum + item.unStandardNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 14%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.standardNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #ddd;width: 18%;">
+          <text style="font-size: 30rpx;color: #666;">{{item.standardPercent}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+    <!-- 单个点位类型下所有指标测评数据弹出层  -->
+ <view class="cu-modal {{showDeptZGInfo==true?'show':'hide'}}">
+    <view class="cu-dialog" style="margin-bottom: 10%;">
+      <view class="cu-bar bg-white justify-end" style="background-color: white;color: #337fe5;">
+        <view class="content">{{model_title_point_ZGInfo}}</view>
+        <view class="action" bindtap="closeZG">
+          <text class="cuIcon-close text-red"></text>
+        </view>
+      </view>
+      <view class="cu-list grid col-5" 
+        style="background-color: #DCDCDC;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 40%;">
+          <text style="color:#666; font-size: 30rpx;">点位</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 15%;">
+          <text style="color:#666; font-size: 30rpx;">全部问题</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 15%;">
+          <text style="color:#666; font-size: 30rpx;">未整改</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 15%;">
+          <text style="color:#666; font-size: 30rpx;">整改达标</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 15%;">
+          <text style="color:#666; font-size: 30rpx;">合格率</text>
+        </view>
+      </view>
+      <view class="cu-list grid col-5" wx:for="{{point_ZGInfo_report_list}}" wx:key="item"
+        style="background-color: white;margin-top: 0; border: 1px solid #e6e6e6;">
+        <view class="cu-item td" style="border-right: 1px solid #f1dede; width: 40%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.pointName}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 13%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.allNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 13%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.unStandardNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 13%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.standardNum}}</text>
+        </view>
+        <view class="cu-item td" style="border-right: 1px solid #f1dede;  width: 21%;">
+          <text style="color:#666; font-size: 30rpx;">{{item.standardPercent}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="flex flex-direction {{showPointZGInfo==true?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
+        aria-disabled="false" bindtap="closeZG">关闭</button>
   </view>
 </view> 
 

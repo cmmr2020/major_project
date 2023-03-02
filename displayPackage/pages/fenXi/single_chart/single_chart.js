@@ -18,6 +18,9 @@ Page({
     ecBar4: {
       lazyLoad: true,
     },
+    ecBar5: {
+      lazyLoad: true,
+    },
   },
 
   /**
@@ -36,6 +39,8 @@ Page({
       this.init_char3(options.data)
     }else if(options.char_index=='4'){
       this.init_char4(options.data)
+    }else if(options.char_index=='5'){
+      this.init_char5(options.data)
     }
   },
   init_char1:function(dataStr){
@@ -993,6 +998,292 @@ Page({
     }
     myChar.setOption(option);
   },
+  init_char5:function(dataStr){
+    var that = this;
+    this.ecComponent = this.selectComponent('#mychart-dom-multi-bar5');
+    this.ecComponent.init((canvas, width, height, dpr) => {
+      // 获取组件的 canvas、width、height 后的回调函数
+      // 在这里初始化图表
+      const barChart = echarts.init(canvas,'dark', {
+        width: width,
+        height: height,
+        devicePixelRatio: dpr // new
+      });
+    that.setOption5(barChart,JSON.parse(dataStr))
+    // canvas.setChart(barChart);
+    // 将图表实例绑定到 this 上，可以在其他成员函数（如 dispose）中访问
+    that.ecBar5 = barChart;
+    // 注意这里一定要返回 chart 实例，否则会影响事件处理等
+    return barChart;
+  })
+},
+setOption5:function(myChar,data){
+  var dimensions = new Array();
+  var oknums = new Array();
+  var unOkNums = new Array();
+  var rates = new Array();
+  for (var i=0; i<data.length; i++){
+    dimensions.push(data[i].departmentName);
+    oknums.push(data[i].standardNum);
+    unOkNums.push((data[i].unCheckNum + data[i].longTaskNum + data[i].unRectifyNum));
+    rates.push(data[i].standardRate);
+  }
+  const option = {
+    //提示框组件
+    tooltip: {
+      show:true,
+      /**
+       * 触发类型
+       * ‘item’数据项图形触发，主要在散点图，饼图等无类目轴的图表中使用。
+       * ‘axis’坐标轴触发，主要在柱状图，折线图等会使用类目轴的图表中使用。
+       * ‘none’不触发
+       */
+      trigger: 'axis',
+      /**
+       * 这是坐标轴指示器的全局公用设置。
+       */
+      axisPointer: {
+        type: 'cross', //指示器类型 ‘line’ 直线指示器  ‘shadow’ 阴影指示器 cross十字准星  ‘none’无指示器
+        crossStyle: {
+          color: '#999'
+        }
+      },
+      triggerOn:"mousemove", //提示框触发的条件  mousemove 鼠标移动时触发  click 鼠标点击时触发   mousemove|click 同时鼠标移动和点击时触发
+      hideDelay:0, //浮层隐藏的延迟，单位为 ms
+      formatter:function (params) {
+        // do some thing
+        //console.log(params)
+        var resultStr = "";
+        params.forEach(function (item,i){
+              if (i == 0) {
+                resultStr += item.axisValue + '\n' + item.marker + item.seriesName +'：';
+                if(item.componentSubType=='line'){
+                  resultStr+=item.value+'%\n'
+                }else{
+                  resultStr+=item.value+'\n'
+                }
+              } else {
+                resultStr += item.marker + item.seriesName +'：';
+                if(item.componentSubType=='line'){
+                  resultStr+=item.value+'%\n'
+                }else{
+                  resultStr+=item.value+'\n'
+                }
+              }
+            }
+        )
+        return resultStr;
+      },
+      textStyle:{
+        fontStyle:'normal',
+        fontWeight:'bolder',
+        fontSize:'13'
+      }
+    },
+    textStyle:{
+      color:"#fff",
+      fontStyle:"normal",
+      fontSize:"12"
+    },
+    title:{
+      show:true,
+      text:'责任单位整改合格情况',
+      left:'center',
+    },
+    legend:{  //图例组件
+      type:'plain',
+      show:true,
+      top:'10%',
+      left:'right',
+      textStyle:{
+        color:"#fff",
+        fontStyle:"normal",
+        fontSize:"10"
+      }
+    },
+    grid: {
+      left: '5%',
+      right: '5%',
+      bottom: '5%',
+      top: 100,
+      containLabel: true
+    },
+    dataZoom : [
+    //1.横向使用滚动条
+    {
+      type: 'inside',//有单独的滑动条，用户在滑动条上进行缩放或漫游。inside是直接可以是在内部拖动显示
+      show: false,//是否显示 组件。如果设置为 false，不会显示，但是数据过滤的功能还存在。
+      xAxisIndex: [0],// 此处表示控制第一个xAxis，设置 dataZoom-slider 组件控制的 x轴 可是已数组[0,2]表示控制第一，三个；xAxisIndex: 2 ，表示控制第二个。yAxisIndex属性同理
+      bottom:'5%', //距离底部的距离
+      start:70,
+      end:100
+    },
+    //2.在内部可以横向拖动
+    {
+      type: 'inside',// 内置于坐标系中
+    /*                start: 0,
+      end: 30,*/
+      xAxisIndex: [0]
+    }
+    ],
+    toolbox: {
+      feature: {
+        dataView: {show: false, readOnly: false},
+        magicType: {show: true, type: ['line', 'bar']},
+        restore: {show: true},
+        saveAsImage: {show: false}
+      },
+      iconStyle:{
+        color:{
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0, color: 'red' // 0% 处的颜色
+          }, {
+            offset: 1, color: 'blue' // 100% 处的颜色
+          }],
+          global: false // 缺省为 false
+        },
+        borderColor:'#666',
+        borderWidth:1,
+        borderType:"solid"
+      },
+      right:'8%'
+    },
+    xAxis: [
+      {
+        type: 'category', //value 数值轴  category 类目轴  time 时间轴 log 对数轴
+        data: dimensions,//['城市社区','小学','主次干道','居住小区','社区综合'],
+        axisPointer: { //坐标轴指示器配置项
+          type: 'shadow'
+        },
+        splitLine: { //坐标轴在 grid 区域中的分隔线。
+          show: false
+        },
+        axisTick:{ //坐标轴刻度相关设置。
+          show:false,
+          alignWithLabel:true, //类目轴中在 boundaryGap 为 true 的时候有效，可以保证刻度线和标签对齐
+          interval:'auto', //坐标轴刻度的显示间隔，在类目轴中有效
+        },
+        axisLabel:{//坐标轴刻度标签的相关设置。
+          show:true,
+          interval:0,
+          inside:false,
+          rotate:316,
+          //showMaxLabel:true,
+          fontSize:10,
+          formatter:function (value) {
+            //console.log(value)
+            //console.log(value.length)
+            if (value.length>4){
+              return value.slice(0,4)+"..."
+            }
+            return value;
+          }
+        },
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',  //value 数值轴  category 类目轴  time 时间轴 log 对数轴
+        name: '任务数量', //坐标轴名称
+        nameGap:10,
+        nameTextStyle:{
+          fontStyle:'normal',
+          fontSize:10,
+        },
+        axisLabel: {  //坐标轴刻度标签的相关设置。
+          fontStyle:'normal',
+          fontSize:10,
+          formatter: '{value}'
+        },
+        splitLine: { //坐标轴在 grid 区域中的分隔线
+          show: false
+        },
+        splitNumber:4,
+        scale:true,
+        nameLocation:'end'  //坐标轴名称显示位置。
+      },
+      {
+        type: 'value',
+        name: '合格率',
+        nameGap:10,
+        nameTextStyle:{
+          fontStyle:'normal',
+          fontSize:10,
+        },
+        min: 0, //坐标轴刻度最小值。 可以设置成特殊值 'dataMin'，此时取数据在该轴上的最小值作为最小刻度。  不设置时会自动计算最小值保证坐标轴刻度的均匀分布
+        max: 100,//坐标轴刻度最大值。可以设置成特殊值 'dataMax'，此时取数据在该轴上的最大值作为最大刻度。  不设置时会自动计算最大值保证坐标轴刻度的均匀分布。
+        interval: 25, //是否是反向坐标轴。
+        axisLabel: { //坐标轴刻度标签的相关设置。
+          formatter: '{value} %',   //刻度标签的内容格式器，支持字符串模板和回调函数两种形式。
+          fontStyle:'normal',
+          fontSize:10,
+        },
+        splitLine: {  //坐标轴在 grid 区域中的分隔线。
+          show: false
+        },
+        nameLocation:'end'  //坐标轴名称显示位置。
+      },
+    ],
+    series: [
+      {
+        name: '整改达标',
+        type: 'bar',
+        itemStyle:{
+          normal:{color:"#55a0ed"},
+        },
+        label:{ //图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。
+          show:true,
+          textStyle:{
+            fontStyle:'normal',
+            //fontWeight:'bolder',
+            fontSize:'10'
+          }
+        },
+        data: oknums//[300, 270, 340, 344, 300, 320, 310]
+      },
+      {
+        name: '未整改',
+        type: 'bar',
+        stack: '总量',
+        itemStyle:{
+          normal:{color:"#bb3843"},
+        },
+        label:{
+          show:true,
+          textStyle:{
+            fontStyle:'normal',
+            color:'#fff',
+            //fontWeight:'bolder',
+            fontSize:'10'
+          }
+        },
+        data: unOkNums//[120, 102, 141, 174, 190, 250, 220]
+      },
+      {
+        name: '合格率',
+        type: 'line',
+        yAxisIndex: 1, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用
+        data: rates,//[25,35,45,55,65,75,85],
+        label:{  //图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。
+          show:true,
+          formatter:'{c}%',
+          textStyle:{
+            fontStyle:'normal',
+            color:'#fff',
+            //fontWeight:'bolder',
+            fontSize:'10'
+          }
+        }
+      }
+    ]
+  };
+  myChar.setOption(option);
+},
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

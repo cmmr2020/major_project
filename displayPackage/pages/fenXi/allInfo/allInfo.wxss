@@ -5,7 +5,7 @@ page{
   }
 
 .my-text-style{
-  font-size:25rpx;
+  font-size:30rpx;
 }
 
 .my-num-style{
@@ -55,7 +55,14 @@ page{
 
 #mychart-dom-multi-bar6 {
   position: absolute;
-  top: 310%;
+  top: 355%;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+}
+#mychart-dom-multi-bar7 {
+  position: absolute;
+  top: 300%;
   bottom: 0; 
   left: 0;
   right: 0;
@@ -65,4 +72,11 @@ page{
 }
 .hide{
   display: none;
+}
+.myZS_text_style{
+  line-height: 1rem;
+  font-size: 0.25rem;
+  font-weight: bold;
+  font-family: system-ui;
+  letter-spacing: 2rpx;
 }

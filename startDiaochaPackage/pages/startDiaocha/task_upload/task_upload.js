@@ -116,7 +116,7 @@ Page({
     logo_img_objec:null,//水印图片对象
     logo_img_info:null,//水印图片对象信息
     isOptionOn: 1,//是否隐藏答案选择框   0不显示  1显示
-    selectPhoto_type_arr:[] //选取照片类型 ['camera','album'] 相机/相册
+    selectPhoto_type_arr:[], //选取照片类型 ['camera','album'] 相机/相册
   },
   // 在页面初次渲染完成生命周期获取操作canvas的上下文对象
   onReady() {
@@ -833,12 +833,12 @@ checkScope(){
   stopRecord: function() {
     var that = this;
     var audioSrc = that.data.audioSrc;
+    console.log(audioSrc)
     var remainTime = that.data.remainTime;
     var audioAddressList = that.data.audioAddressList;
     that.setData({
       idModelShow: 1
     })
-
     recorderManager.stop();
     recorderManager.onStop((res) => {
       if (that.data.fuzhi === 1) {
@@ -851,11 +851,6 @@ checkScope(){
         var address = that.data.address;
         var latitude = that.data.latitude;
         var longitude = that.data.longitude;
-        audioAddressList.push({
-          address: address,
-          latitude: latitude,
-          longitude: longitude
-        })
         audioSrc.push({
           bl: false,
           src: res.tempFilePath,
@@ -870,7 +865,7 @@ checkScope(){
         })
 
         that.tip("录音完成")
-        // console.log("这是录音列表：", that.data.audioSrc);
+         console.log("这是录音列表：", that.data.audioSrc);
       }
       // console.log("录音文件：",that.data.audioSrc,"长度：",that.data.audioSrc.length)
     })

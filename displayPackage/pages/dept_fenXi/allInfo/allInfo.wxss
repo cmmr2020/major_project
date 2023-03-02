@@ -1,0 +1,98 @@
+page{
+  background-color:#100C2A;
+  color: #B9B8CE;
+  /* border:20px solid #ccc */
+  }
+
+.my-text-style{
+  font-size:30rpx;
+}
+
+.my-num-style{
+  font-size:35rpx;
+  font-weight: bolder;
+}
+
+#mychart-dom-multi-bar {
+  position: absolute;
+  top: 0;
+  bottom:0; 
+  left: 0;
+  right: 0;
+}
+
+#mychart-dom-multi-bar2 {
+  position: absolute;
+  top: 55%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#mychart-dom-multi-bar3 {
+  position: absolute;
+  top: 110%;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+}
+
+/* #mychart-dom-multi-bar4 {
+  position: absolute;
+  top: 165%;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+}
+
+#mychart-dom-multi-bar5 {
+  position: absolute;
+  top: 225%;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+}
+
+#mychart-dom-multi-bar6 {
+  position: absolute;
+  top: 310%;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+} */
+#mychart-dom-multi-bar4 {
+  position: absolute;
+  top: 110%;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+}
+
+#mychart-dom-multi-bar5 {
+  position: absolute;
+  top: 165%;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+}
+
+#mychart-dom-multi-bar6 {
+  position: absolute;
+  top: 225%;
+  bottom: 0; 
+  left: 0;
+  right: 0;
+}
+.show{
+  display: block;
+}
+.hide{
+  display: none;
+}
+.myZS_text_style{
+  line-height: 1rem;
+  font-size: 0.25rem;
+  font-weight: bold;
+  font-family: system-ui;
+  letter-spacing: 2rpx;
+}

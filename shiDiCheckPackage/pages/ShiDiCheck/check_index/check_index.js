@@ -36,6 +36,9 @@ Page({
     }, {
       id: 1,
       name: '未整改'
+    },{
+      id: 5,
+      name: '长期整改'
     }, {
       id: 0,
       name: '整改合格'
@@ -72,7 +75,7 @@ Page({
     var requestUrl = app.globalData.requestUrl; //请求路径
     var projectId = option.projectId; //项目id
     var fontSize = wx.getStorageSync('fontSize');
-var bgColor = wx.getStorageSync('bgColor');
+    var bgColor = wx.getStorageSync('bgColor');
     var terminalUserId = app.terminalUserId; //调查员id
     that.setData({
       projectId: projectId,
@@ -221,8 +224,8 @@ var bgColor = wx.getStorageSync('bgColor');
         var auditType = 1;
         that.getCheckFieldTaskList(tabId, auditType);
       }
-      //未整改、整改合格
-      if (tabId == 1 || tabId == 0) {
+      //未整改、整改合格、长期整改
+      if (tabId == 1 || tabId == 0 || tabId == 5) {
         that.setData({
           management_good: false,
           idNeed: false //隐藏批量操作
@@ -399,21 +402,33 @@ var bgColor = wx.getStorageSync('bgColor');
     var requestUrl = that.data.requestUrl; //服务器路径
     var terminalUserId = that.data.terminalUserId; //调查员id
     var pageNum = that.data.pageNum; //当前页
-    //调用全局 请求方法
-    app.wxRequest(
-      'GET',
-      requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
-      {
+    var programData;
+    if(result == 5){
+      programData = {
+        'terminalUserId': terminalUserId,
+        'projectId': projectId,
+        'pageSize': '10',
+        'pageNum': pageNum,
+        'longTask': '1'
+        }
+    }else{
+      programData = {
         'terminalUserId': terminalUserId,
         'projectId': projectId,
         'pageSize': '10',
         'pageNum': pageNum,
         'result': result
-      },
+        }
+    }
+    //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
+      programData,
       app.seesionId,
       (res) =>{
         if (res.data.status === "success") {
-          // console.log("打印出来看看？",res.data.retObj)
+           console.log("打印出来看看？",res.data.retObj)
           if (res.data.retObj.list.length != 0) {
             that.setData({
               pageCount: res.data.retObj.count, //总任务数

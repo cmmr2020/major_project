@@ -1,0 +1,196 @@
+<page>
+<form>
+<!--责任部门不显示-->
+  <!-- <view class="cu-form-group" bindtap="showModal" data-target="bottomModal1">
+		<view class="title">部门</view>
+    <view class="cu-bar bg-white ">
+    <view class="picker">
+      {{deptTip_msg}}
+    </view>
+    <view class="action">
+    <text class="cuIcon-right lg text-gray"></text>
+    </view>
+  </view>
+	</view> -->
+  <!-- <view class="cu-form-group">
+		<view class="title">指标</view>
+    <view class="cu-bar bg-white margin-top">
+  <view class="action">
+    <button class="cu-btn bg-green shadow" bindtap="showModal" data-target="bottomModal">Bottom</button>
+  </view>
+  </view>
+	</view> -->
+  <view class="cu-form-group" bindtap="showModal" data-target="bottomModal3">
+		<view class="title">点位类型</view>
+    <view class="cu-bar bg-white">
+      <view class="picker">
+      {{pointTip_msg}}
+    </view>
+  <view class="action">
+    <text class="cuIcon-right lg text-gray"></text>
+  </view>
+</view>
+	</view>
+  <view class="cu-form-group" bindtap="showModal" data-target="bottomModal4">
+		<view class="title">指标类型</view>
+    <view class="cu-bar bg-white">
+      <view class="picker">
+        {{quotaType_msg}}
+      </view>
+  <view class="action">
+    <text class="cuIcon-right lg text-gray"></text>
+  </view>
+</view>
+	</view>
+ </form> 
+<!--部门多选框 模态框-->
+<view class="cu-modal {{modalName=='bottomModal1'?'show':''}}" style="padding: 5%;">
+  <view class="cu-dialog" style="margin-bottom: 8%;">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">选择部门</view>
+      <!-- 全选功能 因小程序限制无法实现 选中之后无法触发 change事件 存在无法取值的bug-->
+      <!-- <view class=" {{deptAllselect==true?'show':'hide'}}" style="font-size: 40rpx;margin-right: 5%;" bindtap="dept_clean_all">
+        <text class="cuIcon-squarecheckfill lg text-gray " bindtap="dept_select_all"></text>
+      </view> 
+      <view class=" {{deptAllselect==true?'hide':'show'}}" style="font-size: 40rpx;margin-right: 5%;" bindtap="dept_select_all">
+        <text class="cuIcon-squarecheck lg text-gray "></text>
+      </view>  -->
+    </view>
+      <view class="cu-dialog" catchtap>
+        <checkbox-group bindchange="show_temp_dept">
+            <view class="cu-form-group" wx:for="{{dept_list}}" wx:key="item">
+              <view class="title">{{item.name}}</view>
+              <checkbox value="{{item.id}}" checked="{{deptAllselect}}"></checkbox>
+            </view>
+      </checkbox-group>
+      </view>
+  </view>
+</view>
+<view class="{{modalName=='bottomModal1'?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93.5%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
+        aria-disabled="false" bindtap="select_dept">确定</button>
+</view>
+
+<!--指标多选框 模态框-->
+
+<view class="cu-modal {{modalName=='bottomModal2'?'show':''}}" style="padding: 5%;">
+  <view class="cu-dialog" style="margin-bottom: 8%;">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">选择指标</view>
+      <!-- 全选功能 因小程序限制无法实现 选中之后无法触发 change事件 存在无法取值的bug-->
+      <!-- <view class=" {{deptAllselect==true?'show':'hide'}}" style="font-size: 40rpx;margin-right: 5%;" bindtap="dept_clean_all">
+        <text class="cuIcon-squarecheckfill lg text-gray " bindtap="dept_select_all"></text>
+      </view> 
+      <view class=" {{deptAllselect==true?'hide':'show'}}" style="font-size: 40rpx;margin-right: 5%;" bindtap="dept_select_all">
+        <text class="cuIcon-squarecheck lg text-gray "></text>
+      </view>  -->
+    </view>
+      <view class="cu-dialog" catchtap>
+        <checkbox-group bindchange="show_temp_quota">
+            <view class="cu-form-group" wx:for="{{dept_list}}" wx:key="item">
+              <view class="title">{{item.name}}</view>
+              <checkbox value="{{item.id}}"></checkbox>
+            </view>
+      </checkbox-group>
+      </view>
+  </view>
+</view>
+<view class="{{modalName=='bottomModal2'?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93.5%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
+        aria-disabled="false" bindtap="select_quota">确定</button>
+</view>
+
+<!--点位多选框 模态框-->
+
+<view class="cu-modal {{modalName=='bottomModal3'?'show':''}}" style="padding: 5%;">
+  <view class="cu-dialog" style="margin-bottom: 8%;">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">选择点位类型</view>
+      <!-- 全选功能 因小程序限制无法实现 选中之后无法触发 change事件 存在无法取值的bug-->
+      <!-- <view class=" {{deptAllselect==true?'show':'hide'}}" style="font-size: 40rpx;margin-right: 5%;" bindtap="dept_clean_all">
+        <text class="cuIcon-squarecheckfill lg text-gray " bindtap="dept_select_all"></text>
+      </view> 
+      <view class=" {{deptAllselect==true?'hide':'show'}}" style="font-size: 40rpx;margin-right: 5%;" bindtap="dept_select_all">
+        <text class="cuIcon-squarecheck lg text-gray "></text>
+      </view>  -->
+    </view>
+      <view class="cu-dialog" catchtap>
+        <checkbox-group bindchange="show_temp_point">
+            <view class="cu-form-group" wx:for="{{point_list}}" wx:key="item">
+              <view class="title">{{item.name}}</view>
+              <checkbox value="{{item.id}}"></checkbox>
+            </view>
+      </checkbox-group>
+      </view>
+  </view>
+</view>
+<view class="{{modalName=='bottomModal3'?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 93.5%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
+        aria-disabled="false" bindtap="select_point">确定</button>
+</view>
+
+<!--指标类型多选框 模态框-->
+<view class="cu-modal {{modalName=='bottomModal4'?'show':''}}" style="padding: 5%;">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">选择指标类型</view>
+      <!-- 全选功能 因小程序限制无法实现 选中之后无法触发 change事件 存在无法取值的bug-->
+      <!-- <view class=" {{deptAllselect==true?'show':'hide'}}" style="font-size: 40rpx;margin-right: 5%;" bindtap="dept_clean_all">
+        <text class="cuIcon-squarecheckfill lg text-gray " bindtap="dept_select_all"></text>
+      </view> 
+      <view class=" {{deptAllselect==true?'hide':'show'}}" style="font-size: 40rpx;margin-right: 5%;" bindtap="dept_select_all">
+        <text class="cuIcon-squarecheck lg text-gray "></text>
+      </view>  -->
+    </view>
+      <view class="cu-dialog" catchtap>
+        <checkbox-group bindchange="show_temp_quotaType">
+            <view class="cu-form-group" wx:for="{{quota_type_list}}" wx:key="item">
+              <view class="title">{{item.name}}</view>
+              <checkbox value="{{item.id}}"></checkbox>
+            </view>
+      </checkbox-group>
+      </view>
+  </view>
+</view>
+<view class="{{modalName=='bottomModal4'?'show':'hide'}}" style="z-index: 1111;position: fixed;top: 67%; text-align: center;width: 100%;">
+      <button class="cu-btn lg button-hover" style="background-color:#0075c1;color: white; width: 90%;" role="button"
+        aria-disabled="false" bindtap="select_quotaType">确定</button>
+</view>
+
+<!--模态框结束-->
+<view class="box" style="width: 100%;margin: 0;">
+  <view class="cu-bar bg-white" bindtap="jump" data-type="dept">
+    <view class="action title-style-3">
+      <text class="cuIcon-titles text-green"></text>
+      <text class="text-xl text-bold">分点位统计报表</text>
+      <text class="text-Abc text-gray self-end margin-left-sm">Location</text>
+    </view>
+    <text class="cuIcon-rank lg text-gray" style="margin-right: 30rpx; font-size: 40rpx;"></text>
+  </view>
+  <view class="cu-bar bg-white" bindtap="jump" data-type="quota">
+    <view class="action title-style-3">
+      <text class="cuIcon-titles text-green"></text>
+      <text class="text-xl text-bold">分指标统计报表</text>
+      <text class="text-Abc text-gray self-end margin-left-sm">quota</text>
+    </view>
+    <text class="cuIcon-rank lg text-gray" style="margin-right: 30rpx; font-size: 40rpx;"></text>
+  </view>
+  <view class="cu-bar bg-white" bindtap="jump" data-type="location">
+    <view class="action title-style-3">
+      <text class="cuIcon-titles text-green"></text>
+      <text class="text-xl text-bold">分点位类型统计报表</text>
+      <text class="text-Abc text-gray self-end margin-left-sm">PointType</text>
+    </view>
+    <text class="cuIcon-rank lg text-gray" style="margin-right: 30rpx; font-size: 40rpx;"></text>
+  </view>
+  <view class="cu-bar bg-white" bindtap="jump" data-type="abarbeitung">
+    <view class="action title-style-3">
+      <text class="cuIcon-titles text-green"></text>
+      <text class="text-xl text-bold">分点位整改统计报表</text>
+      <text class="text-Abc text-gray self-end margin-left-sm">Abarbeitung
+      </text>
+    </view>
+    <text class="cuIcon-rank lg text-gray" style="margin-right: 30rpx; font-size: 40rpx;"></text>
+  </view>
+</view>
+</page>

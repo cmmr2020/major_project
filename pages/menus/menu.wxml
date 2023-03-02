@@ -53,7 +53,7 @@
 <!-- 账号为调查员时-->
 <!-- <view wx:elif="{{surveyList.length==2}}" class="nav-list box_user" style="font-size:{{menufontSize}}rpx"> -->
 <view class="nav-list box_user" style="font-size:{{menufontSize}}rpx">
-  <view wx:for="{{surveyList}}" wx:key="index" bindtap="junmp" data-type="{{surveyList[index].name}}" class="nav-li">
+  <view wx:for="{{surveyList}}" wx:key="index" bindtap="junmp" data-type="{{surveyList[index].name}}" data-code="{{surveyList[index].code}}" class="nav-li">
     <image id="login" src="{{item.url}}"></image>
     <view id="text">
       <text>{{item.name}}</text>

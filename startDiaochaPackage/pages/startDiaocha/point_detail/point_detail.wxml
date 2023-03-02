@@ -8,17 +8,17 @@
 
 </view>
 <view class="cu-form-group ">
-  <view class="title text-bold" style="font-size:{{fontSize30}}rpx">联系人</view>
+  <view class="title text-bold" style="font-size:{{fontSize30}}rpx">昵称</view>
   <text class="item-left" style="font-size:{{fontSize28}}rpx">{{list.linkman}}</text>
   <text class="cuIcon-peoplelist text-blue"></text>
 </view>
 <view class="cu-form-group ">
-  <view class="title text-bold" style="font-size:{{fontSize30}}rpx" >电话</view>
+  <view class="title text-bold" style="font-size:{{fontSize30}}rpx" >Tel</view>
   <text class="item-left" style="font-size:{{fontSize28}}rpx">{{list.tel}}</text>
   <text class="cuIcon-phone text-green" bind:tap="goToCall" data-phone="{{list.tel}}"></text>
 </view>
 <view class="cu-form-group ">
-  <view class="title text-bold" style="font-size:{{fontSize30}}rpx">地址</view>
+  <view class="title text-bold" style="font-size:{{fontSize30}}rpx">位置</view>
   <text class="item-left" style="font-size:{{fontSize28}}rpx">{{list.address}}</text>
   <text class="cuIcon-location text-red" bind:tap="goToMap" data-address="{{list.address}}" data-latitude="{{list.latitude}}" data-longitude="{{list.longitude}}"></text>
 </view>
