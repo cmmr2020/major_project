@@ -11,6 +11,7 @@ App({
     locationUpdateFlag:false,
     isPhoto:1, //当前项目达标指标是否必须拍照 0否  1是   默认 1
     isStars:0, //当前政府是否开启地图星级模式 0否  1是   默认 0
+    isPhotoTip:0,//当前项目是否为图片提示的项目 0 否 1是
     departmentId:'',//当前账号所属部门id
     departmentName:'',//当前账号所属部门名称
   },
@@ -136,6 +137,29 @@ App({
   }
   })
  },
+ alert(msg,time){
+   //默认1.5s
+  var show_time = 1500
+  if(!isNaN(time)) {
+    show_time = time*1000
+  }
+  wx.showToast({
+    title: msg,
+    icon: 'none',
+    duration: show_time,
+    mask: true
+  })
+ },
+  msg(msg){
+    wx.showModal({
+      title: '提示信息',
+      content: msg,
+      showCancel:false,
+      success (res) {
+        
+      }
+  })
+},
    /**
  * 封装wx.uploadFile请求
  * method： 请求方式

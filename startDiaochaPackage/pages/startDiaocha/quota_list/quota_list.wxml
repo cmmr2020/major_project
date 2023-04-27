@@ -8,7 +8,7 @@
         <text class="cuIcon-favor text-{{bgColor}} "></text>{{pointName}}
       </view>
     </view>
-    <view class="cu-bar user2 bg-white1  solid-bottom ">
+    <view class="cu-bar user2 bg-white1  solid-bottom " wx:if="{{is_sim_project}}">
       <view class="h2" style="font-size:{{fontSize34}}rpx">
         <text class="cuIcon-titles text-{{bgColor}} "></text>{{quotaName}}
       </view>
@@ -18,7 +18,7 @@
     <text wx:else class="cu-bar user2 bg-white1 h3" style="font-size:{{fontSize28}}rpx">{{tips}}</text>
 
   </block>
-  <view class="margin-tb-sm-user text-center" style="z-index: 2;position: relative">
+  <view wx:if="{{is_sim_project}}" class="margin-tb-sm-user text-center" style="z-index: 2;position: relative">
     <button class="cu-btn round lg1 bg-{{bgColor}} cuIcon-back_android " bindtap="showModal" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;left: 3%;overflow: auto;">切换指标</button>
   </view>
 
@@ -79,7 +79,7 @@
         <text class="cuIcon-favor text-{{bgColor}} "></text>{{pointName}}
       </view>
     </view>
-    <view class="cu-bar user2 bg-white1  solid-bottom ">
+    <view class="cu-bar user2 bg-white1  solid-bottom " wx:if="{{is_sim_project}}">
       <view class="h2" style="font-size:{{fontSize34}}rpx">
         <text class="cuIcon-titles text-{{bgColor}} "></text>{{quotaName}}
       </view>
@@ -89,7 +89,7 @@
     <text wx:else class="cu-bar user2 bg-white1 h3" style="font-size:{{fontSize28}}rpx">{{tips}}</text>
 
   </block>
-  <view class="margin-tb-sm-user text-center" style="z-index: 2;position: relative">
+  <view wx:if="{{is_sim_project}}" class="margin-tb-sm-user text-center" style="z-index: 2;position: relative">
     <button class="cu-btn round lg1 bg-{{bgColor}} cuIcon-back_android " bindtap="showModal" data-target="viewModal" style="font-size:{{fontSize28}}rpx;position: fixed;top: 17%;left: 3%;overflow: auto;">切换指标</button>
   </view>
 
@@ -109,9 +109,11 @@
           <view wx:if="{{item.url!=null}}" selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
           <text bindtap="showAlert" data-url="{{item.url}}" data-target="Modal" class="text-red cuIcon-questionfill" style="font-size:{{fontSize29}}rpx"></text>
           <text bindtap="showHistroy" data-isOk="{{item.isOkHistoryResult}}" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray " style="font-size:{{fontSize29}}rpx;display:{{item.isOkHistoryResult==1?'':'none'}}; color:#0000FF"></text>
+          <text wx:if="{{!is_sim_project}}" bindtap="showHistroyByZG" data-locationQueId="{{item.locationQueId}}"  class="cuIcon-attention lg text-gray" style="font-size:{{fontSize29}}rpx; color:#0000FF"></text>
           </view>
           <view wx:else selectable="true" style="font-size:{{fontSize29}}rpx;margin-bottom: 40rpx" class="td-test">{{item.content}}
           <text data-isOk="{{item.isOkHistoryResult}}" bindtap="showHistroy" data-code="{{item.code}}" class="cuIcon-activityfill lg text-gray" style="font-size:{{fontSize29}}rpx; display:{{item.isOkHistoryResult==1?'':'none'}}; color:#0000FF"></text>
+          <text wx:if="{{!is_sim_project}}" bindtap="showHistroyByZG" data-locationQueId="{{item.locationQueId}}"  class="cuIcon-attention lg text-gray" style="font-size:{{fontSize29}}rpx; color:#0000FF"></text>
           </view>
           <view wx:if="{{item.isOk==0}}" class="bg-white" style="margin-bottom: 40rpx">
           <view class="bg-red td-test" style="width:220px font-size:{{fontSize29}}rpx;"><text style="margin-left: 0.5rem;">原因:{{item.unqualified==nul?'无':item.unqualified}}</text></view>
@@ -211,52 +213,97 @@
   </block>
   
 </scroll-view>
-
+<!--固定设施历史资源-->
 <view class="DrawerClose {{modalNameR=='viewModal'?'show':''}}" bindtap="hideModal2">
 			<text class="cuIcon-pullright"></text>
 </view>
-		<scroll-view scroll-y class="DrawerWindow {{modalNameR=='viewModal'?'show':''}}">
-			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg" style="margin-left:0rpx">
-        <!-- <view>
-        <text class="cuIcon-timefill lg text-gray title">历史答案资源</text>
-        </view> -->
-        <view class="cu-bar bg-white solid-bottom">
-        <view class='action'>
-          <text class='cuIcon-titles text-orange '></text> 历史答案资源
-        </view>
-        </view>
-				<view class="cu-item arrow" wx:for="{{historyResList}}" wx:key="index" wx:for-item="item">
-					<view class="">
-						<view class="cu-card article no-card" style="font-size:{{fontSize30}}rpx">
-            <view class="cu-item shadow">
-              <view style="text-align: center;">
-                <text class="title" style="line-height: 2em">项目名称：{{item.projectName}}</text>
-              </view>
-              <!-- 分割线 -->
-             <view class="divLine"></view>
-            <view wx:for="{{item.fieldResourceList}}" wx:key="index2" wx:for-item="obj">
-              <view><text class="td-test" >指标名称：{{obj.quotaContent}}</text></view>
-              <!-- 分割线 -->
-             <view class="divLine"></view>
-              <view><text class="td-test" >测评结果：{{obj.resultContent}}</text></view>
-              <!-- 分割线 -->
-             <view class="divLine"></view>       
-              <view>
-                <image bindtap='lookImg' data-showUrl="{{obj.url}}" style="width: 280px" src="{{obj.url}}" mode="aspectFill"></image>
-              </view>
-              <view><text class="td-test">原因描述：{{obj.address==null?'暂无':obj.description}}</text></view>
-              <!-- 分割线 -->
-             <view class="divLine"></view>
-            <view><text class="td-test">拍摄地址：{{obj.address==null?'暂无':obj.address}}</text></view>
-            <!-- 分割线 -->
-            <view class="divLine"></view>
-            <view><text class="td-test">拍摄时间：{{obj.createBy==null?'暂无':obj.createBy}}</text></view>
-            <!-- 分割线 -->
-            <view class="divLine"></view>
-           </view>  
-            </view>
+<scroll-view scroll-y class="DrawerWindow {{modalNameR=='viewModal'?'show':''}}">
+  <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg" style="margin-left:0rpx">
+    <!-- <view>
+    <text class="cuIcon-timefill lg text-gray title">历史答案资源</text>
+    </view> -->
+    <view class="cu-bar bg-white solid-bottom">
+    <view class='action'>
+      <text class='cuIcon-titles text-orange '></text> 历史答案资源
+    </view>
+    </view>
+    <view class="cu-item arrow" wx:for="{{historyResList}}" wx:key="index" wx:for-item="item">
+      <view class="">
+        <view class="cu-card article no-card" style="font-size:{{fontSize30}}rpx">
+        <view class="cu-item shadow">
+          <view style="text-align: center;">
+            <text class="title" style="line-height: 2em">项目名称：{{item.projectName}}</text>
           </view>
-					</view>
-				</view>
-			</view>
-		</scroll-view>
+          <!-- 分割线 -->
+          <view class="divLine"></view>
+        <view wx:for="{{item.fieldResourceList}}" wx:key="index2" wx:for-item="obj">
+          <view><text class="td-test" >指标名称：{{obj.quotaContent}}</text></view>
+          <!-- 分割线 -->
+          <view class="divLine"></view>
+          <view><text class="td-test" >测评结果：{{obj.resultContent}}</text></view>
+          <!-- 分割线 -->
+          <view class="divLine"></view>       
+          <view>
+            <image bindtap='lookImg' data-showUrl="{{obj.url}}" style="width: 280px" src="{{obj.url}}" mode="aspectFill"></image>
+          </view>
+          <view><text class="td-test">原因描述：{{obj.address==null?'暂无':obj.description}}</text></view>
+          <!-- 分割线 -->
+          <view class="divLine"></view>
+        <view><text class="td-test">拍摄地址：{{obj.address==null?'暂无':obj.address}}</text></view>
+        <!-- 分割线 -->
+        <view class="divLine"></view>
+        <view><text class="td-test">拍摄时间：{{obj.createBy==null?'暂无':obj.createBy}}</text></view>
+        <!-- 分割线 -->
+        <view class="divLine"></view>
+        </view>  
+        </view>
+      </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>
+<!--复查业务 整改资源查看-->
+<view class="DrawerClose {{modalNameR=='viewModal2'?'show':''}}" bindtap="hideModal2">
+			<text class="cuIcon-pullright"></text>
+</view>
+<scroll-view scroll-y class="DrawerWindow {{modalNameR=='viewModal2'?'show':''}}">
+  <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg" style="margin-left:0rpx">
+    <!-- <view>
+    <text class="cuIcon-timefill lg text-gray title">历史答案资源</text>
+    </view> -->
+    <view class="cu-bar bg-white solid-bottom">
+    <view class='action'>
+      <text class='cuIcon-titles text-orange '></text> 当前指标重点问题
+    </view>
+    </view>
+    <view class="cu-item arrow">
+      <view class="">
+        <view class="cu-card article no-card" style="font-size:{{fontSize30}}rpx">
+        <view class="cu-item shadow">
+          <view><text class="td-test">具体地址：{{historydata.locationName}}</text></view>
+          <!-- 分割线 -->
+          <view class="divLine"></view>
+          <view><text class="td-test">问题描述：{{historydata.questionDesc == ''?'暂无':historydata.questionDesc}}</text></view>
+          <!-- 分割线 -->
+          <view class="divLine"></view>
+          <view wx:for="{{historydata.fieldResourceList}}" wx:key="index2" wx:for-item="obj">
+          <!-- <view><text class="td-test" >指标名称：{{obj.quotaContent}}</text></view>
+          <view class="divLine"></view>
+          <view><text class="td-test" >测评结果：{{obj.resultContent}}</text></view>-->
+          <view class="divLine"></view>        
+          <view>
+            <image bindtap='lookImg' data-showUrl="{{obj.url}}" style="width: 280px" src="{{obj.url}}" mode="aspectFill"></image>
+          </view>
+          <!-- <view><text class="td-test">原因描述：{{obj.address==null?'暂无':obj.description}}</text></view>
+          <view class="divLine"></view>
+        <view><text class="td-test">拍摄地址：{{obj.address==null?'暂无':obj.address}}</text></view>
+        <view class="divLine"></view>
+        <view><text class="td-test">拍摄时间：{{obj.createBy==null?'暂无':obj.createBy}}</text></view> -->
+        <view class="divLine"></view>
+        </view>  
+        </view>
+      </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>

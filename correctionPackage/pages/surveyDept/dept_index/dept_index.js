@@ -24,7 +24,7 @@ Page({
     maxPageNum: 1,
     //空内容提示标识
     isNull: '',
-
+    date:'',
     problemType_user: [{
       id: 9,
       name: '待整改'
@@ -269,5 +269,20 @@ Page({
     setTimeout(function() {
       wx.hideLoading()
     }, 1000)
+  },
+  showModal(e) {
+    this.setData({
+      modalName: e.currentTarget.dataset.target
+    })
+  },
+  hideModal(e) {
+    this.setData({
+      modalName: null
+    })
+  },
+  DateChange(e) {
+    this.setData({
+      date: e.detail.value
+    })
   },
 })

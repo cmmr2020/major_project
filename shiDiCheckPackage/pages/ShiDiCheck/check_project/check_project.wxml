@@ -16,11 +16,11 @@
     </view>
     <view class='cu-tabbar-height'></view> -->
     <view class="padding bg-white">
-      <navigator open-type="navigate" hover-class='none' url="../check_index/check_index?projectId={{item.id}}" wx:for="{{elements}}" wx:key="index">
+      <view bindtap="navigate" hover-class='none' data-projectid ="{{item.id}}" wx:for="{{elements}}" wx:key="index">
         <view class="padding margin">
           <view class="nav-li bg-{{item.color}}" style="border:1px solid {{bgColorUi}};" class="shadow-blur bg-{{item.color}} ABox" style="font-size:{{fontSize}}rpx">{{item.name}}</view>
         </view>
-      </navigator>
+      </view>
       <view class='cu-tabbar-height'></view>
     </view>
   </scroll-view>

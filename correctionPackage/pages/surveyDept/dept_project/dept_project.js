@@ -1,4 +1,5 @@
 const app = getApp();
+var requestUrl = ""
 Page({
 
   data: {
@@ -6,7 +7,9 @@ Page({
     colorList: ['green', 'blue', 'cyan', 'olive', 'orange', 'red', 'brown', 'pink', 'mauve', 'purple','green', 'blue', 'cyan', 'olive', 'orange', 'red', 'brown', 'pink', 'mauve', 'purple','green', 'blue', 'cyan', 'olive', 'orange', 'red', 'brown', 'pink', 'mauve', 'purple','green', 'blue', 'cyan', 'olive', 'orange', 'red', 'brown', 'pink', 'mauve', 'purple'],
     elements: [],
     fontSize:'',
-    bgColorUi:''
+    bgColorUi:'',
+    modalName:'',
+    deptGroupBts:[]
   },
 
 
@@ -15,7 +18,7 @@ Page({
    */
   onLoad: function(option) {
     var that = this;
-    var requestUrl = app.globalData.requestUrl; //服务器路径
+    requestUrl = app.globalData.requestUrl; //服务器路径
     var fontSize = wx.getStorageSync('fontSize');
     var bgColorUi = wx.getStorageSync('bgColorUi');
     that.setData({
@@ -31,7 +34,6 @@ Page({
 
   getProjectList: function(terminalUserId) {
     var that = this;
-    var requestUrl = that.data.requestUrl; //服务器路径
     var colorList = that.data.colorList;
     //调用全局 请求方法
     app.wxRequest(
@@ -140,9 +142,118 @@ Page({
     // })
 
   },
-  changeData: function() {
+  navigate:function(e){
+    var that = this
+    var projectId = e.currentTarget.dataset.projectid
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/fieldTask/getGovProByWX',
+      {
+        projectId: projectId
+      },
+      app.seesionId,
+      (res) =>{
+        console.log(res)
+        var govPro = res.data.retObj.govPro
+        //是否为牵头配合模式
+        var isDepartType = govPro.isDepartType
+        if(govPro.isTaskGroup){
+          var roleList = res.data.retObj.roleList
+          var isHeadman = -1; // 是否为组长 1 是  0否
+          for(let i=0; i<roleList.length; i++){
+            let item = roleList[i]
+            if (item.name == '实地整改组长'){
+                isHeadman = 1
+           }
+            if (item.name == '实地整改组员'){
+                isHeadman = 0
+            }
+          }
+          //若未关联组长 组员角色 按原始流程走
+          if (isHeadman < 0){
+            if (isDepartType == 1) {//牵头配合模式
+              wx.navigateTo({
+                url: '../dept_type_task_index/dept_type_task_index?projectId='+projectId,
+              })
+            } else {//普通模式
+              wx.navigateTo({
+                url: '../dept_index/dept_index?projectId='+projectId,
+              })
+            }
+          }else{
+            if(isHeadman == 0){//组员直接跳转
+              wx.navigateTo({
+                url: '../dept_group_task_index/dept_group_task_index?projectId='+projectId+"&isHeadman="+isHeadman,
+              })
+              return
+            }
+            var elementList = res.data.retObj.elementList
+            console.log('角色元素:',elementList);
+            that.setData({
+              modalName:'DialogModal2',
+              deptGroupBts:elementList,
+              isDepartType:isDepartType,
+              projectId:projectId,
+              isHeadman:isHeadman
+            })
+          }
+        }else{
+          if (isDepartType == 1) {//牵头配合模式
+            wx.navigateTo({
+              url: '../dept_type_task_index/dept_type_task_index?projectId='+projectId,
+            })
+          } else {//普通模式
+            wx.navigateTo({
+              url: '../dept_index/dept_index?projectId='+projectId,
+            })
+          }
+        }
+      },
+      (err) =>{
 
-    this.onLoad(); //最好是只写需要刷新的区域的代码，onload也可，效率低，有点low
-
+      }
+    )
   },
+  toZGPage:function(e){
+    var that = this
+    var bt_name = e.currentTarget.dataset.name;
+    var isDepartType = that.data.isDepartType;
+    var projectId = that.data.projectId;
+    var isHeadman = that.data.isHeadman
+    if(bt_name == '单位模式'){
+      if (isDepartType == 1) {//牵头配合模式
+        wx.navigateTo({
+          url: '../dept_type_task_index/dept_type_task_index?projectId='+projectId,
+        })
+      } else {//普通模式
+        wx.navigateTo({
+          url: '../dept_index/dept_index?projectId='+projectId,
+        })
+      }
+    }else{
+      wx.navigateTo({
+        url: '../dept_group_task_index/dept_group_task_index?projectId='+projectId+"&isHeadman="+isHeadman,
+      })
+    }
+    that.setData({
+      modalName:'',
+    })
+  },
+  changeData: function() {
+    this.onLoad(); //最好是只写需要刷新的区域的代码，onload也可，效率低，有点low
+  },
+  alert:function(msg){
+    wx.showToast({
+      title: msg,
+      icon: 'none',
+      duration: 1000,
+      mask: true
+    })
+  },
+  hideModal:function(){
+    this.setData({
+      modalName:'',
+      deptGroupBts:[]
+    })
+  }
 })

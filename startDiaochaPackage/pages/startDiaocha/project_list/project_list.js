@@ -76,7 +76,8 @@ Page({
               isFieldArchive:projectList[i].isFieldArchive,
               isOptionOn:projectList[i].isOptionOn, //是否隐藏答案选择框   0不显示  1显示
               isSelectPhoto:projectList[i].isSelectPhoto, //是否允许选取相册图片 0 不允许 1 允许
-              isOperationTips:projectList[i].isOperationTips//是否为实地2.0
+              isOperationTips:projectList[i].isOperationTips,//是否为实地2.0
+              isPhotoTip:projectList[i].isPhotoTip == null?0:projectList[i].isPhotoTip//当前项目是否为图片提示的项目 0 否 1是
             })
           }
 
@@ -179,6 +180,7 @@ Page({
     var isSelectPhoto = e.currentTarget.dataset.isselectphoto;
     var isOperationTips = e.currentTarget.dataset.isoperationtips; //是否为实地2.0
     app.data.isPhoto = e.currentTarget.dataset.isphoto;
+    app.data.isPhotoTip = e.currentTarget.dataset.isphototip;
      //console.log(app.data.isPhoto)
     that.validTime(projectId,terminalUserId,isGrade,isFieldArchive,isOptionOn,isSelectPhoto,isOperationTips);
   },

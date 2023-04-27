@@ -7,16 +7,6 @@
     {{item.name}}
   </view>
 </scroll-view>
-
-<!--   <view class="cu-form-group margin-top">
-    <view class="title">普通选择</view>
-    <picker bindchange="PickerChange" value="{{index}}" range="{{picker}}">
-      <view class="picker">
-        {{index?picker[index]:'请选择对应操作'}}
-      </view>
-    </picker>
-  </view> -->
-
 <view class='header1'>
   <view class='header'>
     <view class='header_con flex_between'>
@@ -24,7 +14,6 @@
         共计
         <text class="text-red">{{pageCount==0?'0':pageCount}}</text><text style="font-size:{{fontSize}}rpx">条任务</text>
       </view>
-
       <view class='right flex_end' wx:if='{{idNeed}}'>
         <view wx:if="{{!management_good}}" class='flex_center' bindtap='management' style="font-size:{{fontSize}}rpx">
           批量管理
@@ -38,7 +27,6 @@
 </view>
 
 <view class='bottom flex_between' wx:if="{{management_good}}">
-
   <view class='left flex_start'>
     <block wx:if="{{select_all}}">
       <view bindtap='select_none' class='flex_start'>

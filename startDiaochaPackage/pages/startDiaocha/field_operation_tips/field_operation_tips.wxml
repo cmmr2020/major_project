@@ -33,7 +33,7 @@
     </view>
   </view>
   <view wx:if="{{location_info.checkStatus == 4 && location_info.isRepeal == 1}}" class="cu-form-group  bg-white">
-    <textarea class="weui-input" disabled="true" value="{{location_info.repealRemark}}" style="font-size:{{fontSize30}}rpx;pointer-events:none;" />
+    <textarea class="weui-input"  value="{{location_info.repealRemark}}" style="font-size:{{fontSize30}}rpx;pointer-events:none;"></textarea>
   </view>
   <!-- 地址定位 -->
   <view class="cu-bar  solid-bottom">
@@ -90,8 +90,11 @@
               <view class="action" style="font-size:{{fontSize}}rpx">
                 上传图片或视频
               </view>
-              <view class="action" style="font-size:{{fontSize}}rpx">
-                {{value[1].length}}/25
+              <view class="action">         
+                <view  style="font-size:{{fontSize}}rpx" wx:if="{{location_info.checkStatus == 4 && location_info.isRepeal != 1}}" class="cu-tag bg-green">{{value[1].length}}/不限</view>
+                <view  style="font-size:{{fontSize}}rpx" wx:else="" class="cu-tag bg-red">
+                  {{value[1].length}}/25
+                </view>
               </view>
             </view>
             <view wx:key="showMedia" wx:for="{{value[1]}}" wx:for-index="index1" wx:for-item="value1">
@@ -105,7 +108,10 @@
                   <text class="cuIcon-close"></text>
                 </view>
                 <view class="desc" style="flex-direction:column-reverse">
-                  <view class="cu-form-group {{value1.resourceStatus == 0? 'ban':''}}" style="border: 1px solid grey;">
+                  <view wx:if="{{value1.resourceStatus == 0}}" style="border: 1px solid grey;min-height: 220rpx;">
+                    <text style="font-size:{{fontSize}}rpx;color: red;">不合格原因：{{value1.resourceRemark}}</text>
+                  </view>
+                  <view wx:else="" class="cu-form-group" style="border: 1px solid grey;">
                     <textarea  confirm-type="done" bindtap="showDescModel" disabled = "true" data-info="{{value1.desc}}"  data-index="{{index1}}" data-tipid="{{value[0]}}" style="font-size:{{fontSize}}rpx;color: {{value1.resourceStatus == 0?'red':'black'}};" value="{{value1.resourceStatus == 0?'不合格原因：'+value1.resourceRemark:value1.desc}}" data-id="{{value1.id}}" placeholder="{{value1.resourceStatus == 0? '不合格资源，仅供参考，不可删除、修改。':'请输入对资源的描述'}}"></textarea>
                   </view>
                 </view>
@@ -136,10 +142,10 @@
       <!--添加按钮-->
       <view class="cu-form-group">
         <view class="grid col-4 grid-square flex-sub">
-          <view class="solids" bindtap="ChooseImage" wx:if="{{operationTips_resource_num_list[operationTipsIndex] < 25}}" data-target="Modal" data-type="0" data-operationTipsindex="{{operationTipsIndex}}" data-locationid="{{location_info.id}}" data-tipId="{{item.fieldOperationTips.id}}" data-answerid="{{item.fieldOperationTipsAnswerVo.fieldOperationTipsAnswer.id}}">
+          <view class="solids" bindtap="ChooseImage" wx:if="{{operationTips_resource_num_list[operationTipsIndex] < 25 || (location_info.checkStatus == 4 && location_info.isRepeal != 1)}}" data-target="Modal" data-type="0" data-operationTipsindex="{{operationTipsIndex}}" data-locationid="{{location_info.id}}" data-tipId="{{item.fieldOperationTips.id}}" data-answerid="{{item.fieldOperationTipsAnswerVo.fieldOperationTipsAnswer.id}}">
             <text class="cuIcon-cameraadd"></text>
           </view>
-          <view class="solids" bindtap="chooseVideo" wx:if="{{operationTips_resource_num_list[operationTipsIndex] < 25}}" data-target="Modal" data-type="2" data-operationTipsindex="{{operationTipsIndex}}" data-locationid="{{location_info.id}}" data-tipId="{{item.fieldOperationTips.id}}" data-answerid="{{item.fieldOperationTipsAnswerVo.fieldOperationTipsAnswer.id}}">
+          <view class="solids" bindtap="chooseVideo" wx:if="{{operationTips_resource_num_list[operationTipsIndex] < 25 || (location_info.checkStatus == 4 && location_info.isRepeal != 1)}}" data-target="Modal" data-type="2" data-operationTipsindex="{{operationTipsIndex}}" data-locationid="{{location_info.id}}" data-tipId="{{item.fieldOperationTips.id}}" data-answerid="{{item.fieldOperationTipsAnswerVo.fieldOperationTipsAnswer.id}}">
             <text class="cuIcon-video"></text>
           </view>
         </view>

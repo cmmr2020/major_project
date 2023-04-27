@@ -14,7 +14,10 @@
       {{item.name}}
     </view>
   </scroll-view>
-
+    <!-- 搜索图标 -->
+    <view class="cu-item" hidden="true" bindtap="showModal" data-target="DrawerModalL">
+      <text class="cuIcon-search lg text-blue" style="font-size: 50rpx;position: fixed;right: 0;"></text>
+    </view>
   <!-- 任务列表 -->
   <view class="cu-card article">
     <navigator wx:if="{{TabCur==9 && item.longTask==0}}" wx:for="{{taskList}}" wx:key="index" class="cu-item shadow" url='../dept_task_detail/dept_task_detail?id={{item.id}}&projectId={{item.projectId}}'>
@@ -77,4 +80,33 @@
 </view>
 <view class="imagesize {{isNull=='true'?'show':'hide'}}">
   <image src='../../../../images/null.png' mode='scaleToFill' style='height:100%;width:100%'></image>
+</view>
+
+<!-- 搜索弹窗抽屉-->
+<view class="cu-modal drawer-modal justify-start {{modalName=='DrawerModalL'?'show':''}}" bindtap="hideModal">
+  <view class="cu-dialog basis-lg" catchtap style="top:{{CustomBar}}px;height:calc(100vh - {{CustomBar}}px)">
+    <view class="cu-list menu text-left">
+      <form>
+        <view class="cu-form-group margin-top">
+          <input placeholder="请输入任务编号"></input>
+        </view>
+        <view class="cu-form-group">
+          <input placeholder="请输入点位名称"></input>
+        </view>
+        <view class="cu-form-group">
+          <input placeholder="请输入问题"></input>
+        </view>
+        <view class="cu-form-group">
+          <input placeholder="请输入点位类型"></input>
+        </view>
+        <view class="cu-form-group">
+          <picker mode="date" value="{{date}}" start="2017-01-01" end="2050-12-30" bindchange="DateChange">
+            <view class="picker" style="text-align: left;font-size: 30rpx;">
+              发现日期: {{date}}
+            </view>
+          </picker>
+        </view>
+      </form>
+    </view>
+  </view>
 </view>

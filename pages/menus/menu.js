@@ -68,6 +68,7 @@ Page({
           terminalUserName: terminalUserName
         })
       }
+      app.data.terminalUserName = that.data.terminalUserName
       qqmapsdk = new QQMapWX({
         key: that.data.key
       });

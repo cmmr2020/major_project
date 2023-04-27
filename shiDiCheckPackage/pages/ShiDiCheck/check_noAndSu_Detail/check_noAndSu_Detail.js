@@ -358,7 +358,7 @@ Page({
     var mapImage = []; //图片下载
     if (images != null) {
       for (var i = 0; i < images.length; i++) {
-        mapImage.push(images[i].url)
+        mapImage.push(images[i].url.replaceAll('http:','https:'))
         imgDesc.push({
           description: images[i].description
         });
@@ -367,7 +367,7 @@ Page({
     var mapVoid = []; //视频下载
     if (videos != null) {
       for (var i = 0; i < videos.length; i++) {
-        mapVoid.push(videos[i].url)
+        mapVoid.push(videos[i].url.replaceAll('http:','https:'))
         videoDesc.push({
           description: videos[i].description
         })
@@ -391,7 +391,7 @@ Page({
 
     if (audios != null) {
       for (var i = 0; i < audios.length; i++) {
-        mapAudio.push(audios[i].url)
+        mapAudio.push(audios[i].url.replaceAll('http:','https:'))
       }
     }
     for (var index = 0; index < mapAudio.length; index++) {
@@ -416,13 +416,13 @@ Page({
     var mapImage = []; //图片下载
     if (images_task != null) {
       for (var i = 0; i < images_task.length; i++) {
-        mapImage.push(images_task[i].url)
+        mapImage.push(images_task[i].url.replaceAll('http:','https:'))
       }
     }
     var mapVoid = []; //视频下载
     if (videos_task != null) {
       for (var i = 0; i < videos_task.length; i++) {
-        mapVoid.push(videos_task[i].url)
+        mapVoid.push(videos_task[i].url.replaceAll('http:','https:'))
       }
     }
 
@@ -438,7 +438,7 @@ Page({
 
     if (audios_task != null) {
       for (var i = 0; i < audios_task.length; i++) {
-        mapAudio.push(audios_task[i].url)
+        mapAudio.push(audios_task[i].url.replaceAll('http:','https:'))
       }
     }
     for (var index = 0; index < mapAudio.length; index++) {

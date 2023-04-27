@@ -25,8 +25,11 @@
       "root":"correctionPackage",
       "pages": [
         "pages/surveyDept/dept_index/dept_index",
+        "pages/surveyDept/dept_type_task_index/dept_type_task_index",
+        "pages/surveyDept/dept_group_task_index/dept_group_task_index",
         "pages/surveyDept/dept_swiper/dept_swiper",
         "pages/surveyDept/dept_task_detail/dept_task_detail",
+        "pages/surveyDept/dept_group_task_detail/dept_group_task_detail",
         "pages/surveyDept/dept_project/dept_project",
         "pages/surveyDept/dept_task_Already/dept_task_Already"
       ]
@@ -53,6 +56,8 @@
       "pages":[
         "pages/ShiDiCheck/check_project/check_project",
         "pages/ShiDiCheck/check_index/check_index",
+        "pages/ShiDiCheck/check_new_index/check_new_index",
+        "pages/ShiDiCheck/check_new_detail/check_new_detail",
         "pages/ShiDiCheck/check_check_detail/check_check_detail",
         "pages/ShiDiCheck/check_noAndSu_Detail/check_noAndSu_Detail"
       ]

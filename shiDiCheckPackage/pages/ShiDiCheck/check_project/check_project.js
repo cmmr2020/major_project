@@ -1,4 +1,5 @@
 const app = getApp();
+var requestUrl = ""
 Page({
 
   data: {
@@ -16,7 +17,7 @@ Page({
    */
   onLoad: function(option) {
     var that = this;
-    var requestUrl = app.globalData.requestUrl; //服务器路径
+    requestUrl = app.globalData.requestUrl; //服务器路径
     var fontSize = wx.getStorageSync('fontSize');
     var bgColorUi = wx.getStorageSync('bgColorUi');
     that.setData({
@@ -86,61 +87,36 @@ Page({
 
       }
     )
-    // wx.request({
-    //   // 必需
-    //   url: requestUrl + '/mobile/fieldTask/getFieldProjectListByUser',
-    //   // url: 'http://192.168.15.71:8083/wechat/api/fieldProject/getListByTerminalUserId',
-    //   data: {
-    //     terminalUserId: terminalUserId
-    //   },
-    //   header: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   success: (res) => {
-    //     var arr = [];
-    //     if (res.data.status == 'success') {
-    //       var projectList = res.data.retObj;
-    //       for (var i = 0; i < projectList.length; i++) {
-    //         var color = colorList[i];
-    //         arr.push({
-    //           color: color,
-    //           id: projectList[i].id,
-    //           code: projectList[i].code,
-    //           createBy: projectList[i].createBy,
-    //           createTime: projectList[i].createTime,
-    //           isCheck: projectList[i].isCheck,
-    //           isConsistent: projectList[i].isConsistent,
-    //           isGrade: projectList[i].isGrade,
-    //           latitude: projectList[i].latitude,
-    //           longitude: projectList[i].longitude,
-    //           name: projectList[i].name,
-    //           status: projectList[i].status,
-    //           updateBy: projectList[i].updateBy,
-    //           updateTime: projectList[i].updateTime,
-    //           version: projectList[i].version
-    //         })
-    //       }
+  },
+  navigate:function(e){
+    var projectId = e.currentTarget.dataset.projectid
+    app.wxRequest(
+      'GET',
+      requestUrl + '/mobile/fieldTask/getGovProByWX',
+      {
+        projectId: projectId
+      },
+      app.seesionId,
+      (res) =>{
+        console.log(res)
+        var govPro = res.data.retObj.govPro
+        //是否为牵头配合模式
+        var isDepartType = govPro.isDepartType
+        //??projectId={{item.id}}
+        //if (isDepartType == 1) {//牵头配合模式
+        wx.navigateTo({
+          url: '../check_new_index/check_new_index?projectId='+projectId+'&isDepartType='+isDepartType,
+        })
+        //} else {//普通模式
+        //   wx.navigateTo({
+        //     url: '../check_index/check_index?projectId='+projectId,
+        //   })
+        // }
+      },
+      (err) =>{
 
-    //       that.setData({
-    //         elements: arr
-    //       })
-    //     } else {
-    //       wx.showToast({
-    //         title: res.data.message,
-    //         icon: 'none',
-    //         duration: 1000,
-    //         mask: true
-    //       })
-    //     }
-    //   },
-    //   fail: (res) => {
-
-    //   },
-    //   complete: (res) => {
-
-    //   }
-    // })
-
+      }
+    )
   },
   changeData: function() {
 

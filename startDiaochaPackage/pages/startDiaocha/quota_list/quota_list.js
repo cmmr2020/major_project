@@ -12,6 +12,7 @@ Page({
     pointId: '', //点位id
     pointTypeId: '', //点位类型id
     projectId: '',
+    is_sim_project:true,
     list: [],
     //拼装提示
     tips: '',
@@ -59,15 +60,19 @@ Page({
     timeInterval:'', //记录行走经纬度时时间间隔 单位毫秒
     submitStatus:'', //点位测评状态  0 未上传  1上传中  2测评完毕  待提交
     showQueryDistance:0, //是否显示查询行走距离按钮  0隐藏  1显示
+    historydata:'',//八里庄需求历史资源
   },
-    onShow: function() {  
+  onLoad:function(){
+    //console.log('onLoad')
     var that = this;
     var variable = that.data.variable;
     var locationId = '';
+    var isPhotoTip = app.data.isPhotoTip;
     const eventChannel = that.getOpenerEventChannel()
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
     // pointDetail页面传递过来的参数
     eventChannel.on('pointDetail', function(data) {
+      //console.log(data)
       locationId = data.pointId
       that.setData({
         pointName: data.pointName,
@@ -93,18 +98,44 @@ Page({
         that.data.submitStatus = "0";
       }
       // console.log("pointDetail传递参数", data)
-      if(variable===0){
-        that.getproblemList(data.pointTypeId,data.projectId, data.pointId);
-      }else{
-        that.getQuotaList(data.pointTypeId,data.pointId,data.projectId);
+      if(isPhotoTip === 0){//正常流程
+        if(variable===0){
+          that.getproblemList(data.pointTypeId,data.projectId, data.pointId);
+        }else{
+          that.getQuotaList(data.pointTypeId,data.pointId,data.projectId);
+        }
+      }else{//照片提示   复查需求
+        that.setData({
+          modalName:'',
+          is_sim_project:false
+        })
+        that.getAllQuotaDetailByLocation()
       }
+      //this.myLoad();
     })
-     if(variable===0){
-         that.getproblemList(that.data.pointTypeId,that.data.projectId, that.data.pointId);
-      }else{
-         that.getQuotaList(that.data.pointTypeId,that.data.pointId,that.data.projectId);
-      }
-      this.myLoad();
+  },
+    onShow: function() {  
+    //console.log('onShow')
+    var that = this;
+    var variable = that.data.variable;
+    var isPhotoTip = app.data.isPhotoTip;
+    //正常流程
+    if(isPhotoTip === 0){
+      if(variable===0){
+        that.getproblemList(that.data.pointTypeId,that.data.projectId, that.data.pointId);
+     }else{
+        that.getQuotaList(that.data.pointTypeId,that.data.pointId,that.data.projectId);
+     }
+     
+    }else{
+      that.setData({
+        modalName:'',
+        is_sim_project:false
+      })
+      that.getAllQuotaDetailByLocation()
+    }
+    this.myLoad();
+    console.log(that.data.is_sim_project)
   },
   myLoad: function(e) {
     let that = this;
@@ -309,6 +340,86 @@ Page({
     //   }
     // })
   },
+
+    // 八里庄复查需求
+    // 获取项目点位下所有的问题  
+    getAllQuotaDetailByLocation() {
+      var that = this;
+      var projectId = that.data.projectId;
+      var pointId = that.data.pointId;
+      var pointTypeId = that.data.pointTypeId;
+      var requestUrl = that.data.requestUrl; //服务器路径
+      //调用全局 请求方法
+      app.wxRequest(
+        'GET',
+        requestUrl + '/wechat/api/fieldQuestion/getQuestionListByLocation',
+        {
+          projectId: projectId,
+          locationId: pointId,
+          pointId:pointTypeId
+        },
+        app.seesionId,
+        (res) =>{
+          if (res.data.status == 'success') {
+            var quotaList = res.data.retObj;
+             console.log("指标下的详情111111：", quotaList)
+            if(typeof(quotaList) == 'undefined'){
+              return
+            }
+            let arr = [];
+            let ayy = [];
+            for (let i = 0; i < quotaList.length; i++) {
+              if (quotaList[i].type === 2) {
+                arr.push(quotaList[i].content)
+              } else {
+                // 拼装数据
+                ayy.push({
+                  code: quotaList[i].code,
+                  content: quotaList[i].content,
+                  url: quotaList[i].url,
+                  fqtCode: quotaList[i].fqtCode,
+                  fqtId: quotaList[i].fqtId,
+                  grade: quotaList[i].grade,
+                  id: quotaList[i].id,
+                  isRecord: quotaList[i].isRecord,
+                  projectId: quotaList[i].projectId,
+                  quotaId: quotaList[i].quotaId,
+                  status: quotaList[i].status,
+                  finished: quotaList[i].finished,
+                  isAmount: quotaList[i].isAmount,
+                  resourceCount:quotaList[i].resourceCount,
+                  isOk:quotaList[i].isOk,
+                  unqualified:quotaList[i].unqualified,
+                  isFacilities:quotaList[i].isFacilities,
+                  isOkHistoryResult:quotaList[i].isOkHistoryResult,
+                  locationQueId:quotaList[i].locationQueId
+                })
+              }
+              if(quotaList[i].isFacilities == '1'&& quotaList[i].isOkHistoryResult =='1'){
+                if(!show_history_ques_map.has(quotaList[i].code)){
+                  show_history_ques_map.set(quotaList[i].code,'false');
+                }
+              }
+            }
+            that.setData({
+              listData: ayy,
+              //quotaId: quotaId,
+              tips: arr
+            })
+          } else {
+            wx.showToast({
+              title: '获取点位树失败',
+              icon: 'loading',
+              duration: 1000,
+              mask: true
+            })
+          }
+        },
+        (err) =>{
+  
+        }
+      )
+    },
 
   // 获取指标下的问题
   getQuotaDetail(quotaId, q) {
@@ -986,6 +1097,51 @@ Page({
       }
     })
     this.changeParentData();
+  },
+  showHistroyByZG:function(e){
+    var that = this;
+    var id = e.currentTarget.dataset.locationqueid;
+    that.setData({
+      historydata:''
+    })
+    wx.showLoading({
+      title:'数据加载中'
+    })
+     var requestUrl = that.data.requestUrl; //服务器路径
+     //调用全局 请求方法
+    app.wxRequest(
+      'GET',
+      requestUrl + '/wechat/api/fieldQuestion/getHistoryTaskResourceByLQuesId',
+      {
+        locationQueId: id,
+      },
+      app.seesionId,
+      (res) =>{
+        //console.log(res)
+        if (res.data.status == 'success') {
+          if(res.data.retObj){
+            that.setData({
+              historydata:res.data.retObj
+            })
+          }
+          if(that.data.historydata.fieldResourceList.length>0){
+            that.setData({
+              modalNameR:'viewModal2'
+            })
+          }
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: res.data.message,
+            showCancel:false
+          })
+        }
+
+      },
+      (err) =>{
+
+      }
+    )
   },
   showHistroy:function(e){
     var that = this;

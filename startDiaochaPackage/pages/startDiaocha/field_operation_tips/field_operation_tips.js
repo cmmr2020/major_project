@@ -388,7 +388,7 @@ Page({
                     mask: true
                   });
                   var resouce = resouceList[j]
-                  await that.downlodaResource(resouceList[j].url, resouce, tipId).then((res) => {
+                  await that.downlodaResource(resouceList[j].url.replaceAll('http:','https:'), resouce, tipId).then((res) => {
                   })
                 }
               } else {
@@ -906,8 +906,8 @@ Page({
     var location_operationTips_list = that.data.location_operationTips_list
     //各操作提示下拍摄的资源数量  通过下标对应
     var operationTips_resource_num_list = that.data.operationTips_resource_num_list
-    console.log(location_operationTips_list)
-    console.log(operationTips_resource_num_list)
+    //console.log(location_operationTips_list)
+    //console.log(operationTips_resource_num_list)
     var msg = '';
     for (let i = 0; i < location_operationTips_list.length; i++) {
       var resourceNum = location_operationTips_list[i].fieldOperationTips.resourceNum
@@ -985,7 +985,12 @@ Page({
             })
           }
         } else {
-          that.tip('点位提交失败，请重试')
+          //console.log(res.data)
+          if(res.data.message){
+            that.tip(res.data.message)
+          }else{
+            that.tip('点位提交失败，请重试')
+          }
         }
         that.setData({
           is_submiting:0

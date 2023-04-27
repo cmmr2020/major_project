@@ -54,6 +54,15 @@ Page({
             govId:res.data.message
           })
           console.log(projectList)
+          if(!projectList){
+            wx.showToast({
+              title: '暂无数据',
+              icon: 'none',
+              duration: 2000,
+              mask: true
+            })
+            return
+          }
           for (var i = 0; i < projectList.length; i++) {
             var color = colorList[i];
             arr.push({

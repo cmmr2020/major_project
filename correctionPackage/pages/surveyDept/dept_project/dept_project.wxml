@@ -8,13 +8,41 @@
         </view>
       </view>
     </view>
-    <view class="padding bg-white">
+    <!-- <view class="padding bg-white">
       <navigator open-type="navigate" hover-class='none' url="../dept_index/dept_index?projectId={{item.id}}" wx:for="{{elements}}" wx:key="index">
         <view class="padding margin">
           <view class="nav-li bg-{{item.color}}" style="border:1px solid {{bgColorUi}};" class="shadow-blur bg-{{item.color}} ABox" style="font-size:{{fontSize}}rpx">{{item.name}}</view>
         </view>
       </navigator>
       <view class='cu-tabbar-height'></view>
+    </view> -->
+    <view class="padding bg-white">
+      <view bindtap="navigate" hover-class='none' data-projectId="{{item.id}}" wx:for="{{elements}}" wx:key="index">
+        <view class="padding margin">
+          <view class="nav-li bg-{{item.color}}" style="border:1px solid {{bgColorUi}};" class="shadow-blur bg-{{item.color}} ABox" style="font-size:{{fontSize}}rpx">{{item.name}}</view>
+        </view>
+      </view>
+      <view class='cu-tabbar-height'></view>
     </view>
   </scroll-view>
+</view>
+<!--对话框-->
+<view class="cu-modal {{modalName=='DialogModal2'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">提示</view>
+      <view class="action" bindtap="hideModal">
+        <text class="cuIcon-close text-red"></text>
+      </view>
+    </view>
+    <view class="padding-xl">
+      请您选择进入下列哪种实地整改模式
+    </view>
+    <view class="cu-bar bg-white">
+    <view wx:for="{{deptGroupBts}}"  wx:key="index" class="action margin-0 flex-sub text-green solid-left">
+      <view  bindtap="toZGPage" data-name="{{item.name}}">{{item.name}}</view>
+    </view>
+      <view class="action margin-0 flex-sub  solid-left" bindtap="hideModal">取消</view>
+    </view>
+  </view>
 </view>

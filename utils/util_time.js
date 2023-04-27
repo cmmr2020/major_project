@@ -8,9 +8,37 @@ function formatTime(time, format) {
   let len = format.length
   return temp.substr(-len)
 }
+function formatTimeByNew(value,format) {
+  const formateArr = ['Y', 'M', 'D', 'h', 'm', 's'];
+  let returnArr = [];
+  if(value) {
+    let date
+    if(value < 1000000000000){
+      date = new Date(value * 1000) // 时间戳为秒：10位数
+    }else{
+      date = new Date(value)    // 时间戳为毫秒：13位数
+    }
+      let year = date.getFullYear()
+      let month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
+      let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+      let hour = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
+      let minute = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+      let second = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
+      returnArr.push(year, month, day, hour, minute, second)
+      returnArr = returnArr.map(formatNumber);
+      for (var i in returnArr) {
+        format = format.replace(formateArr[i], returnArr[i]);
+      }
+      return format;
+      //return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+  } else {
+      return ''
+  }
+}
 
 module.exports = {
   formatTime: formatTime,
+  formatTimeByNew:formatTimeByNew,
   getNowTime:getNowTime,
   getNowTime2:getNowTime2
 }

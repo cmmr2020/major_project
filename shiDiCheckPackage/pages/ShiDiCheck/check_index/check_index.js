@@ -255,11 +255,10 @@ Page({
     //调用全局 请求方法
     app.wxRequest(
       'GET',
-      requestUrl + '/mobile/fieldTask/getCheckFieldTaskList',
+      requestUrl + '/mobile/fieldTask/getFieldTaskCheckListByMobile',
       {
-        'terminalUserId': terminalUserId,
         'projectId': projectId,
-        'pageSize': '10',
+        'pageSize': '5',
         'pageNum': pageNum,
         'result': result,
         'auditType': auditType
@@ -267,7 +266,7 @@ Page({
       app.seesionId,
       (res) =>{
         if (res.data.status === "success") {
-          // console.log("打印出来看看？",res.data.retObj)
+          console.log("打印出来看看？",res.data.retObj)
           if (res.data.retObj.list.length != 0) {
             var list = res.data.retObj.list;
             var arr = [];
@@ -292,7 +291,7 @@ Page({
               maxPageNum: res.data.retObj.pageCount, //总页数
               tasks: that.data.tasks.concat(arr)
             })
-            console.log("待审核数据：", that.data.tasks)
+            //console.log("待审核数据：", that.data.tasks)
           } else {
             that.setData({
               isNull :'true'
