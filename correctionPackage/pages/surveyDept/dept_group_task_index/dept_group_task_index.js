@@ -522,8 +522,8 @@ Page({
     var result_type = e.currentTarget.dataset.resulttype
     var taskIds = that.data.batch_process_taskIdArr + ''
     var auditContent = that.data.process_auditContent
-    if (!auditContent) {
-      app.msg('请输入审批意见~')
+    if(!auditContent && result_type !=0 ){
+      app.msg('请输入审批意见')
       return
     }
     if (auditContent.length > 500) {

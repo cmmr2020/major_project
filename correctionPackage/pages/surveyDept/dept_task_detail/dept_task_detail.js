@@ -214,7 +214,9 @@ Page({
     that.getGovPro();
     //将当前列表状态和任务id传回父页面, 当前页面返回事加载数据用
     const eventChannel = that.getOpenerEventChannel()
-    eventChannel.emit('acceptDataFromOpenedPage', {pageScrollto_id: pageScrollto_id,tabCur:tabCur,search_param_str:search_param_str,pagenum:pagenum,maxPageNum:maxPageNum});
+    if(eventChannel){
+      eventChannel.emit('acceptDataFromOpenedPage', {pageScrollto_id: pageScrollto_id,tabCur:tabCur,search_param_str:search_param_str,pagenum:pagenum,maxPageNum:maxPageNum});
+    }
   },
 
   //提示
@@ -1670,7 +1672,7 @@ Page({
     var result_type = e.currentTarget.dataset.resulttype
     var taskId = that.data.taskId
     var auditContent = that.data.process_auditContent
-    if(!auditContent){
+    if(!auditContent && result_type != 0){
       app.msg('请输入审批意见~')
       return
     }

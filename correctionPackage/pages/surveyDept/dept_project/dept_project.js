@@ -162,10 +162,10 @@ Page({
           var isHeadman = -1; // 是否为组长 1 是  0否
           for(let i=0; i<roleList.length; i++){
             let item = roleList[i]
-            if (item.name == '实地整改组长'){
+            if (item.name == '实地整改组长-T'){
                 isHeadman = 1
            }
-            if (item.name == '实地整改组员'){
+            if (item.name == '实地整改组员-T'){
                 isHeadman = 0
             }
           }

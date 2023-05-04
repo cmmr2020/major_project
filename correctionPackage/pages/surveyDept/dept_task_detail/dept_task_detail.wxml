@@ -402,13 +402,13 @@
   <!-- 审核按钮组 -->
   <view class="flex solid-bottom padding justify-center" style="width: 100%;">
     <view class=" margin-xs radius">
-      <button role="button" class="cu-btn bg-{{bgColor}} " bindtap="process_fun" data-type="0">通过</button>
+      <button role="button" class="cu-btn bg-{{bgColor}} " bindtap="process_fun" data-resulttype="0">通过</button>
     </view>
     <view class=" margin-xs radius">
-      <button role="button" class="cu-btn bg-{{bgColor}} " bindtap="process_fun" data-type="1">不通过</button>
+      <button role="button" class="cu-btn bg-{{bgColor}} " bindtap="process_fun" data-resulttype="1">不通过</button>
     </view>
     <view class=" margin-xs radius">
-      <button role="button" class="cu-btn bg-{{bgColor}} " bindtap="process_fun" data-type="2">长期整改</button>
+      <button role="button" class="cu-btn bg-{{bgColor}} " bindtap="process_fun" data-resulttype="2">长期整改</button>
     </view>
   </view>
 </view>

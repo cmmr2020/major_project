@@ -72,10 +72,11 @@ Page({
   },
   //刷新页面
   onShow: function() { 
-    console.log('页面显示')
+    //console.log('页面显示')
     var that = this;
     that.setData({
       taskList: [],
+      pagenum:1,
       maxPageNum: 0, //总页数
       isNull: ''
     })
@@ -169,7 +170,9 @@ Page({
     var TabCur = that.data.TabCur; //整改状态
     var pagenum = that.data.pagenum;
     var terminalUserId = that.data.terminalUserId;
-    //console.log(e);
+    console.log(TabCur);
+    console.log(pagenum);
+
     //调用全局 请求方法
     app.wxRequest(
       'GET',
