@@ -1694,7 +1694,6 @@ Page({
         id: taskId,
         projectId: projectId,
         result: 0,
-        longTask: 0,
         auditContent: auditContent,
       }
     } else {

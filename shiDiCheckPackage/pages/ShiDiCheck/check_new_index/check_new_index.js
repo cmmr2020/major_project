@@ -630,7 +630,6 @@ Page({
       param = {
         taskIds: taskIds,
         result: 0,
-        longTask: 0,
         auditContent: auditContent,
       }
     } else {

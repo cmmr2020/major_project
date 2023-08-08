@@ -721,10 +721,19 @@ Page({
         if (data.status = "success") {
           var allList = data.retObj.allList
           var assignedListByUserList = data.retObj.assignedListByUser
+          var allocationIds = data.retObj.allocationIds
           var selectLocationIds = '';
           if (allList) {
             for (let i = 0; i < allList.length; i++) {
               var location = allList[i]
+              location.allocation = false;
+              if(allocationIds && allocationIds.length > 0){
+                for (var t=0; t<allocationIds.length; t++){
+                    if (location.locationId == allocationIds[t]){
+                      location.allocation = true
+                    }
+                }
+            }
               if (assignedListByUserList) {
                 for (let t = 0; t < assignedListByUserList.length; t++) {
                   var assigned_location = assignedListByUserList[t]

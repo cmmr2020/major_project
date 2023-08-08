@@ -136,7 +136,7 @@ height: 100%;
 font-weight: bold;
 line-height:70rpx;
 letter-spacing:2rpx;
-margin-left: 30rpx;
+margin-left: 10rpx;
 }
 
 /* 横着的分割View样式 */

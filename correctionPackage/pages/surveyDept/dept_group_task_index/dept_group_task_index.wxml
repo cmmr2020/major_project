@@ -343,7 +343,7 @@
         <view class="bg-white padding">
           <view class="grid col-2 margin-bottom text-left">
             <view wx:for="{{show_batch_user}}" wx:key="index" style="padding:10rpx">
-              <checkbox value="{{item.locationId}}" disabled="{{item.haveResource == 1?true:false}}" checked="{{item.check}}" class="{{bgColor}}" /><text style="margin-left: 10rpx;">{{item.locationName}}</text>
+              <checkbox value="{{item.locationId}}" disabled="{{item.haveResource == 1?true:false}}" checked="{{item.check}}" class="{{bgColor}}" /><text style="margin-left: 10rpx;{{item.allocation == true?'color:orange;':''}}">{{item.locationName}}</text>
             </view>
           </view>
         </view>
