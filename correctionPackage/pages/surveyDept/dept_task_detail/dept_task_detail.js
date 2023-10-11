@@ -17,6 +17,7 @@ Page({
     task_log_list:[],//任务日志集合
     can_qs:true,//权属异议选择框 与长期整改互斥  默认显示 未选中
     can_long:true,//长期整改选择框 与权属异议互斥  默认显示 未选中
+    dissent_show:true,
     long_setTime:false,//长期整改结束日期选择框
     long_task_finish_Time:'',//长期整改结束时间
     process_auditContent:'',//整改审核审批意见

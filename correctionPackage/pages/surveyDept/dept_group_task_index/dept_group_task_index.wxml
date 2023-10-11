@@ -71,7 +71,8 @@
           <view class=" margin radius">
             <button role="button" class="cu-btn bg-{{bgColor}} " data-taskid="{{item.id}}" data-pageid="task_index_{{index}}" bindtap="open_allocating_task_page">分配</button>
           </view>
-          <view class=" margin radius" wx:if="{{item.mobile_userId == terminalUserId}}">
+          <!--组长可以提交已分配的任意任务-->
+          <view class=" margin radius" wx:if="{{(item.mobile_userId == terminalUserId || isHeadman == 1) && item.userName != null}}">
             <button role="button" class="cu-btn bg-{{bgColor}} " data-taskid="{{item.id}}" data-projectid="{{item.projectId}}" bindtap="goTaskRectify">整改</button>
           </view>
         </view>

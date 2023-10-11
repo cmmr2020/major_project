@@ -229,7 +229,7 @@
   </view>
 </view>
 <!--上传部分  待整改和长期整改状态显示 小组模式  如果当前用户跟责任用户相同才允许提交-->
-<view wx:if="{{tabCur == 0 || (tabCur ==3 && mobile_userId == terminalUserId)}}">
+<view wx:if="{{tabCur == 0 || (tabCur ==3 && (mobile_userId == terminalUserId || isHeadman))}}">
   <tui-divider gradual="{{true}}" gradualColor="{{gradualColor}}">
     <text class="text-{{bgColor}} " style="font-size:{{fontSize35}}rpx">整改上传</text>
   </tui-divider>
